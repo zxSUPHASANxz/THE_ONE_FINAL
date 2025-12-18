@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}THE ONE - หน้าหลัก{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Logo -->
+<div class="bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white rounded-2xl shadow-2xl p-12 mb-8 relative overflow-hidden">
+    <!-- Animated background circles -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-gold-500 opacity-10 rounded-full blur-3xl animate-pulse-slow"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold-400 opacity-10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+        <!-- Logo -->
+        <div class="w-48 h-48 mx-auto mb-6 text-white animate-fade-in">
+            <img src="{% static 'images/logo.svg' %}" alt="THE ONE Logo" class="w-full h-full filter drop-shadow-2xl">
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-slide-up">
+            ยินดีต้อนรับสู่ THE_ONE
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-white/90 animate-slide-up" style="animation-delay: 0.2s;">
+            ระบบจองคิวซ่อมรถจักรยานยนต์และ Chatbot ให้คำปรึกษาแบบมืออาชีพ
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4 animate-slide-up" style="animation-delay: 0.4s;">
+            <a href="/chatbot/" class="bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold hover:bg-gold-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                💬 เริ่มคุยกับ Chatbot
+            </a>
+            {% if user.is_authenticated and not user.is_mechanic %}
+            <a href="/booking/" class="bg-gradient-to-r from-gold-400 to-gold-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-gold-500 hover:to-gold-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                📅 จองคิวซ่อม
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="card text-center group hover:border-primary-300 cursor-pointer">
+        <div class="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">🤖</div>
+        <h3 class="text-xl font-semibold mb-2 text-primary-600">AI Chatbot</h3>
+        <p class="text-gray-600">ระบบ AI ให้คำปรึกษาและประเมินอาการรถของคุณแบบอัตโนมัติ</p>
+    </div>
+    
+    <div class="card text-center group hover:border-gold-300 cursor-pointer">
+        <div class="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">📅</div>
+        <h3 class="text-xl font-semibold mb-2 text-gold-600">จองคิวง่าย</h3>
+        <p class="text-gray-600">จองคิวซ่อมรถได้ง่ายๆ เลือกวันเวลาที่สะดวกได้เลย</p>
+    </div>
+    
+    <div class="card text-center group hover:border-primary-300 cursor-pointer">
+        <div class="text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">👨‍🔧</div>
+        <h3 class="text-xl font-semibold mb-2 text-primary-600">ช่างมืออาชีพ</h3>
+        <p class="text-gray-600">ทีมช่างที่มีความชำนาญพร้อมดูแลรถบิ๊กไบค์ของคุณ</p>
+    </div>
+</div>
+
+<!-- Supported Bikes Section -->
+<div class="card mb-12">
+    <h2 class="text-3xl font-bold mb-6 text-center">รองรับรถจักรยานยนต์</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div class="p-4">
+            <div class="text-3xl mb-2">🏍️</div>
+            <p class="font-semibold">150cc+</p>
+            <p class="text-sm text-gray-600">รถมาตรฐาน</p>
+        </div>
+        <div class="p-4">
+            <div class="text-3xl mb-2">🏁</div>
+            <p class="font-semibold">Sport Bike</p>
+            <p class="text-sm text-gray-600">รถสปอร์ต</p>
+        </div>
+        <div class="p-4">
+            <div class="text-3xl mb-2">🛣️</div>
+            <p class="font-semibold">Cruiser</p>
+            <p class="text-sm text-gray-600">รถครูเซอร์</p>
+        </div>
+        <div class="p-4">
+            <div class="text-3xl mb-2">⚡</div>
+            <p class="font-semibold">Superbike</p>
+            <p class="text-sm text-gray-600">ซุปเปอร์ไบค์</p>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="card">
+    <h2 class="text-3xl font-bold mb-6 text-center">วิธีการใช้งาน</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="text-center">
+            <div class="bg-primary-100 text-primary-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                1
+            </div>
+            <h4 class="font-semibold mb-2">คุยกับ Chatbot</h4>
+            <p class="text-sm text-gray-600">บอกอาการหรือปัญหาของรถ</p>
+        </div>
+        <div class="text-center">
+            <div class="bg-primary-100 text-primary-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                2
+            </div>
+            <h4 class="font-semibold mb-2">รับคำแนะนำ</h4>
+            <p class="text-sm text-gray-600">AI วิเคราะห์และให้คำแนะนำ</p>
+        </div>
+        <div class="text-center">
+            <div class="bg-primary-100 text-primary-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                3
+            </div>
+            <h4 class="font-semibold mb-2">จองคิวซ่อม</h4>
+            <p class="text-sm text-gray-600">เลือกวันเวลาที่สะดวก</p>
+        </div>
+        <div class="text-center">
+            <div class="bg-primary-100 text-primary-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                4
+            </div>
+            <h4 class="font-semibold mb-2">รับรถกลับ</h4>
+            <p class="text-sm text-gray-600">รถพร้อมใช้งานอีกครั้ง</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

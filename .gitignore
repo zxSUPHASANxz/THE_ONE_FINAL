@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+/static
+
+# Environment
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups (เก็บไว้นอก git)
+backups/
+*.sql
+*.dump
+
+# Node
+node_modules/
+
+# Migrations (สำรองก่อน commit)
+# */migrations/*.py
+# !*/migrations/__init__.py

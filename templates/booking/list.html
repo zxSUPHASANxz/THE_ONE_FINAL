@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}การจองของฉัน - THE ONE{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6">
+    <div class="mb-6 flex justify-between items-center">
+        <h2 class="text-2xl font-bold">การจองของฉัน</h2>
+        <a href="{% url 'booking_create' %}" class="btn-primary">
+            จองคิวใหม่
+        </a>
+    </div>
+    
+    {% if bookings %}
+    <div class="grid grid-cols-1 gap-6">
+        {% for booking in bookings %}
+        <div class="card">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <h3 class="text-lg font-semibold">
+                            {{ booking.motorcycle.brand }} {{ booking.motorcycle.model }}
+                        </h3>
+                        <span class="px-2 py-1 text-xs rounded-full
+                            {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif booking.status == 'confirmed' %}bg-blue-100 text-blue-800
+                            {% elif booking.status == 'in_progress' %}bg-purple-100 text-purple-800
+                            {% elif booking.status == 'completed' %}bg-green-100 text-green-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ booking.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 space-y-1">
+                        <p><strong>ทะเบียน:</strong> {{ booking.motorcycle.license_plate }}</p>
+                        <p><strong>อาการ:</strong> {{ booking.problem_description }}</p>
+                        <p><strong>วันนัดหมาย:</strong> {{ booking.appointment_date|date:"d/m/Y H:i" }} น.</p>
+                        {% if booking.mechanic %}
+                        <p><strong>ช่างผู้รับผิดชอบ:</strong> {{ booking.mechanic.username }}</p>
+                        {% endif %}
+                        {% if booking.estimated_cost %}
+                        <p><strong>ราคาประเมิณ:</strong> {{ booking.estimated_cost }} บาท</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex flex-col space-y-2">
+                    {% if booking.status == 'pending' or booking.status == 'confirmed' %}
+                    <form method="POST" action="#" onsubmit="return confirm('ต้องการยกเลิกการจองนี้?')">
+                        {% csrf_token %}
+                        <button type="submit" class="text-sm text-red-600 hover:text-red-800">
+                            ยกเลิกการจอง
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if booking.repair_notes %}
+            <div class="mt-4 pt-4 border-t">
+                <p class="text-sm font-medium text-gray-700">รายละเอียดการซ่อม:</p>
+                <p class="text-sm text-gray-600">{{ booking.repair_notes }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card text-center py-12">
+        <p class="text-gray-500 mb-4">คุณยังไม่มีการจอง</p>
+        <a href="{% url 'booking_create' %}" class="btn-primary inline-block">
+            จองคิวเลย
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

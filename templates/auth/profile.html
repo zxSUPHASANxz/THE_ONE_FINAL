@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}โปรไฟล์ - THE ONE{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" x-data="{ editing: false, addingMotorcycle: false }">
+    <div class="px-4 py-6 sm:px-0">
+        <!-- Profile Card -->
+        <div class="card mb-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">ข้อมูลส่วนตัว</h2>
+                <button @click="editing = !editing" 
+                        x-text="editing ? 'ยกเลิก' : 'แก้ไขข้อมูล'"
+                        :class="editing ? 'btn-secondary' : 'btn-primary'">
+                </button>
+            </div>
+            
+            <!-- View Mode -->
+            <div x-show="!editing">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+                        <p class="text-gray-900">{{ user.username }}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <p class="text-gray-900">{{ user.email }}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทผู้ใช้</label>
+                        <p class="text-gray-900">{{ user.get_user_type_display }}</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
+                        <p class="text-gray-900">{{ user.phone_number|default:"ยังไม่ระบุ" }}</p>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ที่อยู่</label>
+                        <p class="text-gray-900">{{ user.address|default:"ยังไม่ระบุ" }}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex space-x-4">
+                    {% if not user.is_mechanic %}
+                    <a href="{% url 'booking_list' %}" class="btn-secondary">การจองของฉัน</a>
+                    {% else %}
+                    <a href="{% url 'mechanic_dashboard' %}" class="btn-secondary">แดชบอร์ดช่าง</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Edit Mode -->
+            <div x-show="editing" style="display: none;">
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_profile">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+                            <input type="text" name="username" value="{{ user.username }}" class="input-field" readonly>
+                            <p class="text-xs text-gray-500 mt-1">ไม่สามารถเปลี่ยนแปลงได้</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                            <input type="email" name="email" value="{{ user.email }}" class="input-field" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทผู้ใช้</label>
+                            <input type="text" value="{{ user.get_user_type_display }}" class="input-field" readonly>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
+                            <input type="tel" name="phone_number" value="{{ user.phone_number }}" class="input-field" placeholder="0812345678">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ที่อยู่</label>
+                            <textarea name="address" rows="3" class="input-field" placeholder="ที่อยู่สำหรับจัดส่ง">{{ user.address }}</textarea>
+                        </div>
+                        
+                        <div class="md:col-span-2 border-t pt-4 mt-2">
+                            <h3 class="text-lg font-semibold mb-4">เปลี่ยนรหัสผ่าน (ถ้าต้องการ)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านปัจจุบัน</label>
+                                    <input type="password" name="current_password" class="input-field" placeholder="ใส่รหัสผ่านปัจจุบันถ้าต้องการเปลี่ยน">
+                                </div>
+                                <div></div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านใหม่</label>
+                                    <input type="password" name="new_password" class="input-field" placeholder="รหัสผ่านใหม่">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">ยืนยันรหัสผ่านใหม่</label>
+                                    <input type="password" name="confirm_password" class="input-field" placeholder="ยืนยันรหัสผ่านใหม่">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex space-x-4">
+                        <button type="submit" class="btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                        <button type="button" @click="editing = false" class="btn-secondary">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Motorcycles Section (Only for customers) -->
+        {% if not user.is_mechanic %}
+        <div class="card">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">🏍️ รถของฉัน</h2>
+                <button @click="addingMotorcycle = !addingMotorcycle" 
+                        x-text="addingMotorcycle ? 'ยกเลิก' : '+ เพิ่มรถ'"
+                        :class="addingMotorcycle ? 'btn-secondary' : 'btn-primary'">
+                </button>
+            </div>
+
+            <!-- Add Motorcycle Form -->
+            <div x-show="addingMotorcycle" x-transition class="mb-6 p-4 bg-gradient-to-r from-red-50 to-amber-50 rounded-lg" style="display: none;">
+                <h3 class="text-lg font-semibold mb-4">เพิ่มรถใหม่</h3>
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_motorcycle">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ยี่ห้อ *</label>
+                            <input type="text" name="brand" class="input-field" required placeholder="เช่น Honda, Yamaha">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">รุ่น *</label>
+                            <input type="text" name="model" class="input-field" required placeholder="เช่น CBR650R, MT-09">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ปี *</label>
+                            <input type="number" name="year" class="input-field" required min="1990" max="2030" placeholder="2024">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ซีซี *</label>
+                            <input type="number" name="cc" class="input-field" required min="150" placeholder="650">
+                        </div>
+                    </div>
+                    <div class="mt-4 flex space-x-2">
+                        <button type="submit" class="btn-primary">บันทึก</button>
+                        <button type="button" @click="addingMotorcycle = false" class="btn-secondary">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Motorcycle List -->
+            {% if motorcycles %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for motorcycle in motorcycles %}
+                <div class="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-300 hover:shadow-lg transition-all duration-300">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-900">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
+                        <span class="badge-gold">{{ motorcycle.cc }} cc</span>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                        <p><strong>ปี:</strong> {{ motorcycle.year }}</p>
+                        <p><strong>เพิ่มเมื่อ:</strong> {{ motorcycle.created_at|date:"d/m/Y" }}</p>
+                    </div>
+                    <form method="POST" action="{% url 'profile' %}" class="mt-3" onsubmit="return confirm('ต้องการลบรถคันนี้?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_motorcycle">
+                        <input type="hidden" name="motorcycle_id" value="{{ motorcycle.id }}">
+                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">🗑️ ลบ</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12 bg-gray-50 rounded-lg">
+                <p class="text-gray-500 mb-2">ยังไม่มีข้อมูลรถ</p>
+                <button @click="addingMotorcycle = true" class="btn-primary">เพิ่มรถคันแรก</button>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
