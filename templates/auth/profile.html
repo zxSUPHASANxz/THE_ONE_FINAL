@@ -55,7 +55,10 @@
             
             <!-- Edit Mode -->
             <div x-show="editing" style="display: none;">
-                <form method="POST" action="{% url 'profile' %}">
+                <!-- Alert Container -->
+                <div id="profileAlertContainer" class="mb-6"></div>
+
+                <form id="profileForm" method="POST" action="{% url 'profile' %}">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="update_profile">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,7 +70,8 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
-                            <input type="email" name="email" value="{{ user.email }}" class="input-field" required>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" class="input-field" required>
+                            <p id="emailError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                         
                         <div>
@@ -77,12 +81,13 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
-                            <input type="tel" name="phone_number" value="{{ user.phone_number }}" class="input-field" placeholder="0812345678">
+                            <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}" class="input-field" placeholder="0812345678" pattern="[0-9]{10}" maxlength="10">
+                            <p id="phoneError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">ที่อยู่</label>
-                            <textarea name="address" rows="3" class="input-field" placeholder="ที่อยู่สำหรับจัดส่ง">{{ user.address }}</textarea>
+                            <textarea id="address" name="address" rows="3" class="input-field" placeholder="ที่อยู่สำหรับจัดส่ง">{{ user.address }}</textarea>
                         </div>
                         
                         <div class="md:col-span-2 border-t pt-4 mt-2">
@@ -90,23 +95,49 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านปัจจุบัน</label>
-                                    <input type="password" name="current_password" class="input-field" placeholder="ใส่รหัสผ่านปัจจุบันถ้าต้องการเปลี่ยน">
+                                    <div class="relative">
+                                        <input type="password" id="current_password" name="current_password" class="input-field pr-12" placeholder="ใส่รหัสผ่านปัจจุบันถ้าต้องการเปลี่ยน">
+                                        <button type="button" id="toggleCurrentPassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none" tabindex="-1">
+                                            <span id="currentPasswordIcon">👁️</span>
+                                        </button>
+                                    </div>
+                                    <p id="currentPasswordError" class="text-xs text-red-500 hidden mt-1"></p>
                                 </div>
                                 <div></div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านใหม่</label>
-                                    <input type="password" name="new_password" class="input-field" placeholder="รหัสผ่านใหม่">
+                                    <div class="relative">
+                                        <input type="password" id="new_password" name="new_password" class="input-field pr-12" placeholder="รหัสผ่านใหม่" minlength="8">
+                                        <button type="button" id="toggleNewPassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none" tabindex="-1">
+                                            <span id="newPasswordIcon">👁️</span>
+                                        </button>
+                                    </div>
+                                    <p id="newPasswordError" class="text-xs text-red-500 hidden mt-1"></p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">ยืนยันรหัสผ่านใหม่</label>
-                                    <input type="password" name="confirm_password" class="input-field" placeholder="ยืนยันรหัสผ่านใหม่">
+                                    <div class="relative">
+                                        <input type="password" id="confirm_password" name="confirm_password" class="input-field pr-12" placeholder="ยืนยันรหัสผ่านใหม่" minlength="8">
+                                        <button type="button" id="toggleConfirmPassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none" tabindex="-1">
+                                            <span id="confirmPasswordIcon">👁️</span>
+                                        </button>
+                                    </div>
+                                    <p id="confirmPasswordError" class="text-xs text-red-500 hidden mt-1"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="mt-6 flex space-x-4">
-                        <button type="submit" class="btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                        <button type="submit" id="profileSubmitBtn" class="btn-primary">
+                            <span id="profileSubmitText">บันทึกการเปลี่ยนแปลง</span>
+                            <span id="profileSubmitSpinner" class="hidden">
+                                <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                        </button>
                         <button type="button" @click="editing = false" class="btn-secondary">ยกเลิก</button>
                     </div>
                 </form>
@@ -127,29 +158,45 @@
             <!-- Add Motorcycle Form -->
             <div x-show="addingMotorcycle" x-transition class="mb-6 p-4 bg-gradient-to-r from-red-50 to-amber-50 rounded-lg" style="display: none;">
                 <h3 class="text-lg font-semibold mb-4">เพิ่มรถใหม่</h3>
-                <form method="POST" action="{% url 'profile' %}">
+                
+                <!-- Alert Container -->
+                <div id="motorcycleAlertContainer" class="mb-4"></div>
+
+                <form id="addMotorcycleForm" method="POST" action="{% url 'profile' %}">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="add_motorcycle">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">ยี่ห้อ *</label>
-                            <input type="text" name="brand" class="input-field" required placeholder="เช่น Honda, Yamaha">
+                            <input type="text" id="moto_brand" name="brand" class="input-field" required placeholder="เช่น Honda, Yamaha">
+                            <p id="motoBrandError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">รุ่น *</label>
-                            <input type="text" name="model" class="input-field" required placeholder="เช่น CBR650R, MT-09">
+                            <input type="text" id="moto_model" name="model" class="input-field" required placeholder="เช่น CBR650R, MT-09">
+                            <p id="motoModelError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">ปี *</label>
-                            <input type="number" name="year" class="input-field" required min="1990" max="2030" placeholder="2024">
+                            <input type="number" id="moto_year" name="year" class="input-field" required min="1990" max="2030" placeholder="2024">
+                            <p id="motoYearError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">ซีซี *</label>
-                            <input type="number" name="cc" class="input-field" required min="150" placeholder="650">
+                            <input type="number" id="moto_cc" name="cc" class="input-field" required min="150" placeholder="650">
+                            <p id="motoCcError" class="text-xs text-red-500 hidden mt-1"></p>
                         </div>
                     </div>
                     <div class="mt-4 flex space-x-2">
-                        <button type="submit" class="btn-primary">บันทึก</button>
+                        <button type="submit" id="motorcycleSubmitBtn" class="btn-primary">
+                            <span id="motorcycleSubmitText">บันทึก</span>
+                            <span id="motorcycleSubmitSpinner" class="hidden">
+                                <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                        </button>
                         <button type="button" @click="addingMotorcycle = false" class="btn-secondary">ยกเลิก</button>
                     </div>
                 </form>
@@ -187,4 +234,355 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    // ==================== Profile Form JavaScript ====================
+    
+    const profileForm = document.getElementById('profileForm');
+    const profileSubmitBtn = document.getElementById('profileSubmitBtn');
+    const profileSubmitText = document.getElementById('profileSubmitText');
+    const profileSubmitSpinner = document.getElementById('profileSubmitSpinner');
+    const profileAlertContainer = document.getElementById('profileAlertContainer');
+
+    // Input fields
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone_number');
+    const addressInput = document.getElementById('address');
+    const currentPasswordInput = document.getElementById('current_password');
+    const newPasswordInput = document.getElementById('new_password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+
+    // Error elements
+    const emailError = document.getElementById('emailError');
+    const phoneError = document.getElementById('phoneError');
+    const currentPasswordError = document.getElementById('currentPasswordError');
+    const newPasswordError = document.getElementById('newPasswordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // Toggle password buttons
+    const toggleCurrentPassword = document.getElementById('toggleCurrentPassword');
+    const toggleNewPassword = document.getElementById('toggleNewPassword');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const currentPasswordIcon = document.getElementById('currentPasswordIcon');
+    const newPasswordIcon = document.getElementById('newPasswordIcon');
+    const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
+
+    // Show alert
+    function showProfileAlert(message, type = 'info') {
+        const colors = {
+            success: 'bg-green-50 border-green-500 text-green-800',
+            error: 'bg-red-50 border-red-500 text-red-800',
+            warning: 'bg-yellow-50 border-yellow-500 text-yellow-800',
+            info: 'bg-blue-50 border-blue-500 text-blue-800'
+        };
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        profileAlertContainer.innerHTML = `
+            <div class="${colors[type]} border-l-4 p-4 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-3">${icons[type]}</span>
+                    <p class="font-medium">${message}</p>
+                </div>
+            </div>
+        `;
+
+        profileAlertContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        setTimeout(() => {
+            profileAlertContainer.innerHTML = '';
+        }, 5000);
+    }
+
+    // Set loading state
+    function setProfileLoading(isLoading) {
+        if (isLoading) {
+            profileSubmitBtn.disabled = true;
+            profileSubmitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            profileSubmitText.classList.add('hidden');
+            profileSubmitSpinner.classList.remove('hidden');
+        } else {
+            profileSubmitBtn.disabled = false;
+            profileSubmitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            profileSubmitText.classList.remove('hidden');
+            profileSubmitSpinner.classList.add('hidden');
+        }
+    }
+
+    // Show field error
+    function showFieldError(input, errorElement, message) {
+        input.classList.add('border-red-500', 'bg-red-50');
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+    }
+
+    // Clear field error
+    function clearFieldError(input, errorElement) {
+        input.classList.remove('border-red-500', 'bg-red-50');
+        input.classList.add('border-green-500', 'bg-green-50');
+        errorElement.classList.add('hidden');
+    }
+
+    // Validate email
+    function validateEmail() {
+        const email = emailInput.value.trim();
+        const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        
+        if (!emailPattern.test(email)) {
+            showFieldError(emailInput, emailError, 'รูปแบบอีเมลไม่ถูกต้อง');
+            return false;
+        }
+        
+        clearFieldError(emailInput, emailError);
+        return true;
+    }
+
+    // Validate phone
+    function validatePhone() {
+        const phone = phoneInput.value.trim();
+        
+        if (phone.length === 0) {
+            clearFieldError(phoneInput, phoneError);
+            return true;
+        }
+        
+        const phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+            showFieldError(phoneInput, phoneError, 'เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก');
+            return false;
+        }
+        
+        if (!phone.startsWith('0')) {
+            showFieldError(phoneInput, phoneError, 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 0');
+            return false;
+        }
+        
+        clearFieldError(phoneInput, phoneError);
+        return true;
+    }
+
+    // Validate password change
+    function validatePasswordChange() {
+        const currentPassword = currentPasswordInput.value;
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        
+        // If no password fields are filled, skip validation
+        if (!currentPassword && !newPassword && !confirmPassword) {
+            return true;
+        }
+        
+        // If any password field is filled, all must be filled
+        if (!currentPassword) {
+            showFieldError(currentPasswordInput, currentPasswordError, 'กรุณากรอกรหัสผ่านปัจจุบัน');
+            return false;
+        }
+        
+        if (!newPassword) {
+            showFieldError(newPasswordInput, newPasswordError, 'กรุณากรอกรหัสผ่านใหม่');
+            return false;
+        }
+        
+        if (newPassword.length < 8) {
+            showFieldError(newPasswordInput, newPasswordError, 'รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร');
+            return false;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            showFieldError(confirmPasswordInput, confirmPasswordError, 'รหัสผ่านไม่ตรงกัน');
+            return false;
+        }
+        
+        clearFieldError(currentPasswordInput, currentPasswordError);
+        clearFieldError(newPasswordInput, newPasswordError);
+        clearFieldError(confirmPasswordInput, confirmPasswordError);
+        return true;
+    }
+
+    // Validate profile form
+    function validateProfileForm() {
+        const isEmailValid = validateEmail();
+        const isPhoneValid = validatePhone();
+        const isPasswordValid = validatePasswordChange();
+        
+        return isEmailValid && isPhoneValid && isPasswordValid;
+    }
+
+    // Toggle password visibility
+    if (toggleCurrentPassword) {
+        toggleCurrentPassword.addEventListener('click', () => {
+            const type = currentPasswordInput.type === 'password' ? 'text' : 'password';
+            currentPasswordInput.type = type;
+            currentPasswordIcon.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    }
+
+    if (toggleNewPassword) {
+        toggleNewPassword.addEventListener('click', () => {
+            const type = newPasswordInput.type === 'password' ? 'text' : 'password';
+            newPasswordInput.type = type;
+            newPasswordIcon.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    }
+
+    if (toggleConfirmPassword) {
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+            confirmPasswordInput.type = type;
+            confirmPasswordIcon.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    }
+
+    // Real-time validation
+    if (emailInput) emailInput.addEventListener('blur', validateEmail);
+    if (phoneInput) phoneInput.addEventListener('blur', validatePhone);
+    if (newPasswordInput) newPasswordInput.addEventListener('input', () => {
+        if (newPasswordInput.value.length > 0) {
+            validatePasswordChange();
+        }
+    });
+    if (confirmPasswordInput) confirmPasswordInput.addEventListener('input', () => {
+        if (confirmPasswordInput.value.length > 0) {
+            validatePasswordChange();
+        }
+    });
+
+    // Handle profile form submission
+    if (profileForm) {
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            profileAlertContainer.innerHTML = '';
+            
+            if (!validateProfileForm()) {
+                showProfileAlert('กรุณาแก้ไขข้อมูลที่ไม่ถูกต้อง', 'error');
+                return;
+            }
+            
+            const formData = new FormData(profileForm);
+            const csrfToken = formData.get('csrfmiddlewaretoken');
+            
+            setProfileLoading(true);
+            
+            try {
+                const response = await fetch('/api/profile/', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email: emailInput.value.trim(),
+                        phone_number: phoneInput.value.trim() || null,
+                        address: addressInput.value.trim() || null,
+                        current_password: currentPasswordInput.value || null,
+                        new_password: newPasswordInput.value || null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showProfileAlert('อัปเดตโปรไฟล์สำเร็จ!', 'success');
+                    
+                    // Clear password fields
+                    currentPasswordInput.value = '';
+                    newPasswordInput.value = '';
+                    confirmPasswordInput.value = '';
+                    
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showProfileAlert(data.message || data.detail || 'เกิดข้อผิดพลาด', 'error');
+                }
+            } catch (error) {
+                showProfileAlert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
+            } finally {
+                setProfileLoading(false);
+            }
+        });
+    }
+
+    // ==================== Add Motorcycle Form JavaScript ====================
+    
+    const addMotorcycleForm = document.getElementById('addMotorcycleForm');
+    const motorcycleSubmitBtn = document.getElementById('motorcycleSubmitBtn');
+    const motorcycleSubmitText = document.getElementById('motorcycleSubmitText');
+    const motorcycleSubmitSpinner = document.getElementById('motorcycleSubmitSpinner');
+    const motorcycleAlertContainer = document.getElementById('motorcycleAlertContainer');
+
+    // Show motorcycle alert
+    function showMotorcycleAlert(message, type = 'info') {
+        const colors = {
+            success: 'bg-green-50 border-green-500 text-green-800',
+            error: 'bg-red-50 border-red-500 text-red-800',
+            warning: 'bg-yellow-50 border-yellow-500 text-yellow-800',
+            info: 'bg-blue-50 border-blue-500 text-blue-800'
+        };
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        motorcycleAlertContainer.innerHTML = `
+            <div class="${colors[type]} border-l-4 p-3 rounded-lg">
+                <div class="flex items-center">
+                    <span class="text-xl mr-2">${icons[type]}</span>
+                    <p class="font-medium text-sm">${message}</p>
+                </div>
+            </div>
+        `;
+
+        setTimeout(() => {
+            motorcycleAlertContainer.innerHTML = '';
+        }, 5000);
+    }
+
+    // Set motorcycle loading
+    function setMotorcycleLoading(isLoading) {
+        if (isLoading) {
+            motorcycleSubmitBtn.disabled = true;
+            motorcycleSubmitBtn.classList.add('opacity-75');
+            motorcycleSubmitText.classList.add('hidden');
+            motorcycleSubmitSpinner.classList.remove('hidden');
+        } else {
+            motorcycleSubmitBtn.disabled = false;
+            motorcycleSubmitBtn.classList.remove('opacity-75');
+            motorcycleSubmitText.classList.remove('hidden');
+            motorcycleSubmitSpinner.classList.add('hidden');
+        }
+    }
+
+    // Handle motorcycle form submission
+    if (addMotorcycleForm) {
+        addMotorcycleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            motorcycleAlertContainer.innerHTML = '';
+            
+            const formData = new FormData(addMotorcycleForm);
+            const csrfToken = formData.get('csrfmiddlewaretoken');
+            
+            setMotorcycleLoading(true);
+            
+            try {
+                // For now, submit traditionally since we need proper API endpoint
+                addMotorcycleForm.submit();
+            } catch (error) {
+                showMotorcycleAlert('เกิดข้อผิดพลาด', 'error');
+                setMotorcycleLoading(false);
+            }
+        });
+    }
+</script>
+
 {% endblock %}

@@ -1,90 +1,492 @@
 {% extends 'base.html' %}
 
-{% block title %}รถของฉัน - THE ONE{% endblock %}
+{% block title %}จัดการรถจักรยานยนต์ - THE ONE{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto py-6">
-    <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-2xl font-bold">รถของฉัน</h2>
-        <button @click="showAddForm = true" class="btn-primary">
-            เพิ่มรถ
-        </button>
-    </div>
-    
-    <!-- Add Motorcycle Form Modal -->
-    <div x-data="{ showAddForm: false }" x-show="showAddForm" 
-         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-         style="display: none;">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">เพิ่มข้อมูลรถ</h3>
-                <form method="POST" action="#" class="space-y-4">
-                    {% csrf_token %}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ยี่ห้อ</label>
-                        <input type="text" name="brand" required class="input-field">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">รุ่น</label>
-                        <input type="text" name="model" required class="input-field">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ปี</label>
-                        <input type="number" name="year" required class="input-field" min="1990" max="2025">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ความจุ (cc)</label>
-                        <input type="number" name="cc" required class="input-field" min="150">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">ทะเบียน</label>
-                        <input type="text" name="license_plate" required class="input-field">
-                    </div>
-                    <div class="flex space-x-2">
-                        <button type="submit" class="btn-primary flex-1">บันทึก</button>
-                        <button type="button" @click="showAddForm = false" class="btn-secondary flex-1">ยกเลิก</button>
-                    </div>
-                </form>
-            </div>
+<div class="py-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
+                รถจักรยานยนต์ของฉัน
+            </h1>
         </div>
-    </div>
-    
-    <!-- Motorcycle List -->
-    {% if motorcycles %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for motorcycle in motorcycles %}
-        <div class="card">
-            <div class="flex justify-between items-start mb-4">
-                <h3 class="text-lg font-semibold">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
-                <span class="px-2 py-1 bg-primary-100 text-primary-800 text-xs rounded-full">
-                    {{ motorcycle.cc }} cc
-                </span>
+
+        <!-- Add Motorcycle Form -->
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8 mb-8">
+            <div class="flex items-center mb-6">
+                <div class="text-5xl mr-4">🏍️</div>
+                <h2 class="text-2xl font-bold text-white">เพิ่มรถใหม่</h2>
             </div>
-            
-            <div class="space-y-2 text-sm text-gray-600">
-                <p><strong>ทะเบียน:</strong> {{ motorcycle.license_plate }}</p>
-                <p><strong>ปี:</strong> {{ motorcycle.year }}</p>
-                <p><strong>ประเภท:</strong> {{ motorcycle.get_bike_type_display }}</p>
-                {% if motorcycle.color %}
-                <p><strong>สี:</strong> {{ motorcycle.color }}</p>
+
+            <!-- Alert Messages -->
+            <div id="alertContainer" class="mb-6"></div>
+
+            <form id="addMotorcycleForm" class="space-y-6">
+                {% csrf_token %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            ยี่ห้อ <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="brand" name="brand" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="เช่น Honda, Yamaha, Kawasaki">
+                        <p id="brandError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            รุ่น <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="model" name="model" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="เช่น CBR1000RR, YZF-R1">
+                        <p id="modelError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            ทะเบียน <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="license_plate" name="license_plate" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="กข 1234">
+                        <p id="licensePlateError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            ปี <span class="text-red-400">*</span>
+                        </label>
+                        <input type="number" id="year" name="year" min="1990" max="2026" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="2024">
+                        <p id="yearError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            ขนาดเครื่องยนต์ (CC) <span class="text-red-400">*</span>
+                        </label>
+                        <input type="number" id="cc" name="cc" min="50" max="2000" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="เช่น 150, 1000">
+                        <p id="ccError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-2">
+                        หมายเหตุ
+                    </label>
+                    <textarea id="notes" name="notes" rows="2" class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับรถ"></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-6 py-4 rounded-lg font-extrabold text-lg transition-all duration-200 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <span id="submitText">+ เพิ่มรถ</span>
+                    <span id="submitSpinner" class="hidden">
+                        <svg class="animate-spin h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        กำลังเพิ่ม...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Motorcycles List -->
+        {% if motorcycles %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for motorcycle in motorcycles %}
+            <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-xl p-6 hover:border-gold-500 transition-all duration-300">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="text-6xl">🏍️</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-white mb-1">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
+                        <p class="text-gray-400">ทะเบียน: <span class="text-gold-400 font-semibold">{{ motorcycle.license_plate }}</span></p>
+                        {% if motorcycle.year %}
+                        <p class="text-gray-500 text-sm">ปี: {{ motorcycle.year }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if motorcycle.notes %}
+                <div class="bg-gray-700 rounded-lg p-3 mb-4">
+                    <p class="text-gray-400 text-xs mb-1">หมายเหตุ</p>
+                    <p class="text-gray-200 text-sm">{{ motorcycle.notes }}</p>
+                </div>
                 {% endif %}
-                <p><strong>เลขไมล์:</strong> {{ motorcycle.mileage|default:"0" }} km</p>
+
+                <div class="flex gap-3">
+                    <button 
+                        onclick="editMotorcycle({{ motorcycle.id }}, '{{ motorcycle.brand|escapejs }}', '{{ motorcycle.model|escapejs }}', '{{ motorcycle.license_plate|escapejs }}', {{ motorcycle.year|default:'null' }}, {{ motorcycle.cc|default:'null' }}, '{{ motorcycle.notes|default:''|escapejs }}')" 
+                        class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                        แก้ไข
+                    </button>
+                    <button 
+                        onclick="confirmDelete({{ motorcycle.id }}, '{{ motorcycle.brand|escapejs }} {{ motorcycle.model|escapejs }} ({{ motorcycle.license_plate|escapejs }})')" 
+                        class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                        ลบ
+                    </button>
+                </div>
             </div>
-            
-            <div class="mt-4 pt-4 border-t flex space-x-2">
-                <button class="text-sm text-primary-600 hover:text-primary-800">แก้ไข</button>
-                <button class="text-sm text-red-600 hover:text-red-800">ลบ</button>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-16 text-center">
+            <div class="text-8xl mb-6">🏍️</div>
+            <h2 class="text-2xl font-bold text-gray-300 mb-3">ยังไม่มีรถในระบบ</h2>
+            <p class="text-gray-500">กรอกฟอร์มด้านบนเพื่อเพิ่มรถของคุณ</p>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="card text-center py-12">
-        <p class="text-gray-500 mb-4">คุณยังไม่มีข้อมูลรถ</p>
-        <button @click="showAddForm = true" class="btn-primary inline-block">
-            เพิ่มรถเลย
-        </button>
-    </div>
-    {% endif %}
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" onclick="if(event.target === this) closeDeleteModal()">
+    <div class="bg-gray-800 border-2 border-red-600 rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+        <div class="text-center mb-6">
+            <div class="text-6xl mb-4">⚠️</div>
+            <h3 class="text-2xl font-bold text-red-500 mb-2">ยืนยันการลบ</h3>
+            <p class="text-gray-300">คุณแน่ใจหรือไม่ที่จะลบ</p>
+            <p id="deleteMotorcycleName" class="text-gold-400 font-bold mt-2"></p>
+            <p class="text-red-400 text-sm mt-3">⚠️ การลบจะไม่สามารถย้อนกลับได้</p>
+        </div>
+        
+        <div class="flex gap-3">
+            <button onclick="closeDeleteModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                ยกเลิก
+            </button>
+            <button id="confirmDeleteBtn" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                <span id="deleteText">ลบ</span>
+                <span id="deleteSpinner" class="hidden">⏳</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== DOM Elements ====================
+    const form = document.getElementById('addMotorcycleForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const alertContainer = document.getElementById('alertContainer');
+
+    const brandInput = document.getElementById('brand');
+    const modelInput = document.getElementById('model');
+    const licensePlateInput = document.getElementById('license_plate');
+    const yearInput = document.getElementById('year');
+    const ccInput = document.getElementById('cc');
+    const notesInput = document.getElementById('notes');
+
+    // Delete Modal
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteMotorcycleName = document.getElementById('deleteMotorcycleName');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const deleteText = document.getElementById('deleteText');
+    const deleteSpinner = document.getElementById('deleteSpinner');
+    
+    let editingMotorcycleId = null;
+    let deletingMotorcycleId = null;
+
+    // ==================== Utility Functions ====================
+    
+    /**
+     * Show alert message
+     */
+    function showAlert(message, type = 'info') {
+        const colors = {
+            success: 'bg-green-600 border-green-700',
+            error: 'bg-red-600 border-red-700',
+            warning: 'bg-yellow-600 border-yellow-700',
+            info: 'bg-blue-600 border-blue-700'
+        };
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        alertContainer.innerHTML = `
+            <div class="${colors[type]} border-2 px-5 py-4 rounded-lg shadow-xl animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <span class="text-3xl">${icons[type]}</span>
+                    <p class="text-white font-bold text-base">${message}</p>
+                </div>
+            </div>
+        `;
+
+        alertContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        setTimeout(() => {
+            alertContainer.innerHTML = '';
+        }, 5000);
+    }
+
+    /**
+     * Set loading state
+     */
+    function setLoading(isLoading) {
+        if (isLoading) {
+            submitBtn.disabled = true;
+            submitText.classList.add('hidden');
+            submitSpinner.classList.remove('hidden');
+        } else {
+            submitBtn.disabled = false;
+            submitText.classList.remove('hidden');
+            submitSpinner.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Validate form
+     */
+    function validateForm() {
+        let isValid = true;
+
+        // Validate brand
+        if (brandInput.value.trim().length < 2) {
+            isValid = false;
+        }
+
+        // Validate model
+        if (modelInput.value.trim().length < 1) {
+            isValid = false;
+        }
+
+        // Validate license plate
+        if (licensePlateInput.value.trim().length < 2) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // ==================== Form Submission ====================
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Clear previous alerts
+        alertContainer.innerHTML = '';
+
+        // Validate form
+        if (!validateForm()) {
+            showAlert('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+            return;
+        }
+
+        // Prepare data
+        const formData = {
+            brand: brandInput.value.trim(),
+            model: modelInput.value.trim(),
+            license_plate: licensePlateInput.value.trim(),
+            year: yearInput.value ? parseInt(yearInput.value) : new Date().getFullYear(),
+            cc: ccInput.value ? parseInt(ccInput.value) : 150,
+            notes: notesInput.value.trim() || null
+        };
+
+        // Get CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Determine if editing or creating
+        const isEditing = editingMotorcycleId !== null;
+        const url = isEditing ? `/booking/api/motorcycles/${editingMotorcycleId}/` : '/booking/api/motorcycles/';
+        const method = isEditing ? 'PUT' : 'POST';
+
+        // Set loading
+        setLoading(true);
+
+        try {
+            console.log(`${isEditing ? 'Updating' : 'Creating'} motorcycle:`, formData);
+            console.log('API URL:', url);
+            console.log('Method:', method);
+            console.log('CSRF Token:', csrfToken);
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: 'same-origin',  // Important: Send cookies with request
+                body: JSON.stringify(formData)
+            });
+
+            console.log('Response status:', response.status);
+            
+            let data;
+            try {
+                data = await response.json();
+                console.log('Response data:', data);
+            } catch (e) {
+                console.error('Failed to parse JSON:', e);
+                data = {};
+            }
+
+            if (response.ok) {
+                // Success
+                console.log(`${isEditing ? 'Updated' : 'Added'} successfully:`, data);
+                showAlert(`${isEditing ? 'แก้ไข' : 'เพิ่ม'}รถสำเร็จ! กำลังโหลดหน้าใหม่...`, 'success');
+                
+                // Reset form and editing mode
+                form.reset();
+                cancelEdit();
+
+                // Reload page after 1.5 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+
+            } else if (response.status === 400) {
+                // Validation error
+                console.error('Validation error:', data);
+                if (data.license_plate) {
+                    showAlert('ทะเบียนนี้มีอยู่ในระบบแล้ว', 'error');
+                } else if (data.error || data.detail) {
+                    showAlert(data.error || data.detail || 'ข้อมูลไม่ถูกต้อง', 'error');
+                } else {
+                    // Show all validation errors
+                    let errorMsg = 'ข้อมูลไม่ถูกต้อง:\n';
+                    Object.keys(data).forEach(key => {
+                        if (Array.isArray(data[key])) {
+                            errorMsg += `${key}: ${data[key].join(', ')}\n`;
+                        } else {
+                            errorMsg += `${key}: ${data[key]}\n`;
+                        }
+                    });
+                    showAlert(errorMsg, 'error');
+                }
+
+            } else if (response.status === 401 || response.status === 403) {
+                // Authentication error
+                console.error('Authentication error:', data);
+                showAlert('กรุณาเข้าสู่ระบบก่อนเพิ่มรถ', 'error');
+                setTimeout(() => {
+                    window.location.href = '/login/';
+                }, 2000);
+
+            } else if (response.status >= 500) {
+                // Server error
+                console.error('Server error:', data);
+                showAlert('เกิดข้อผิดพลาดของเซิร์ฟเวอร์ กรุณาลองใหม่ภายหลัง', 'error');
+
+            } else {
+                // Other errors
+                showAlert(data.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
+            }
+
+        } catch (error) {
+            // Network error
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                showAlert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต', 'error');
+            } else {
+                showAlert('เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองใหม่อีกครั้ง', 'error');
+                console.error('Error:', error);
+            }
+
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    // ==================== Edit Motorcycle ====================
+    
+    function editMotorcycle(id, brand, model, licensePlate, year, cc, notes) {
+        console.log('Editing motorcycle:', id);
+        
+        // Set editing mode
+        editingMotorcycleId = id;
+        
+        // Fill form with existing data
+        brandInput.value = brand;
+        modelInput.value = model;
+        licensePlateInput.value = licensePlate;
+        yearInput.value = year || new Date().getFullYear();
+        ccInput.value = cc || 150;
+        notesInput.value = notes || '';
+        
+        // Change button text
+        submitText.textContent = 'บันทึกการแก้ไข';
+        submitBtn.classList.remove('bg-gold-500', 'hover:bg-gold-600');
+        submitBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        
+        // Scroll to form
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Show alert
+        showAlert('กำลังแก้ไขข้อมูล: ' + brand + ' ' + model, 'info');
+    }
+
+    // ==================== Delete Motorcycle ====================
+    
+    function confirmDelete(id, motorcycleName) {
+        console.log('Confirming delete:', id, motorcycleName);
+        deletingMotorcycleId = id;
+        deleteMotorcycleName.textContent = motorcycleName;
+        deleteModal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        deleteModal.classList.add('hidden');
+        deletingMotorcycleId = null;
+    }
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!deletingMotorcycleId) return;
+
+        // Get CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Set loading
+        deleteText.classList.add('hidden');
+        deleteSpinner.classList.remove('hidden');
+        confirmDeleteBtn.disabled = true;
+
+        try {
+            const response = await fetch(`/booking/api/motorcycles/${deletingMotorcycleId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: 'same-origin'
+            });
+
+            if (response.ok || response.status === 204) {
+                closeDeleteModal();
+                showAlert('ลบรถสำเร็จ! กำลังโหลดหน้าใหม่...', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                const data = await response.json().catch(() => ({}));
+                closeDeleteModal();
+                showAlert(data.error || data.detail || 'ไม่สามารถลบรถได้ กรุณาลองใหม่อีกครั้ง', 'error');
+            }
+
+        } catch (error) {
+            console.error('Delete error:', error);
+            closeDeleteModal();
+            showAlert('เกิดข้อผิดพลาดในการลบ กรุณาลองใหม่อีกครั้ง', 'error');
+
+        } finally {
+            deleteText.classList.remove('hidden');
+            deleteSpinner.classList.add('hidden');
+            confirmDeleteBtn.disabled = false;
+        }
+    });
+
+    // ==================== Cancel Edit Mode ====================
+    
+    function cancelEdit() {
+        editingMotorcycleId = null;
+        form.reset();
+        submitText.textContent = '+ เพิ่มรถ';
+        submitBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        submitBtn.classList.add('bg-gold-500', 'hover:bg-gold-600');
+    }
+
+    // Add cancel button when editing (optional)
+    brandInput.addEventListener('input', () => {
+        if (editingMotorcycleId && brandInput.value === '') {
+            cancelEdit();
+        }
+    });
+</script>
 {% endblock %}

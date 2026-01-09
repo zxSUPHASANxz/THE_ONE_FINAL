@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ChatSession, ChatMessage, MotorcycleKnowledge
+from .models import ChatSession, ChatMessage, KnowlageDatabase
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
@@ -22,11 +22,12 @@ class ChatSessionSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'started_at')
 
 
-class MotorcycleKnowledgeSerializer(serializers.ModelSerializer):
-    """Serializer for MotorcycleKnowledge model"""
+class KnowlageDatabaseSerializer(serializers.ModelSerializer):
+    """Serializer for KnowlageDatabase model"""
     
     class Meta:
-        model = MotorcycleKnowledge
-        fields = ('id', 'brand', 'model', 'problem_category', 'symptom', 
-                  'solution', 'source_url', 'scraped_data', 'created_at', 'updated_at')
+        model = KnowlageDatabase
+        fields = ('id', 'source', 'source_url', 'title', 'content', 'category',
+                  'author', 'brand', 'model', 'price', 'views', 'comments_count',
+                  'raw_data', 'published_at', 'created_at', 'updated_at', 'is_active')
         read_only_fields = ('id', 'created_at', 'updated_at')

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from pgvector.django import VectorField
 
 
 class ChatSession(models.Model):
@@ -69,34 +70,145 @@ class ChatMessage(models.Model):
         return f"{self.get_sender_display()}: {self.message[:50]}"
 
 
-class MotorcycleKnowledge(models.Model):
-    """ฐานความรู้เกี่ยวกับรถจักรยานยนต์ (สำหรับ RAG)"""
-    brand = models.CharField(max_length=100, verbose_name='ยี่ห้อ')
-    model = models.CharField(max_length=100, verbose_name='รุ่น')
-    problem_category = models.CharField(
-        max_length=100,
-        verbose_name='ประเภทปัญหา'
+class KnowlageDatabase(models.Model):
+    """ฐานความรู้รวม - จาก Pantip และ Honda BigBike พร้อม Vector Embeddings"""
+    
+    # Source Info
+    source = models.CharField(
+        max_length=50,
+        verbose_name='แหล่งที่มา',
+        help_text='pantip หรือ honda'
     )
-    symptom = models.TextField(verbose_name='อาการ')
-    solution = models.TextField(verbose_name='วิธีแก้ไข')
     source_url = models.URLField(
+        verbose_name='URL แหล่งที่มา',
         blank=True,
-        null=True,
-        verbose_name='แหล่งที่มา'
+        null=True
     )
-    scraped_data = models.JSONField(
+    
+    # Content
+    title = models.CharField(max_length=500, verbose_name='หัวข้อ/ชื่อรุ่น')
+    content = models.TextField(verbose_name='เนื้อหา/รายละเอียด')
+    category = models.CharField(
+        max_length=100,
+        verbose_name='หมวดหมู่',
+        blank=True
+    )
+    
+    # Metadata (เก็บข้อมูลดิบทั้งหมดเพื่อความยืดหยุ่น)
+    raw_data = models.JSONField(
+        verbose_name='ข้อมูลดิบ JSON',
+        help_text='เก็บข้อมูลทั้งหมดจาก source'
+    )
+    
+    # Additional fields
+    author = models.CharField(
+        max_length=200,
+        verbose_name='ผู้เขียน',
+        blank=True,
+        null=True
+    )
+    brand = models.CharField(
+        max_length=100,
+        verbose_name='ยี่ห้อ',
+        blank=True,
+        null=True
+    )
+    model = models.CharField(
+        max_length=100,
+        verbose_name='รุ่น',
+        blank=True,
+        null=True
+    )
+    price = models.CharField(
+        max_length=50,
+        verbose_name='ราคา',
+        blank=True,
+        null=True
+    )
+    
+    # Stats
+    views = models.IntegerField(default=0, verbose_name='ยอดเข้าชม')
+    comments_count = models.IntegerField(default=0, verbose_name='จำนวนคอมเมนต์')
+    
+    # Timestamps
+    published_at = models.DateTimeField(
+        verbose_name='เผยแพร่เมื่อ',
+        null=True,
+        blank=True
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='สร้างเมื่อ'
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name='อัพเดทล่าสุด'
+    )
+    
+    # Status
+    is_active = models.BooleanField(default=True, verbose_name='ใช้งาน')
+    
+    # Vector Embedding for RAG (768 dimensions for Google Gemini)
+    embedding = VectorField(
+        dimensions=768,
         null=True,
         blank=True,
-        verbose_name='ข้อมูลที่ดึงมา'
+        verbose_name='Vector Embedding'
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='วันที่เพิ่ม')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='วันที่อัปเดต')
     
     class Meta:
-        verbose_name = 'ความรู้เกี่ยวกับรถ'
-        verbose_name_plural = 'ความรู้เกี่ยวกับรถทั้งหมด'
+        db_table = 'DatabaseKnowlage'
+        verbose_name = 'ฐานความรู้'
+        verbose_name_plural = 'ฐานความรู้ทั้งหมด'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['source', 'category']),
+            models.Index(fields=['brand', 'model']),
+            models.Index(fields=['is_active']),
+            models.Index(fields=['-published_at']),
+        ]
     
     def __str__(self):
-        return f"{self.brand} {self.model} - {self.problem_category}"
+        return f"[{self.source}] {self.title[:80]}"
 
+
+class KnowBase(models.Model):
+    """
+    Knowledge Base for RAG - Simple structure optimized for PGVector Store
+    """
+    
+    # Primary Content
+    title = models.CharField(max_length=500, verbose_name='Title', db_index=True)
+    content = models.TextField(verbose_name='Content')
+    
+    # Metadata
+    source = models.CharField(max_length=100, default='honda', db_index=True)
+    brand = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    model = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    category = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    source_url = models.URLField(blank=True, null=True)
+    
+    # Vector Embedding (768 dimensions for Gemini text-embedding-004)
+    # For OpenAI: use 1536 dimensions with import_honda_openai/import_pantip_openai
+    embedding = VectorField(dimensions=768, null=True, blank=True)
+    
+    # Additional data
+    raw_data = models.JSONField(blank=True, null=True)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+    
+    class Meta:
+        db_table = 'knowbase'
+        verbose_name = 'Knowledge Base'
+        verbose_name_plural = 'Knowledge Base'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['source', 'brand']),
+            models.Index(fields=['brand', 'model']),
+        ]
+    
+    def __str__(self):
+        return f"{self.brand} {self.model}" if self.brand and self.model else self.title[:80]

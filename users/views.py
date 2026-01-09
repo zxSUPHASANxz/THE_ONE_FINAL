@@ -13,13 +13,35 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({
-            'user': UserSerializer(user).data,
-            'message': 'สมัครสมาชิกเรียบร้อยแล้ว'
-        }, status=status.HTTP_201_CREATED)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            
+            if serializer.is_valid():
+                user = serializer.save()
+                return Response({
+                    'success': True,
+                    'message': 'สร้างบัญชีสำเร็จ! กรุณาเข้าสู่ระบบ',
+                    'redirect': '/login/',
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email,
+                        'user_type': user.user_type
+                    }
+                }, status=status.HTTP_201_CREATED)
+            else:
+                # Return field-specific errors
+                return Response({
+                    'success': False,
+                    'message': 'ข้อมูลไม่ถูกต้อง',
+                    'errors': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):

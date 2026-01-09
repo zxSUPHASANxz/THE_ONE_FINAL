@@ -3,110 +3,418 @@
 {% block title %}จองคิวซ่อม - THE ONE{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto py-6" x-data="bookingForm()">
-    <div class="card">
-        <h2 class="text-2xl font-bold mb-6">จองคิวซ่อมรถ</h2>
-        
-        {% if messages %}
-        <div class="mb-4">
-            {% for message in messages %}
-            <div class="p-4 rounded {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
-                {{ message }}
+<div class="py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">📅</div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent mb-2">
+                    จองคิวซ่อมรถ
+                </h1>
+                <p class="text-gray-400">กรุณากรอกข้อมูลเพื่อจองคิวซ่อมรถจักรยานยนต์</p>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <form method="POST" action="{% url 'booking_create' %}">
-            {% csrf_token %}
-            
-            <div class="space-y-6">
-                <!-- เลือกรถ -->
+
+            <form method="POST" action="" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Motorcycle Selection -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        เลือกรถของคุณ
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        เลือกรถของคุณ 
+                        <span class="text-red-400">*</span>
                     </label>
-                    {% if motorcycles %}
-                    <select name="motorcycle" required class="input-field">
+                    <select name="motorcycle" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200">
                         <option value="">-- เลือกรถ --</option>
                         {% for motorcycle in motorcycles %}
-                        <option value="{{ motorcycle.id }}">
-                            {{ motorcycle.brand }} {{ motorcycle.model }} ({{ motorcycle.license_plate }})
-                        </option>
+                        <option value="{{ motorcycle.id }}">{{ motorcycle.brand }} {{ motorcycle.model }} ({{ motorcycle.license_plate }})</option>
                         {% endfor %}
                     </select>
-                    {% else %}
-                    <p class="text-red-600">คุณยังไม่มีข้อมูลรถ กรุณา<a href="{% url 'motorcycle_list' %}" class="underline">เพิ่มข้อมูลรถ</a>ก่อน</p>
+                    {% if not motorcycles %}
+                    <p class="mt-2 text-sm text-yellow-400">
+                        ⚠️ คุณยังไม่มีรถในระบบ 
+                        <a href="/booking/motorcycles/" class="text-gold-400 hover:text-gold-300 underline">คลิกเพื่อเพิ่มรถ</a>
+                    </p>
                     {% endif %}
                 </div>
-                
-                <!-- อาการที่พบ -->
+
+                <!-- Service Type -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        อาการที่พบ
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        ประเภทการซ่อม
+                        <span class="text-red-400">*</span>
                     </label>
-                    <textarea name="problem_description" rows="4" required
-                              class="input-field"
-                              placeholder="บอกรายละเอียดอาการที่พบ เช่น รถสตาร์ทไม่ติด เครื่องเสียงดัง เป็นต้น"></textarea>
-                </div>
-                
-                <!-- วันที่นัดหมาย -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        วันที่นัดหมาย
-                    </label>
-                    <input type="date" name="appointment_date" required
-                           :min="minDate"
-                           class="input-field">
-                </div>
-                
-                <!-- เวลานัดหมาย -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        เวลานัดหมาย
-                    </label>
-                    <select name="appointment_time" required class="input-field">
-                        <option value="">-- เลือกเวลา --</option>
-                        <option value="09:00">09:00 น.</option>
-                        <option value="10:00">10:00 น.</option>
-                        <option value="11:00">11:00 น.</option>
-                        <option value="13:00">13:00 น.</option>
-                        <option value="14:00">14:00 น.</option>
-                        <option value="15:00">15:00 น.</option>
-                        <option value="16:00">16:00 น.</option>
+                    <select name="service_type" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200">
+                        <option value="">-- เลือกประเภท --</option>
+                        <option value="maintenance">🔧 ซ่อมบำรุงทั่วไป</option>
+                        <option value="engine">⚙️ ซ่อมเครื่องยนต์</option>
+                        <option value="brake">🛑 ซ่อมเบรค</option>
+                        <option value="electrical">⚡ ระบบไฟฟ้า</option>
+                        <option value="tire">🛞 เปลี่ยนยาง</option>
+                        <option value="other">🔨 อื่นๆ</option>
                     </select>
                 </div>
-                
-                <!-- หมายเหตุเพิ่มเติม -->
+
+                <!-- Description -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        อาการหรือรายละเอียดการซ่อม
+                    </label>
+                    <textarea name="description" rows="4" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200" placeholder="บอกอาการหรือรายละเอียดการซ่อม เช่น รถสตาร์ทไม่ติด, เบรกไม่ค่อยแน่น เป็นต้น"></textarea>
+                </div>
+
+                <!-- Date -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        วันที่ต้องการ
+                        <span class="text-red-400">*</span>
+                    </label>
+                    <input type="date" name="scheduled_date" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200">
+                </div>
+
+                <!-- Time Slot -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        เวลาที่ต้องการ
+                    </label>
+                    <select name="time_slot" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200">
+                        <option value="">-- เลือกเวลา --</option>
+                        <option value="morning">🌅 เช้า (09:00-12:00)</option>
+                        <option value="afternoon">☀️ บ่าย (13:00-16:00)</option>
+                    </select>
+                </div>
+
+                <!-- Additional Notes -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
                         หมายเหตุเพิ่มเติม (ถ้ามี)
                     </label>
-                    <textarea name="notes" rows="2"
-                              class="input-field"
-                              placeholder="ข้อมูลเพิ่มเติมที่ต้องการแจ้ง"></textarea>
+                    <textarea name="notes" rows="2" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200" placeholder="ข้อมูลเพิ่มเติมหรือคำขอพิเศษ"></textarea>
                 </div>
-            </div>
-            
-            <div class="mt-6 flex space-x-4">
-                <button type="submit" class="btn-primary" {% if not motorcycles %}disabled{% endif %}>
-                    จองคิว
-                </button>
-                <a href="{% url 'booking_list' %}" class="btn-secondary">
-                    ดูการจองทั้งหมด
-                </a>
-            </div>
-        </form>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" id="submitBtn" class="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <span id="btnText">จองคิว</span>
+                        <span id="btnLoader" class="hidden">
+                            <svg class="animate-spin inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            กำลังจองคิว...
+                        </span>
+                    </button>
+                    <a href="/booking/" id="viewBookingsBtn" class="flex-1 text-center bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 transform hover:scale-105 shadow-xl">
+                        ดูการจองทั้งหมด
+                    </a>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div id="alertBox" class="hidden mt-4 p-4 rounded-lg"></div>
+            </form>
+        </div>
     </div>
 </div>
-{% endblock %}
 
 {% block extra_js %}
 <script>
-function bookingForm() {
-    return {
-        minDate: new Date().toISOString().split('T')[0]
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const alertBox = document.getElementById('alertBox');
+    const motorcycleSelect = document.querySelector('[name="motorcycle"]');
+    const dateInput = document.querySelector('[name="scheduled_date"]');
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+
+    // Show alert function
+    function showAlert(message, type = 'error') {
+        alertBox.className = `mt-4 p-4 rounded-lg ${
+            type === 'success' 
+                ? 'bg-green-500/20 border-2 border-green-500 text-green-300' 
+                : 'bg-red-500/20 border-2 border-red-500 text-red-300'
+        }`;
+        alertBox.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <span class="text-2xl">${type === 'success' ? '✅' : '⚠️'}</span>
+                <div>
+                    <p class="font-bold">${type === 'success' ? 'สำเร็จ!' : 'เกิดข้อผิดพลาด'}</p>
+                    <p class="text-sm mt-1">${message}</p>
+                </div>
+            </div>
+        `;
+        alertBox.classList.remove('hidden');
+        
+        // Scroll to alert
+        alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Auto hide after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 5000);
+        }
     }
-}
+
+    // Loading state
+    function setLoading(loading) {
+        submitBtn.disabled = loading;
+        if (loading) {
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+        } else {
+            btnText.classList.remove('hidden');
+            btnLoader.classList.add('hidden');
+        }
+    }
+
+    // Validation
+    function validateForm() {
+        const motorcycle = motorcycleSelect.value;
+        const serviceType = document.querySelector('[name="service_type"]').value;
+        const scheduledDate = dateInput.value;
+
+        if (!motorcycle) {
+            showAlert('กรุณาเลือกรถของคุณ');
+            motorcycleSelect.focus();
+            return false;
+        }
+
+        if (!serviceType) {
+            showAlert('กรุณาเลือกประเภทการซ่อม');
+            document.querySelector('[name="service_type"]').focus();
+            return false;
+        }
+
+        if (!scheduledDate) {
+            showAlert('กรุณาเลือกวันที่ต้องการ');
+            dateInput.focus();
+            return false;
+        }
+
+        // Check if date is in the past
+        const selectedDate = new Date(scheduledDate);
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < todayDate) {
+            showAlert('ไม่สามารถเลือกวันที่ในอดีตได้');
+            dateInput.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    // Form submission
+    let isSubmitting = false;
+    let requestSent = false; // Additional flag to track if request was already sent
+    let lastSubmitTime = 0; // Debounce timestamp
+    
+    // Disable form completely during submission
+    function lockForm() {
+        isSubmitting = true;
+        requestSent = true;
+        lastSubmitTime = Date.now();
+        submitBtn.disabled = true;
+        form.style.pointerEvents = 'none';
+        form.style.opacity = '0.6';
+        
+        // Disable all inputs
+        const inputs = form.querySelectorAll('input, select, textarea, button');
+        inputs.forEach(input => input.disabled = true);
+    }
+    
+    // Re-enable form only on error
+    function unlockForm() {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        form.style.pointerEvents = 'auto';
+        form.style.opacity = '1';
+        
+        // Re-enable all inputs
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => input.disabled = false);
+        submitBtn.disabled = false;
+    }
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        // Debounce - prevent submissions within 3 seconds of each other
+        const now = Date.now();
+        if (now - lastSubmitTime < 3000) {
+            console.log('⛔ Submission blocked: Too fast (debounce)');
+            return false;
+        }
+
+        // Prevent double submission - multiple checks
+        if (isSubmitting || requestSent) {
+            console.log('⛔ Submission blocked: Already submitting');
+            return false;
+        }
+
+        // Validate
+        if (!validateForm()) {
+            return false;
+        }
+
+        // Get form data
+        const formData = new FormData(form);
+        const data = {
+            motorcycle: parseInt(formData.get('motorcycle')),
+            service_type_input: formData.get('service_type'),
+            description: formData.get('description') || '',
+            scheduled_date: formData.get('scheduled_date'),
+            time_slot: formData.get('time_slot') || '',
+            notes: formData.get('notes') || '',
+            status: 'pending'
+        };
+
+        console.log('📤 Sending booking data:', data);
+
+        lockForm(); // Lock form completely
+        setLoading(true);
+        alertBox.classList.add('hidden');
+
+        try {
+            const response = await fetch('/booking/api/bookings/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            });
+
+            // Try to parse JSON, fallback to error message
+            let result;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                result = await response.json();
+            } else {
+                // Server returned HTML (error page), create error object
+                result = { error: `เซิร์ฟเวอร์เกิดข้อผิดพลาด (${response.status})` };
+            }
+            console.log('📥 Server response:', response.status, result);
+
+            if (response.ok) {
+                showAlert('✅ จองคิวซ่อมสำเร็จแล้ว! กำลังนำคุณไปหน้ารายการจอง...', 'success');
+                
+                // Keep form locked and redirect
+                setTimeout(() => {
+                    window.location.href = '/booking/';
+                }, 2000);
+            } else {
+                console.error('❌ Booking failed:', result);
+                let errorMsg = 'ไม่สามารถจองคิวได้ กรุณาลองใหม่อีกครั้ง';
+                
+                // Display specific errors
+                if (result.errors) {
+                    errorMsg = Object.entries(result.errors)
+                        .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
+                        .join('\n');
+                } else if (result.error) {
+                    errorMsg = result.error;
+                } else if (result.message) {
+                    errorMsg = result.message;
+                }
+                
+                showAlert(errorMsg);
+                setLoading(false);
+                unlockForm(); // Only unlock on error
+                requestSent = false; // Allow retry on error
+            }
+        } catch (error) {
+            console.error('❌ Booking error:', error);
+            showAlert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+            unlockForm(); // Only unlock on error
+            requestSent = false; // Allow retry on error
+            setLoading(false);
+        }
+        
+        return false;
+    });
+
+    // Helper: Get time from slot
+    function getTimeFromSlot(slot) {
+        const times = {
+            'morning': '09:00:00',
+            'afternoon': '13:00:00',
+            'evening': '16:00:00'
+        };
+        return times[slot] || '09:00:00';
+    }
+
+    // Helper: Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Real-time validation feedback
+    motorcycleSelect.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.remove('border-red-500');
+            this.classList.add('border-green-500');
+        }
+    });
+
+    dateInput.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.remove('border-red-500');
+            this.classList.add('border-green-500');
+        }
+    });
+
+    // Prevent multiple Enter key submissions
+    form.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && (isSubmitting || requestSent)) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log('⛔ Enter key blocked: Already submitting');
+            return false;
+        }
+    });
+
+    // Prevent button double-click
+    submitBtn.addEventListener('click', function(e) {
+        if (isSubmitting || requestSent) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log('⛔ Button click blocked: Already submitting');
+            return false;
+        }
+    });
+    
+    // Prevent link navigation during submission
+    document.getElementById('viewBookingsBtn').addEventListener('click', function(e) {
+        if (isSubmitting || requestSent) {
+            e.preventDefault();
+            console.log('⛔ Navigation blocked: Submission in progress');
+            return false;
+        }
+    });
+});
 </script>
+{% endblock %}
+
 {% endblock %}

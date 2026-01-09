@@ -1,70 +1,442 @@
 {% extends 'base.html' %}
 
-{% block title %}สมัครสมาชิก - THE ONE{% endblock %}
+{% block title %}สร้างบัญชี - THE ONE{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                สมัครสมาชิก
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                มีบัญชีอยู่แล้ว?
-                <a href="{% url 'login' %}" class="font-medium text-primary-600 hover:text-primary-500">
-                    เข้าสู่ระบบ
-                </a>
-            </p>
-        </div>
-        
-        <form class="mt-8 space-y-6" method="POST" action="{% url 'register' %}">
-            {% csrf_token %}
-            <div class="rounded-md shadow-sm space-y-4">
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้</label>
-                    <input id="username" name="username" type="text" required 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" 
-                           placeholder="ชื่อผู้ใช้">
-                </div>
-                
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">อีเมล</label>
-                    <input id="email" name="email" type="email" required 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" 
-                           placeholder="email@example.com">
-                </div>
-                
-                <div>
-                    <label for="user_type" class="block text-sm font-medium text-gray-700">ประเภทผู้ใช้</label>
-                    <select id="user_type" name="user_type" 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-                        <option value="customer">ลูกค้า</option>
-                        <option value="mechanic">ช่างซ่อม</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
-                    <input id="password" name="password" type="password" required 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" 
-                           placeholder="รหัสผ่าน">
-                </div>
-                
-                <div>
-                    <label for="password2" class="block text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน</label>
-                    <input id="password2" name="password2" type="password" required 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" 
-                           placeholder="ยืนยันรหัสผ่าน">
-                </div>
+<style>
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    .shake {
+        animation: shake 0.4s ease-in-out;
+    }
+    .strength-bar {
+        transition: all 0.3s ease;
+    }
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        width: 20px;
+        height: 20px;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .input-valid {
+        border-color: #10b981 !important;
+        background-color: #f0fdf4 !important;
+    }
+    .input-invalid {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+    .password-requirement {
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+    .requirement-met {
+        color: #10b981;
+        font-weight: 600;
+    }
+    .requirement-unmet {
+        color: #6b7280;
+    }
+</style>
+
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="max-w-2xl w-full space-y-8">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 border-2 border-gray-200">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">📝</div>
+                <h2 class="text-3xl font-extrabold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
+                    สร้างบัญชี THE_ONE
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    กรอกข้อมูลเพื่อเริ่มใช้งานระบบจองซ่อมมอเตอร์ไซค์
+                </p>
             </div>
 
-            <div>
-                <button type="submit" 
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                    สมัครสมาชิก
-                </button>
+            <!-- Alert Messages -->
+            <div id="alertContainer" class="mb-6">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="rounded-lg p-4 mb-3 {% if message.tags == 'success' %}bg-green-100 border-2 border-green-400 text-green-800{% elif message.tags == 'error' %}bg-red-100 border-2 border-red-400 text-red-800{% else %}bg-blue-100 border-2 border-blue-400 text-blue-800{% endif %}">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">{% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% else %}ℹ️{% endif %}</span>
+                                <p class="font-semibold">{{ message }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
-        </form>
+
+                <form id="registerForm" class="space-y-5" method="POST">
+                    {% csrf_token %}
+
+                    <!-- Username Field -->
+                    <div>
+                        <label for="username" class="block text-sm font-bold text-gray-900 mb-2">
+                            ชื่อผู้ใช้ <span class="text-red-600">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                            placeholder="อย่างน้อย 3 ตัวอักษร"
+                            required
+                            minlength="3"
+                            maxlength="150"
+                            autocomplete="username"
+                        >
+                        <p class="mt-1 text-xs text-gray-600 font-medium" id="usernameHelp">
+                            ใช้ตัวอักษร ตัวเลข และ @/./+/-/_ เท่านั้น
+                        </p>
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="usernameError"></p>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-bold text-gray-900 mb-2">
+                            อีเมล <span class="text-red-600">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                            placeholder="example@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="emailError"></p>
+                    </div>
+
+                    <!-- First Name Field -->
+                    <div>
+                        <label for="first_name" class="block text-sm font-bold text-gray-900 mb-2">
+                            ชื่อ <span class="text-red-600">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="first_name" 
+                            name="first_name"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                            placeholder="ชื่อจริง"
+                            required
+                            maxlength="150"
+                            autocomplete="given-name"
+                        >
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="firstNameError"></p>
+                    </div>
+
+                    <!-- Last Name Field -->
+                    <div>
+                        <label for="last_name" class="block text-sm font-bold text-gray-900 mb-2">
+                            นามสกุล <span class="text-red-600">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="last_name" 
+                            name="last_name"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                            placeholder="นามสกุล"
+                            required
+                            maxlength="150"
+                            autocomplete="family-name"
+                        >
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="lastNameError"></p>
+                    </div>
+
+                    <!-- Phone Number Field -->
+                    <div>
+                        <label for="phone_number" class="block text-sm font-bold text-gray-900 mb-2">
+                            เบอร์โทรศัพท์
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="phone_number" 
+                            name="phone_number"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                            placeholder="0812345678 (ไม่บังคับ)"
+                            maxlength="10"
+                            pattern="[0-9]{10}"
+                            autocomplete="tel"
+                        >
+                        <p class="mt-1 text-xs text-gray-600 font-medium">
+                            กรอกเบอร์มือถือ 10 หลัก (ไม่จำเป็น)
+                        </p>
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="phoneError"></p>
+                    </div>
+
+                    <!-- User Type Field -->
+                    <div>
+                        <label for="user_type" class="block text-sm font-bold text-gray-900 mb-2">
+                            ประเภทผู้ใช้ <span class="text-red-600">*</span>
+                        </label>
+                        <select 
+                            id="user_type" 
+                            name="user_type"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 bg-white font-medium"
+                            required
+                        >
+                            <option value="" class="text-gray-500">-- เลือกประเภทผู้ใช้ --</option>
+                            <option value="customer" class="text-gray-900 font-semibold">ลูกค้า (Customer)</option>
+                            <option value="mechanic" class="text-gray-900 font-semibold">ช่างซ่อม (Mechanic)</option>
+                        </select>
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="userTypeError"></p>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-bold text-gray-900 mb-2">
+                            รหัสผ่าน <span class="text-red-600">*</span>
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 pr-12 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                                placeholder="อย่างน้อย 8 ตัวอักษร"
+                                required
+                                minlength="8"
+                                autocomplete="new-password"
+                            >
+                            <button 
+                                type="button" 
+                                id="togglePassword"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900 focus:outline-none text-xl"
+                                tabindex="-1"
+                            >
+                                <span id="passwordIcon">👁️</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Password Strength Meter -->
+                        <div class="mt-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-700">ความแข็งแกร่งของรหัสผ่าน:</span>
+                                <span id="strengthText" class="text-xs font-extrabold text-gray-600">ไม่มี</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 border border-gray-300">
+                                <div 
+                                    id="strengthBar" 
+                                    class="strength-bar h-full rounded-full bg-gray-300" 
+                                    style="width: 0%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <!-- Password Requirements -->
+                        <div class="mt-3 space-y-1 text-xs bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="password-requirement requirement-unmet" id="req-length">
+                                <span id="icon-length" class="font-bold">○</span> อย่างน้อย 8 ตัวอักษร
+                            </p>
+                            <p class="password-requirement requirement-unmet" id="req-letter">
+                                <span id="icon-letter" class="font-bold">○</span> มีตัวอักษร (a-z, A-Z)
+                            </p>
+                            <p class="password-requirement requirement-unmet" id="req-number">
+                                <span id="icon-number" class="font-bold">○</span> มีตัวเลข (0-9)
+                            </p>
+                            <p class="password-requirement requirement-unmet" id="req-special">
+                                <span id="icon-special" class="font-bold">○</span> มีอักขระพิเศษ (!@#$%^&*)
+                            </p>
+                        </div>
+                        <p class="mt-2 text-xs text-red-600 font-semibold hidden" id="passwordError"></p>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="password2" class="block text-sm font-bold text-gray-900 mb-2">
+                            ยืนยันรหัสผ่าน <span class="text-red-600">*</span>
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password2" 
+                                name="password2"
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 pr-12 border-2 border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 font-medium"
+                                placeholder="กรอกรหัสผ่านอีกครั้ง"
+                                required
+                                minlength="8"
+                                autocomplete="new-password"
+                            >
+                            <button 
+                                type="button" 
+                                id="togglePassword2"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900 focus:outline-none text-xl"
+                                tabindex="-1"
+                            >
+                                <span id="password2Icon">👁️</span>
+                            </button>
+                        </div>
+                        <p class="mt-1 text-xs text-red-600 font-semibold hidden" id="password2Error"></p>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="flex items-start bg-gray-50 p-4 rounded-lg border-2 border-gray-200">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            name="terms"
+                            class="mt-1 w-5 h-5 text-red-600 border-gray-400 rounded focus:ring-2 focus:ring-red-500"
+                            required
+                        >
+                        <label for="terms" class="ml-3 text-sm text-gray-900 font-medium">
+                            ฉันยอมรับ <a href="/terms" class="text-red-600 hover:text-red-700 hover:underline font-bold" target="_blank">ข้อกำหนดการใช้งาน</a> 
+                            และ <a href="/privacy" class="text-red-600 hover:text-red-700 hover:underline font-bold" target="_blank">นโยบายความเป็นส่วนตัว</a>
+                            <span class="text-red-600">*</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-red-600 font-semibold hidden" id="termsError"></p>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        id="submitBtn"
+                        class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-base font-extrabold rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    >
+                        <span id="submitText">สร้างบัญชี</span>
+                        <span id="submitSpinner" class="spinner mx-auto hidden"></span>
+                    </button>
+                </form>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-700 font-medium">
+                        มีบัญชีอยู่แล้ว? 
+                        <a href="{% url 'users:login' %}" class="font-bold text-red-600 hover:text-red-700 hover:underline">เข้าสู่ระบบ</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle Password Visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const passwordIcon = document.getElementById('passwordIcon');
+
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        passwordIcon.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Toggle Confirm Password Visibility
+    const togglePassword2 = document.getElementById('togglePassword2');
+    const password2Input = document.getElementById('password2');
+    const password2Icon = document.getElementById('password2Icon');
+
+    togglePassword2.addEventListener('click', function() {
+        const type = password2Input.getAttribute('type') === 'password' ? 'text' : 'password';
+        password2Input.setAttribute('type', type);
+        password2Icon.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Password Strength Checker
+    const password = document.getElementById('password');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    
+    password.addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+    });
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        const requirements = {
+            length: password.length >= 8,
+            letter: /[a-zA-Z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        };
+
+        // Update requirement indicators
+        Object.keys(requirements).forEach(req => {
+            const element = document.getElementById(`req-${req}`);
+            const icon = document.getElementById(`icon-${req}`);
+            if (requirements[req]) {
+                element.classList.add('requirement-met');
+                element.classList.remove('requirement-unmet');
+                icon.textContent = '✓';
+                strength++;
+            } else {
+                element.classList.remove('requirement-met');
+                element.classList.add('requirement-unmet');
+                icon.textContent = '○';
+            }
+        });
+
+        // Update strength bar
+        const strengthPercent = (strength / 4) * 100;
+        strengthBar.style.width = strengthPercent + '%';
+
+        if (strength === 0) {
+            strengthBar.classList.remove('bg-red-500', 'bg-yellow-500', 'bg-green-500');
+            strengthBar.classList.add('bg-gray-300');
+            strengthText.textContent = 'ไม่มี';
+            strengthText.className = 'text-xs font-extrabold text-gray-600';
+        } else if (strength <= 2) {
+            strengthBar.classList.remove('bg-gray-300', 'bg-yellow-500', 'bg-green-500');
+            strengthBar.classList.add('bg-red-500');
+            strengthText.textContent = 'อ่อน';
+            strengthText.className = 'text-xs font-extrabold text-red-600';
+        } else if (strength === 3) {
+            strengthBar.classList.remove('bg-gray-300', 'bg-red-500', 'bg-green-500');
+            strengthBar.classList.add('bg-yellow-500');
+            strengthText.textContent = 'ปานกลาง';
+            strengthText.className = 'text-xs font-extrabold text-yellow-600';
+        } else {
+            strengthBar.classList.remove('bg-gray-300', 'bg-red-500', 'bg-yellow-500');
+            strengthBar.classList.add('bg-green-500');
+            strengthText.textContent = 'แข็งแกร่ง';
+            strengthText.className = 'text-xs font-extrabold text-green-600';
+        }
+    }
+
+    // Form validation
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', function(e) {
+        const password1 = document.getElementById('password').value;
+        const password2 = document.getElementById('password2').value;
+
+        // Check if passwords match (client-side validation)
+        if (password1 !== password2) {
+            e.preventDefault();
+            document.getElementById('password2Error').textContent = 'รหัสผ่านไม่ตรงกัน';
+            document.getElementById('password2Error').classList.remove('hidden');
+            document.getElementById('password2').classList.add('input-invalid');
+            return false;
+        }
+
+        // Clear error
+        document.getElementById('password2Error').classList.add('hidden');
+        document.getElementById('password2').classList.remove('input-invalid');
+
+        // Show loading state
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const submitSpinner = document.getElementById('submitSpinner');
+
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        submitSpinner.classList.remove('hidden');
+
+        // Let form submit naturally (don't prevent default)
+        return true;
+    });
+});
+</script>
 {% endblock %}

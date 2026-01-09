@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}แชทกับ {{ other_user.first_name|default:other_user.username }} - THE ONE{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 py-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Chat Container -->
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl overflow-hidden" style="height: calc(100vh - 150px);">
+            
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-blue-900 to-purple-900 border-b-2 border-gray-700 p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <a href="{% url 'chat:list' %}" class="text-white hover:text-gold-400 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+                        
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                            {{ other_user.username|first|upper }}
+                        </div>
+                        
+                        <div>
+                            <h2 class="text-xl font-bold text-white">
+                                {{ other_user.first_name|default:other_user.username }}
+                            </h2>
+                            <p class="text-sm text-gray-300">
+                                {% if other_user.user_type == 'mechanic' %}
+                                🔧 ช่าง
+                                {% else %}
+                                👤 ลูกค้า
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Info -->
+                    <div class="text-right">
+                        <p class="text-sm text-gray-300">
+                            🏍️ {{ chat_room.booking.motorcycle.brand }} {{ chat_room.booking.motorcycle.model }}
+                        </p>
+                        <p class="text-xs text-gray-400">การจอง #{{ chat_room.booking.id }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-900" style="height: calc(100% - 140px);">
+                {% for msg in messages %}
+                <div class="flex {% if msg.sender == user %}justify-end{% else %}justify-start{% endif %}">
+                    <div class="max-w-xs lg:max-w-md">
+                        {% if msg.sender != user %}
+                        <div class="flex items-end space-x-2">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                {{ msg.sender.username|first|upper }}
+                            </div>
+                            <div class="bg-gray-700 text-white rounded-2xl rounded-bl-none px-4 py-2 shadow-lg">
+                                <p class="text-sm break-words">{{ msg.message }}</p>
+                                <p class="text-xs text-gray-400 mt-1">{{ msg.created_at|date:"H:i" }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="flex items-end space-x-2 justify-end">
+                            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-none px-4 py-2 shadow-lg">
+                                <p class="text-sm break-words">{{ msg.message }}</p>
+                                <p class="text-xs text-blue-200 mt-1 text-right">
+                                    {{ msg.created_at|date:"H:i" }}
+                                    {% if msg.is_read %}✓✓{% else %}✓{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Message Input -->
+            <div class="bg-gray-800 border-t-2 border-gray-700 p-4">
+                <form id="messageForm" class="flex items-center space-x-2">
+                    {% csrf_token %}
+                    <input 
+                        type="text" 
+                        id="messageInput"
+                        name="message"
+                        placeholder="พิมพ์ข้อความ..." 
+                        class="flex-1 bg-gray-700 text-white rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+                        autocomplete="off"
+                        required
+                    >
+                    <button 
+                        type="submit"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-3 rounded-full transition-all transform hover:scale-110 shadow-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+const chatRoomId = {{ chat_room.id }};
+const messagesContainer = document.getElementById('messagesContainer');
+const messageForm = document.getElementById('messageForm');
+const messageInput = document.getElementById('messageInput');
+
+// Scroll to bottom on load
+function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+scrollToBottom();
+
+// Send message
+messageForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const message = messageInput.value.trim();
+    if (!message) return;
+    
+    try {
+        const response = await fetch(`/chat/api/rooms/${chatRoomId}/messages/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ message: message })
+        });
+        
+        if (response.ok) {
+            messageInput.value = '';
+            loadMessages();
+        } else {
+            console.error('Failed to send message');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+});
+
+// Load messages
+async function loadMessages() {
+    try {
+        const response = await fetch(`/chat/api/rooms/${chatRoomId}/messages/`, {
+            credentials: 'same-origin',
+            headers: { 'Accept': 'application/json' }
+        });
+        
+        if (response.ok) {
+            const messages = await response.json();
+            displayMessages(messages);
+        }
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+}
+
+// Display messages
+function displayMessages(messages) {
+    const currentUserId = {{ user.id }};
+    
+    messagesContainer.innerHTML = messages.map(msg => {
+        const isMine = msg.sender.id === currentUserId;
+        const time = new Date(msg.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        
+        if (isMine) {
+            return `
+                <div class="flex justify-end">
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="flex items-end space-x-2 justify-end">
+                            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-none px-4 py-2 shadow-lg">
+                                <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                                <p class="text-xs text-blue-200 mt-1 text-right">
+                                    ${time}
+                                    ${msg.is_read ? '✓✓' : '✓'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="flex justify-start">
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="flex items-end space-x-2">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                ${msg.sender.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="bg-gray-700 text-white rounded-2xl rounded-bl-none px-4 py-2 shadow-lg">
+                                <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
+                                <p class="text-xs text-gray-400 mt-1">${time}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }).join('');
+    
+    scrollToBottom();
+}
+
+// Escape HTML
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Poll for new messages every 3 seconds
+setInterval(loadMessages, 3000);
+
+// Focus input on load
+messageInput.focus();
+</script>
+{% endblock %}

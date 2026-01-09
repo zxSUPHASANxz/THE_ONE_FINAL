@@ -3,75 +3,617 @@
 {% block title %}การจองของฉัน - THE ONE{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto py-6">
-    <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-2xl font-bold">การจองของฉัน</h2>
-        <a href="{% url 'booking_create' %}" class="btn-primary">
-            จองคิวใหม่
-        </a>
+<div class="py-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
+                การจองของฉัน
+            </h1>
+            <a href="/booking/create/" class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 transform hover:scale-105 shadow-xl">
+                + จองใหม่
+            </a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl p-2 mb-8 relative" id="filterTabs">
+            <div class="flex flex-wrap gap-2 relative">
+                <button data-filter="all" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-white rounded-xl font-bold transition-all duration-300 relative z-10 bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/50">
+                    <span class="text-xl mr-1">📋</span>
+                    <span class="block sm:inline text-sm">ทั้งหมด</span>
+                </button>
+                <button data-filter="pending" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-gray-400 rounded-xl font-bold hover:text-white hover:bg-gray-700/50 transition-all duration-300 relative z-10">
+                    <span class="text-xl mr-1">⏳</span>
+                    <span class="block sm:inline text-sm">รอช่างรับ</span>
+                </button>
+                <button data-filter="confirmed" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-gray-400 rounded-xl font-bold hover:text-white hover:bg-gray-700/50 transition-all duration-300 relative z-10">
+                    <span class="text-xl mr-1">✅</span>
+                    <span class="block sm:inline text-sm">ยืนยันแล้ว</span>
+                </button>
+                <button data-filter="in_progress" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-gray-400 rounded-xl font-bold hover:text-white hover:bg-gray-700/50 transition-all duration-300 relative z-10">
+                    <span class="text-xl mr-1">🔧</span>
+                    <span class="block sm:inline text-sm">กำลังซ่อม</span>
+                </button>
+                <button data-filter="completed" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-gray-400 rounded-xl font-bold hover:text-white hover:bg-gray-700/50 transition-all duration-300 relative z-10">
+                    <span class="text-xl mr-1">🏁</span>
+                    <span class="block sm:inline text-sm">เสร็จสิ้น</span>
+                </button>
+                <button data-filter="cancelled" class="filter-btn flex-1 min-w-[120px] px-4 py-3 text-gray-400 rounded-xl font-bold hover:text-white hover:bg-gray-700/50 transition-all duration-300 relative z-10">
+                    <span class="text-xl mr-1">❌</span>
+                    <span class="block sm:inline text-sm">ยกเลิก</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="text-center py-12">
+            <svg class="animate-spin inline-block w-12 h-12 text-gold-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-400 mt-4">กำลังโหลดข้อมูล...</p>
+        </div>
+
+        <!-- Bookings List Container -->
+        <div id="bookingsList" class="space-y-6 hidden"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-16 text-center hidden">
+            <div class="text-8xl mb-6">📅</div>
+            <h2 class="text-2xl font-bold text-gray-300 mb-3">ยังไม่มีการจอง</h2>
+            <p class="text-gray-500 mb-8">คุณยังไม่เคยจองคิวซ่อมรถ เริ่มจองคิวของคุณตอนนี้!</p>
+            <a href="/booking/create/" class="inline-block bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-10 py-4 rounded-lg font-bold transition-all duration-200 transform hover:scale-105 shadow-xl">
+                + จองคิวซ่อมเลย
+            </a>
+        </div>
     </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl max-w-md w-full transform transition-all scale-95 opacity-0" id="confirmModalContent">
+        <div class="p-6">
+            <div class="text-center mb-6">
+                <div class="text-6xl mb-4">⚠️</div>
+                <h3 class="text-2xl font-bold text-white mb-2">ยืนยันการยกเลิก</h3>
+                <p class="text-gray-400" id="confirmMessage">คุณแน่ใจหรือไม่ที่จะยกเลิกการจองนี้?</p>
+            </div>
+            <div class="flex gap-3">
+                <button id="confirmYes" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                    ยืนยัน
+                </button>
+                <button id="confirmNo" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                    ยกเลิก
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="notificationToast" class="fixed top-4 right-4 z-50 hidden transform transition-all duration-300">
+    <div class="bg-gray-800 border-2 rounded-xl shadow-2xl p-4 max-w-md">
+        <div class="flex items-start space-x-3">
+            <div id="toastIcon" class="text-3xl"></div>
+            <div class="flex-1">
+                <p id="toastTitle" class="font-bold text-lg mb-1"></p>
+                <p id="toastMessage" class="text-sm text-gray-300"></p>
+            </div>
+            <button onclick="window.hideToast()" class="text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const bookingsList = document.getElementById('bookingsList');
+    const emptyState = document.getElementById('emptyState');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmYes = document.getElementById('confirmYes');
+    const confirmNo = document.getElementById('confirmNo');
+    const notificationToast = document.getElementById('notificationToast');
     
-    {% if bookings %}
-    <div class="grid grid-cols-1 gap-6">
-        {% for booking in bookings %}
-        <div class="card">
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2 mb-2">
-                        <h3 class="text-lg font-semibold">
-                            {{ booking.motorcycle.brand }} {{ booking.motorcycle.model }}
-                        </h3>
-                        <span class="px-2 py-1 text-xs rounded-full
-                            {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
-                            {% elif booking.status == 'confirmed' %}bg-blue-100 text-blue-800
-                            {% elif booking.status == 'in_progress' %}bg-purple-100 text-purple-800
-                            {% elif booking.status == 'completed' %}bg-green-100 text-green-800
-                            {% else %}bg-gray-100 text-gray-800{% endif %}">
-                            {{ booking.get_status_display }}
-                        </span>
-                    </div>
-                    
-                    <div class="text-sm text-gray-600 space-y-1">
-                        <p><strong>ทะเบียน:</strong> {{ booking.motorcycle.license_plate }}</p>
-                        <p><strong>อาการ:</strong> {{ booking.problem_description }}</p>
-                        <p><strong>วันนัดหมาย:</strong> {{ booking.appointment_date|date:"d/m/Y H:i" }} น.</p>
-                        {% if booking.mechanic %}
-                        <p><strong>ช่างผู้รับผิดชอบ:</strong> {{ booking.mechanic.username }}</p>
-                        {% endif %}
-                        {% if booking.estimated_cost %}
-                        <p><strong>ราคาประเมิณ:</strong> {{ booking.estimated_cost }} บาท</p>
-                        {% endif %}
-                    </div>
+    let allBookings = [];
+    let currentFilter = 'all';
+    let confirmResolver = null;
+
+    // Toast notification
+    function showToast(title, message, type = 'success') {
+        const toast = notificationToast;
+        const toastIcon = document.getElementById('toastIcon');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastContainer = toast.querySelector('div > div');
+
+        const configs = {
+            success: { icon: '✅', titleColor: 'text-green-400', borderColor: 'border-green-500' },
+            error: { icon: '❌', titleColor: 'text-red-400', borderColor: 'border-red-500' },
+            warning: { icon: '⚠️', titleColor: 'text-yellow-400', borderColor: 'border-yellow-500' },
+            info: { icon: 'ℹ️', titleColor: 'text-blue-400', borderColor: 'border-blue-500' }
+        };
+
+        const config = configs[type] || configs.info;
+        
+        toastIcon.textContent = config.icon;
+        toastTitle.textContent = title;
+        toastTitle.className = `font-bold text-lg mb-1 ${config.titleColor}`;
+        toastMessage.textContent = message;
+        toastContainer.className = `bg-gray-800 border-2 rounded-xl shadow-2xl p-4 max-w-md ${config.borderColor}`;
+
+        toast.classList.remove('hidden');
+        
+        setTimeout(() => window.hideToast(), 5000);
+    }
+
+    window.hideToast = function() {
+        notificationToast.classList.add('hidden');
+    };
+
+    // Show confirmation modal
+    function showConfirm(message) {
+        return new Promise((resolve) => {
+            const modal = confirmModal;
+            const modalContent = document.getElementById('confirmModalContent');
+            
+            document.getElementById('confirmMessage').textContent = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            confirmResolver = resolve;
+        });
+    }
+
+    function hideConfirm() {
+        const modal = confirmModal;
+        const modalContent = document.getElementById('confirmModalContent');
+        
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    confirmYes.addEventListener('click', () => {
+        hideConfirm();
+        if (confirmResolver) {
+            confirmResolver(true);
+            confirmResolver = null;
+        }
+    });
+
+    confirmNo.addEventListener('click', () => {
+        hideConfirm();
+        if (confirmResolver) {
+            confirmResolver(false);
+            confirmResolver = null;
+        }
+    });
+
+    // Load bookings from API
+    async function loadBookings() {
+        loadingIndicator.classList.remove('hidden');
+        bookingsList.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        
+        try {
+            const response = await fetch('/booking/api/bookings/', {
+                credentials: 'same-origin',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            // Check content type before parsing JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error(`เซิร์ฟเวอร์ส่งข้อมูลไม่ถูกต้อง (${response.status})`);
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('=== API Response Debug ===');
+            console.log('Bookings loaded:', data.length);
+            console.log('All bookings:', data);
+            console.log('Status breakdown:', data.reduce((acc, b) => {
+                acc[b.status] = (acc[b.status] || 0) + 1;
+                return acc;
+            }, {}));
+            
+            allBookings = data;
+            
+            loadingIndicator.classList.add('hidden');
+            
+            if (allBookings.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                bookingsList.classList.remove('hidden');
+                filterBookings(currentFilter); // Apply current filter instead of displaying all
+            }
+        } catch (error) {
+            console.error('Error loading bookings:', error);
+            loadingIndicator.classList.add('hidden');
+            loadingIndicator.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">⚠️</div>
+                    <p class="text-red-400 text-xl font-bold mb-2">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
+                    <p class="text-gray-400 mb-4">${error.message}</p>
+                    <button onclick="location.reload()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                        🔄 ลองใหม่อีกครั้ง
+                    </button>
                 </div>
+            `;
+            loadingIndicator.classList.remove('hidden');
+        }
+    }
+
+    // Display bookings
+    function displayBookings(bookings) {
+        console.log('=== Display Bookings Debug ===');
+        console.log('Total bookings to display:', bookings.length);
+        console.log('Current filter:', currentFilter);
+        console.log('Bookings:', bookings.map(b => ({ id: b.id, status: b.status, motorcycle_info: b.motorcycle_info })));
+        
+        if (bookings.length === 0) {
+            bookingsList.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        bookingsList.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        
+        bookingsList.innerHTML = bookings.map(booking => createBookingCard(booking)).join('');
+        
+        // Attach cancel handlers
+        document.querySelectorAll('.cancel-booking-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                cancelBooking(this.dataset.id);
+            });
+        });
+    }
+
+    // Create booking card HTML
+    function createBookingCard(booking) {
+        const statusConfig = {
+            'pending': { 
+                icon: '⏳', 
+                text: 'รอดำเนินการ', 
+                bgClass: 'bg-yellow-500/10', 
+                textClass: 'text-yellow-400', 
+                borderClass: 'border-yellow-500/50',
+                shadowClass: 'shadow-yellow-500/20'
+            },
+            'confirmed': { 
+                icon: '✅', 
+                text: 'ยืนยันแล้ว', 
+                bgClass: 'bg-blue-500/10', 
+                textClass: 'text-blue-400', 
+                borderClass: 'border-blue-500/50',
+                shadowClass: 'shadow-blue-500/20'
+            },
+            'in_progress': { 
+                icon: '🔧', 
+                text: 'กำลังซ่อม', 
+                bgClass: 'bg-purple-500/10', 
+                textClass: 'text-purple-400', 
+                borderClass: 'border-purple-500/50',
+                shadowClass: 'shadow-purple-500/20'
+            },
+            'completed': { 
+                icon: '✅', 
+                text: 'เสร็จสิ้น', 
+                bgClass: 'bg-green-500/10', 
+                textClass: 'text-green-400', 
+                borderClass: 'border-green-500/50',
+                shadowClass: 'shadow-green-500/20'
+            },
+            'cancelled': { 
+                icon: '❌', 
+                text: 'ยกเลิก', 
+                bgClass: 'bg-red-500/10', 
+                textClass: 'text-red-400', 
+                borderClass: 'border-red-500/50',
+                shadowClass: 'shadow-red-500/20'
+            }
+        };
+
+        const status = statusConfig[booking.status] || statusConfig['pending'];
+        const appointmentDate = new Date(booking.appointment_date);
+        const dateStr = appointmentDate.toLocaleDateString('th-TH', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        const timeStr = appointmentDate.toLocaleTimeString('th-TH', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+
+        return `
+            <div class="bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700 rounded-2xl shadow-2xl overflow-hidden hover:border-gold-500 hover:shadow-gold-500/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <!-- Status Bar -->
+                <div class="h-2 ${status.bgClass}"></div>
                 
-                <div class="flex flex-col space-y-2">
-                    {% if booking.status == 'pending' or booking.status == 'confirmed' %}
-                    <form method="POST" action="#" onsubmit="return confirm('ต้องการยกเลิกการจองนี้?')">
-                        {% csrf_token %}
-                        <button type="submit" class="text-sm text-red-600 hover:text-red-800">
+                <div class="p-6">
+                    <!-- Header Section -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+                        <div class="flex items-start space-x-4 flex-1">
+                            <div class="bg-gradient-to-br from-red-500 to-red-600 p-4 rounded-2xl shadow-xl">
+                                <span class="text-4xl">🏍️</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white mb-1 leading-tight">${booking.motorcycle_info || 'รถจักรยานยนต์'}</h3>
+                                <div class="flex items-center text-gray-400 text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    จองเมื่อ: ${new Date(booking.created_at).toLocaleDateString('th-TH')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center px-4 py-2 ${status.bgClass} ${status.textClass} text-sm font-bold rounded-xl border-2 ${status.borderClass} shadow-lg ${status.shadowClass}">
+                                    <span class="text-xl mr-2">${status.icon}</span>
+                                    ${status.text}
+                                </span>
+                                ${(booking.mechanic_name && ['confirmed', 'in_progress', 'completed', 'cancelled'].includes(booking.status)) ? `
+                                <a href="/chat/" class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105" title="แชทกับช่าง">
+                                    <span class="text-lg mr-1">💬</span>
+                                    แชท
+                                </a>
+                                ` : ''}
+                            </div>
+                            <span class="text-gray-500 text-xs font-mono">#${booking.id}</span>
+                        </div>
+                    </div>
+
+                    <!-- Info Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-4 border border-gray-600 hover:border-gold-500/50 transition-all">
+                            <div class="flex items-center mb-2">
+                                <svg class="w-5 h-5 text-gold-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide">วันที่นัดหมาย</p>
+                            </div>
+                            <p class="text-white font-bold text-lg">${dateStr}</p>
+                            <p class="text-gold-400 font-semibold mt-1">⏰ ${timeStr} น.</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-4 border border-gray-600 hover:border-gold-500/50 transition-all">
+                            <div class="flex items-center mb-2">
+                                <svg class="w-5 h-5 text-gold-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                </svg>
+                                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide">ประเภทบริการ</p>
+                            </div>
+                            <p class="text-white font-bold text-lg">${booking.service_type || 'ไม่ระบุ'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Second Row: Mechanic & Details Side by Side -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <!-- Mechanic Info (only show for confirmed, in_progress, completed, cancelled) -->
+                        ${['confirmed', 'in_progress', 'completed', 'cancelled'].includes(booking.status) && booking.mechanic_name ? `
+                        <div class="bg-gradient-to-br from-blue-900/30 to-blue-800/30 rounded-xl p-4 border-2 border-blue-500/50">
+                            <div class="flex items-center mb-2">
+                                <span class="text-xl mr-2">👨‍🔧</span>
+                                <p class="text-blue-300 text-xs font-semibold uppercase tracking-wide">ช่างผู้รับผิดชอบ</p>
+                            </div>
+                            <p class="text-white font-bold text-lg">${booking.mechanic_full_name || booking.mechanic_name}</p>
+                            ${booking.mechanic_phone ? `
+                            <p class="text-blue-200 text-sm mt-1">
+                                <span class="mr-1">📞</span> ${booking.mechanic_phone}
+                            </p>
+                            ` : ''}
+                            ${booking.chat_room_id ? `
+                            <a href="/chat/${booking.chat_room_id}/" class="inline-flex items-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300 transform hover:scale-105 shadow-lg mt-3">
+                                <span class="mr-1">💬</span> แชทกับช่าง
+                            </a>
+                            ` : `
+                            <p class="text-gray-400 text-xs mt-3">รอสร้างห้องแชท...</p>
+                            `}
+                        </div>
+                        ` : booking.status === 'pending' ? `
+                        <div class="bg-gradient-to-br from-yellow-900/20 to-yellow-800/20 rounded-xl p-4 border border-yellow-500/30">
+                            <div class="flex items-center mb-2">
+                                <span class="text-xl mr-2">⏳</span>
+                                <p class="text-yellow-300 text-xs font-semibold uppercase tracking-wide">ช่างผู้รับผิดชอบ</p>
+                            </div>
+                            <p class="text-yellow-200 font-semibold">รอช่างรับงาน...</p>
+                        </div>
+                        ` : `
+                        <div class="bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-xl p-4 border border-gray-600/50">
+                            <div class="flex items-center mb-2">
+                                <span class="text-xl mr-2">👨‍🔧</span>
+                                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide">ช่างผู้รับผิดชอบ</p>
+                            </div>
+                            <p class="text-gray-400 font-semibold">-</p>
+                        </div>
+                        `}
+
+                        <!-- Details -->
+                        <div class="bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-xl p-4 border border-gray-600/50">
+                            <div class="flex items-center mb-2">
+                                <svg class="w-5 h-5 text-gold-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide">รายละเอียด</p>
+                            </div>
+                            <p class="text-gray-200 leading-relaxed">${booking.problem_description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 mt-6">
+                        ${booking.status === 'pending' || booking.status === 'confirmed' ? `
+                        <button data-id="${booking.id}" class="cancel-booking-btn flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/50 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
                             ยกเลิกการจอง
                         </button>
-                    </form>
-                    {% endif %}
+                        ` : booking.status === 'completed' ? `
+                        <div class="flex-1 bg-gradient-to-r from-green-600/20 to-green-700/20 border-2 border-green-500/50 text-green-400 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            บริการเสร็จสิ้นแล้ว
+                        </div>
+                        ` : booking.status === 'cancelled' ? `
+                        <div class="flex-1 bg-gradient-to-r from-gray-600/20 to-gray-700/20 border-2 border-gray-500/50 text-gray-400 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
+                            </svg>
+                            การจองถูกยกเลิกแล้ว
+                        </div>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
+        `;
+    }
+
+    // Filter bookings
+    function filterBookings(filter) {
+        currentFilter = filter;
+        
+        // Update active button with smooth animation
+        filterButtons.forEach(btn => {
+            if (btn.dataset.filter === filter) {
+                btn.classList.remove('text-gray-400', 'hover:bg-gray-700/50');
+                btn.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-600', 'text-white', 'shadow-lg', 'shadow-red-500/50');
+            } else {
+                btn.classList.add('text-gray-400', 'hover:bg-gray-700/50');
+                btn.classList.remove('bg-gradient-to-r', 'from-red-500', 'to-red-600', 'text-white', 'shadow-lg', 'shadow-red-500/50');
+            }
+        });
+
+        // Filter logic
+        let filtered = allBookings;
+        if (filter !== 'all') {
+            const statuses = filter.split(',');
+            filtered = allBookings.filter(b => statuses.includes(b.status));
+        }
+
+        displayBookings(filtered);
+    }
+
+    // Cancel booking
+    async function cancelBooking(bookingId) {
+        const confirmed = await showConfirm('คุณแน่ใจหรือไม่ที่จะยกเลิกการจองนี้?');
+        
+        if (!confirmed) {
+            return;
+        }
+
+        showToast('กำลังยกเลิก...', 'กรุณารอสักครู่', 'info');
+
+        try {
+            const csrfToken = getCookie('csrftoken');
+            const url = `/booking/api/bookings/${bookingId}/cancel/`;
             
-            {% if booking.repair_notes %}
-            <div class="mt-4 pt-4 border-t">
-                <p class="text-sm font-medium text-gray-700">รายละเอียดการซ่อม:</p>
-                <p class="text-sm text-gray-600">{{ booking.repair_notes }}</p>
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="card text-center py-12">
-        <p class="text-gray-500 mb-4">คุณยังไม่มีการจอง</p>
-        <a href="{% url 'booking_create' %}" class="btn-primary inline-block">
-            จองคิวเลย
-        </a>
-    </div>
-    {% endif %}
-</div>
+            console.log('Cancel Request:', { bookingId, url, csrfToken });
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            });
+
+            console.log('Cancel Response:', { status: response.status, ok: response.ok });
+
+            // Check content type before parsing JSON
+            const contentType = response.headers.get('content-type');
+            let data = {};
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                data = { error: `เซิร์ฟเวอร์เกิดข้อผิดพลาด (${response.status})` };
+            }
+
+            if (response.ok) {
+                console.log('Cancel Success:', data);
+                showToast('สำเร็จ!', 'ยกเลิกการจองเรียบร้อยแล้ว', 'success');
+                setTimeout(() => loadBookings(), 1000);
+            } else {
+                console.error('Cancel Error Response:', data);
+                
+                let errorMsg = 'ไม่สามารถยกเลิกการจองได้';
+                if (response.status === 404) {
+                    errorMsg = 'ไม่พบการจองหรือคุณไม่มีสิทธิ์เข้าถึง';
+                } else if (response.status === 400) {
+                    errorMsg = data.error || 'การจองนี้ไม่สามารถยกเลิกได้ (อาจถูกยกเลิกไปแล้วหรืออยู่ในสถานะที่ไม่อนุญาต)';
+                } else {
+                    errorMsg = data.error || `เกิดข้อผิดพลาด (${response.status})`;
+                }
+                
+                showToast('เกิดข้อผิดพลาด', errorMsg, 'error');
+                // Reload to sync status
+                setTimeout(() => loadBookings(), 2000);
+            }
+        } catch (error) {
+            console.error('Cancel error:', error);
+            showToast('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        }
+    }
+
+    // Helper: Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Filter button handlers
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBookings(this.dataset.filter);
+        });
+    });
+
+    // Cancel button handler (event delegation)
+    bookingsList.addEventListener('click', function(e) {
+        const cancelBtn = e.target.closest('.cancel-booking-btn');
+        if (cancelBtn) {
+            const bookingId = cancelBtn.dataset.id;
+            cancelBooking(bookingId);
+        }
+    });
+
+    // Initial load
+    loadBookings();
+});
+</script>
+{% endblock %}
 {% endblock %}

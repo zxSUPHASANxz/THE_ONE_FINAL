@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure--fsmpa4mrq%!r8h-16rmt&y#&2^2bbdan&#x+19wk)ro@s9q0r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok-free.app']
 
 
 # Application definition
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'chatbot',
     'booking',
     'mechanics',
+    'chat',
     'the_one_app',
 ]
 
@@ -142,10 +144,11 @@ AUTH_USER_MODEL = 'users.User'
 # REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # For web browser
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # For API clients
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
 }
 
@@ -153,7 +156,33 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
+
+# NGROK ENABLED
+# Add ngrok URL if available
+NGROK_URL = os.getenv('NGROK_URL', '')
+if NGROK_URL:
+    CORS_ALLOWED_ORIGINS.append(NGROK_URL)
+
+# CSRF Settings
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:5678',  # n8n
+    'https://*.ngrok-free.app',  # All ngrok domains
+]
+
+# NGROK ENABLED
+# Add ngrok URL to CSRF trusted origins
+if NGROK_URL:
+    if NGROK_URL not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(NGROK_URL)
 
 # Media Files (uploaded images)
 MEDIA_URL = '/media/'
@@ -164,7 +193,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # JWT Settings
 from datetime import timedelta
+from decouple import config
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+# n8n Configuration
+N8N_WEBHOOK_URL = config('N8N_WEBHOOK_URL', default='http://localhost:5678/webhook/chatbot-rag')
+# NGROK ENABLED
+NGROK_URL = config('NGROK_URL', default='')
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='')

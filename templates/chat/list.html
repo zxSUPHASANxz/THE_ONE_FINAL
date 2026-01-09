@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block title %}ข้อความ - THE ONE{% endblock %}
+
+{% block content %}
+<div class="py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-3">
+                <span class="text-3xl">💬</span> ข้อความ
+                <span id="refreshIndicator" class="hidden">
+                    <svg class="w-5 h-5 text-blue-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </span>
+            </h1>
+        </div>
+
+        <!-- Chat List Container (Dynamic) -->
+        <div id="chatListContainer">
+            {% if chat_rooms %}
+            <div id="chatListItems" class="bg-gray-800 border-2 border-gray-700 rounded-2xl overflow-hidden shadow-2xl">
+                {% for room in chat_rooms %}
+                <a href="{% url 'chat:detail' room.id %}" 
+                   class="chat-item block hover:bg-gray-700/50 transition-all duration-200 {% if not forloop.last %}border-b border-gray-700{% endif %}"
+                   data-room-id="{{ room.id }}">
+                    <div class="flex items-center p-4 gap-4">
+                        <!-- Avatar -->
+                        <div class="relative flex-shrink-0">
+                            <div class="w-14 h-14 bg-gradient-to-br {% if room.other_user.user_type == 'mechanic' %}from-blue-500 to-blue-700{% else %}from-purple-500 to-purple-700{% endif %} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                                {% if room.other_user.first_name %}
+                                    {{ room.other_user.first_name|first|upper }}
+                                {% else %}
+                                    {{ room.other_user.username|first|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-gray-800 rounded-full"></div>
+                        </div>
+                        
+                        <!-- Chat Info -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-lg font-bold text-white truncate">
+                                        {% if room.other_user.first_name %}
+                                            {{ room.other_user.first_name }} {{ room.other_user.last_name|default:"" }}
+                                        {% else %}
+                                            {{ room.other_user.username }}
+                                        {% endif %}
+                                    </h3>
+                                    {% if room.other_user.user_type == 'mechanic' %}
+                                    <span class="text-xs bg-blue-600/30 text-blue-300 px-2 py-0.5 rounded-full">🔧 ช่าง</span>
+                                    {% else %}
+                                    <span class="text-xs bg-purple-600/30 text-purple-300 px-2 py-0.5 rounded-full">👤 ลูกค้า</span>
+                                    {% endif %}
+                                </div>
+                                <span class="text-xs text-gray-500 time-ago">
+                                    {% if room.last_message %}{{ room.last_message.created_at|timesince }} ที่แล้ว{% endif %}
+                                </span>
+                            </div>
+                            
+                            <p class="text-xs text-gray-500 mb-1">
+                                🏍️ {{ room.booking.motorcycle.brand }} {{ room.booking.motorcycle.model }}
+                                <span class="text-gray-600">• #{{ room.booking.id }}</span>
+                            </p>
+                            
+                            <div class="flex items-center justify-between">
+                                <p class="last-message text-sm text-gray-400 truncate max-w-[250px] {% if room.unread_count > 0 %}font-semibold text-white{% endif %}">
+                                    {% if room.last_message %}
+                                        {% if room.last_message.sender == request.user %}<span class="text-gray-500">คุณ: </span>{% endif %}
+                                        {{ room.last_message.message|truncatechars:40 }}
+                                    {% else %}
+                                        <span class="text-gray-500 italic">เริ่มการสนทนา...</span>
+                                    {% endif %}
+                                </p>
+                                {% if room.unread_count > 0 %}
+                                <span class="unread-badge flex-shrink-0 bg-green-600 text-white text-xs font-bold min-w-[20px] h-5 flex items-center justify-center px-1.5 rounded-full animate-pulse">
+                                    {{ room.unread_count }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="flex-shrink-0">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div id="emptyState" class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-16 text-center">
+                <div class="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center">
+                    <span class="text-6xl">💬</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-300 mb-3">ยังไม่มีการสนทนา</h2>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto">
+                    เมื่อคุณจองคิวซ่อมและมีช่างรับงาน คุณจะสามารถแชทกับช่างได้ที่นี่
+                </p>
+                <a href="{% url 'booking:booking_create_web' %}" class="inline-flex items-center gap-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 transform hover:scale-105 shadow-xl">
+                    <span class="text-xl">+</span>
+                    จองคิวซ่อมเลย
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- New Chat Room Toast -->
+<div id="newChatToast" class="fixed top-20 right-4 z-50 hidden">
+    <div class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 animate-slide-in-right">
+        <span class="text-3xl">💬</span>
+        <div>
+            <p class="font-bold">มีการสนทนาใหม่!</p>
+            <p class="text-sm text-green-100" id="newChatName"></p>
+        </div>
+        <button onclick="hideNewChatToast()" class="ml-2 text-green-200 hover:text-white">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+let knownRoomIds = new Set([{% for room in chat_rooms %}{{ room.id }},{% endfor %}]);
+const currentUserId = {{ request.user.id }};
+let lastRoomCount = {{ chat_rooms|length }};
+
+function formatTimeAgo(dateStr) {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'เมื่อสักครู่';
+    if (diffMins < 60) return `${diffMins} นาที ที่แล้ว`;
+    if (diffHours < 24) return `${diffHours} ชั่วโมง ที่แล้ว`;
+    return `${diffDays} วัน ที่แล้ว`;
+}
+
+function showNewChatToast(otherUserName) {
+    const toast = document.getElementById('newChatToast');
+    document.getElementById('newChatName').textContent = `แชทกับ ${otherUserName}`;
+    toast.classList.remove('hidden');
+    
+    // Play sound
+    try {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleRcALIzT+PWlYxUIIXrD7feqaRwGGGir4fa7dCQGE1uc1fDJgSkFEE+N1fbalgwABDZ8yfbeoxMAAS5wwO/irCEAASeq3e+6diYEC0ig1O3OhzMECDuL0/TamT4FBymB0vbkokkFBh14yfXspVMFBhRwxPTwr1wFBRBnvvLytGQFBAtfuPD0t2sFBA5guPDzs2oFBBBlufDxr2UFBRtwvPHrp1oEBSN4wO/jnE0EBi+Exu7XjjwEBz+NyvHOfSkECE+T0PLEcBgECl6Y1fS6ZwcEDGuc2fa1XwAEDnSe3fmvVQAEEHyg4fyqSwAEEoSj5P2kQQAEFYem5/2eNwAEGIuo6f2YLQAEGo6q6vyRIwAEHJKs6/uLGAAEH5Wu6vqFFwAEIZiv6fiAFQAEI5uw6fZ7EQAEJp6x6PR2CwAEKaGy5vJxBQAELKOz5e9tAAAELqW05OtpAAAEMKe15OdlAAAEMqi25ONhAAAENKq35N9dAAAENqy359lYAAAEOK635dRTAAAEOq+45c9OAAAEPbG55cpJAAA=');
+        audio.play();
+    } catch(e) {}
+    
+    setTimeout(() => { toast.classList.add('hidden'); }, 5000);
+}
+
+function hideNewChatToast() {
+    document.getElementById('newChatToast').classList.add('hidden');
+}
+
+function createChatItemHTML(room) {
+    const otherUser = room.other_user;
+    const displayName = otherUser.first_name ? `${otherUser.first_name} ${otherUser.last_name || ''}`.trim() : otherUser.username;
+    const initial = (otherUser.first_name || otherUser.username).charAt(0).toUpperCase();
+    const isMechanic = otherUser.user_type === 'mechanic';
+    const lastMsg = room.last_message;
+    const booking = room.booking_info;
+    
+    let lastMsgText = '<span class="text-gray-500 italic">เริ่มการสนทนา...</span>';
+    let timeText = '';
+    if (lastMsg) {
+        const prefix = lastMsg.sender_id === currentUserId ? '<span class="text-gray-500">คุณ: </span>' : '';
+        lastMsgText = prefix + (lastMsg.message.length > 40 ? lastMsg.message.substring(0, 40) + '...' : lastMsg.message);
+        timeText = formatTimeAgo(lastMsg.created_at);
+    }
+    
+    const unreadClass = room.unread_count > 0 ? 'font-semibold text-white' : '';
+    const unreadBadge = room.unread_count > 0 ? 
+        `<span class="unread-badge flex-shrink-0 bg-green-600 text-white text-xs font-bold min-w-[20px] h-5 flex items-center justify-center px-1.5 rounded-full animate-pulse">${room.unread_count}</span>` : '';
+    
+    return `
+        <a href="/chat/${room.id}/" 
+           class="chat-item block hover:bg-gray-700/50 transition-all duration-200 border-b border-gray-700 animate-fade-in"
+           data-room-id="${room.id}">
+            <div class="flex items-center p-4 gap-4">
+                <div class="relative flex-shrink-0">
+                    <div class="w-14 h-14 bg-gradient-to-br ${isMechanic ? 'from-blue-500 to-blue-700' : 'from-purple-500 to-purple-700'} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        ${initial}
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-gray-800 rounded-full"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg font-bold text-white truncate">${displayName}</h3>
+                            <span class="text-xs ${isMechanic ? 'bg-blue-600/30 text-blue-300' : 'bg-purple-600/30 text-purple-300'} px-2 py-0.5 rounded-full">${isMechanic ? '🔧 ช่าง' : '👤 ลูกค้า'}</span>
+                        </div>
+                        <span class="text-xs text-gray-500 time-ago">${timeText}</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-1">
+                        🏍️ ${booking ? booking.brand + ' ' + booking.model : ''} <span class="text-gray-600">• #${booking ? booking.id : ''}</span>
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <p class="last-message text-sm text-gray-400 truncate max-w-[250px] ${unreadClass}">${lastMsgText}</p>
+                        ${unreadBadge}
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+    `;
+}
+
+async function loadChatRooms() {
+    try {
+        document.getElementById('refreshIndicator')?.classList.remove('hidden');
+        
+        const response = await fetch('/chat/api/rooms/', {
+            headers: { 'Accept': 'application/json' }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const rooms = await response.json();
+        const container = document.getElementById('chatListContainer');
+        const emptyState = document.getElementById('emptyState');
+        let listItems = document.getElementById('chatListItems');
+        
+        // Check for new rooms
+        rooms.forEach(room => {
+            if (!knownRoomIds.has(room.id)) {
+                knownRoomIds.add(room.id);
+                const otherName = room.other_user?.first_name || room.other_user?.username || 'ผู้ใช้';
+                showNewChatToast(otherName);
+            }
+        });
+        
+        if (rooms.length > 0) {
+            // Remove empty state if exists
+            if (emptyState) emptyState.remove();
+            
+            // Create list container if doesn't exist
+            if (!listItems) {
+                listItems = document.createElement('div');
+                listItems.id = 'chatListItems';
+                listItems.className = 'bg-gray-800 border-2 border-gray-700 rounded-2xl overflow-hidden shadow-2xl';
+                container.appendChild(listItems);
+            }
+            
+            // Update room list
+            listItems.innerHTML = rooms.map(room => createChatItemHTML(room)).join('');
+            
+            // Remove border from last item
+            const items = listItems.querySelectorAll('.chat-item');
+            items.forEach((item, i) => {
+                if (i === items.length - 1) item.classList.remove('border-b');
+            });
+        }
+        
+        lastRoomCount = rooms.length;
+        
+    } catch (error) {
+        console.error('Error loading chat rooms:', error);
+    } finally {
+        document.getElementById('refreshIndicator')?.classList.add('hidden');
+    }
+}
+
+// Poll every 2 seconds for near real-time updates
+setInterval(loadChatRooms, 2000);
+
+// Initial load
+document.addEventListener('DOMContentLoaded', loadChatRooms);
+</script>
+
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+</style>
+{% endblock %}

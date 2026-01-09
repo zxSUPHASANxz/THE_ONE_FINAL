@@ -1,15 +1,20 @@
 from django.urls import path
 from . import views
+from . import views_web
 
 app_name = 'booking'
 
 urlpatterns = [
-    # Motorcycle endpoints
-    path('motorcycles/', views.MotorcycleListCreateView.as_view(), name='motorcycle_list'),
-    path('motorcycles/<int:pk>/', views.MotorcycleDetailView.as_view(), name='motorcycle_detail'),
+    # Web Views (Template-based) - requires login
+    path('', views_web.booking_list_view, name='booking_list_web'),
+    path('create/', views_web.booking_create_view, name='booking_create_web'),
+    path('motorcycles/', views_web.motorcycles_view, name='motorcycles_web'),
     
-    # Booking endpoints
-    path('bookings/', views.BookingListCreateView.as_view(), name='booking_list'),
-    path('bookings/<int:pk>/', views.BookingDetailView.as_view(), name='booking_detail'),
-    path('bookings/<int:pk>/cancel/', views.BookingCancelView.as_view(), name='booking_cancel'),
+    # API endpoints (JSON)
+    path('api/motorcycles/', views.MotorcycleListCreateView.as_view(), name='motorcycle_list'),
+    path('api/motorcycles/<int:pk>/', views.MotorcycleDetailView.as_view(), name='motorcycle_detail'),
+    
+    path('api/bookings/', views.BookingListCreateView.as_view(), name='booking_list'),
+    path('api/bookings/<int:pk>/', views.BookingDetailView.as_view(), name='booking_detail'),
+    path('api/bookings/<int:pk>/cancel/', views.BookingCancelView.as_view(), name='booking_cancel'),
 ]

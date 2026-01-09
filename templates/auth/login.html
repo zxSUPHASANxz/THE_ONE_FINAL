@@ -3,60 +3,301 @@
 {% block title %}เข้าสู่ระบบ - THE ONE{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100">
     <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                เข้าสู่ระบบ
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                หรือ
-                <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:text-primary-500">
-                    สมัครสมาชิกใหม่
-                </a>
-            </p>
-        </div>
-        
-        <form class="mt-8 space-y-6" method="POST" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div class="rounded-md shadow-sm -space-y-px">
-                <div>
-                    <label for="username" class="sr-only">ชื่อผู้ใช้</label>
-                    <input id="username" name="username" type="text" required 
-                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm" 
-                           placeholder="ชื่อผู้ใช้">
-                </div>
-                <div>
-                    <label for="password" class="sr-only">รหัสผ่าน</label>
-                    <input id="password" name="password" type="password" required 
-                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm" 
-                           placeholder="รหัสผ่าน">
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input id="remember-me" name="remember-me" type="checkbox" 
-                           class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                        จดจำฉันไว้
-                    </label>
-                </div>
-
-                <div class="text-sm">
-                    <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
-                        ลืมรหัสผ่าน?
-                    </a>
-                </div>
-            </div>
-
-            <div>
-                <button type="submit" 
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 border-2 border-gray-200">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">🔐</div>
+                <h2 class="text-3xl font-extrabold bg-gradient-to-r from-red-600 to-gold-500 bg-clip-text text-transparent">
                     เข้าสู่ระบบ
-                </button>
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    หรือ
+                    <a href="{% url 'users:register_web' %}" class="font-medium text-red-600 hover:text-red-500 underline">
+                        สมัครสมาชิกใหม่
+                    </a>
+                </p>
             </div>
-        </form>
+            
+            <form id="loginForm" class="space-y-6" method="POST" action="{% url 'users:login_web' %}">
+                {% csrf_token %}
+                
+                <!-- Error Alert -->
+                <div id="errorAlert" class="hidden bg-red-500 border-2 border-red-500 text-red-700 px-4 py-3 rounded-lg">
+                    <div class="flex items-start space-x-2">
+                        <span class="text-xl">⚠️</span>
+                        <div>
+                            <p class="font-bold">เข้าสู่ระบบไม่สำเร็จ</p>
+                            <p id="errorMessage" class="text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            ชื่อผู้ใช้
+                        </label>
+                        <input 
+                            id="username" 
+                            name="username" 
+                            type="text" 
+                            required 
+                            autocomplete="username"
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200" 
+                            placeholder="ชื่อผู้ใช้">
+                        <p id="usernameError" class="hidden text-red-500 text-xs mt-1"></p>
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            รหัสผ่าน
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                autocomplete="current-password"
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 pr-12 border border-gray-300 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200" 
+                                placeholder="รหัสผ่าน">
+                            <button 
+                                type="button" 
+                                id="togglePassword"
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-red-600 focus:outline-none transition-colors duration-200 bg-white hover:bg-gray-50 rounded z-10 border border-gray-300"
+                                title="คลิกเพื่อแสดง/ซ่อนรหัสผ่าน"
+                                style="cursor: pointer;">
+                                <!-- Eye Open Icon -->
+                                <svg id="eyeOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <!-- Eye Closed Icon (hidden by default) -->
+                                <svg id="eyeClosed" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <p id="passwordError" class="hidden text-red-500 text-xs mt-1"></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            id="remember-me" 
+                            name="remember-me" 
+                            type="checkbox" 
+                            class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            จดจำฉันไว้
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-red-600 hover:text-red-500">
+                            ลืมรหัสผ่าน?
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <button 
+                        type="submit" 
+                        id="submitBtn"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <span id="btnText">เข้าสู่ระบบ</span>
+                        <span id="btnLoader" class="hidden">
+                            <svg class="animate-spin inline-block w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            กำลังเข้าสู่ระบบ...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle icons
+        if (type === 'text') {
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+        } else {
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+        }
+    });
+
+    // Show error
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('hidden');
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Hide error
+    function hideError() {
+        errorAlert.classList.add('hidden');
+    }
+
+    // Loading state
+    function setLoading(loading) {
+        submitBtn.disabled = loading;
+        if (loading) {
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+        } else {
+            btnText.classList.remove('hidden');
+            btnLoader.classList.add('hidden');
+        }
+    }
+
+    // Validation
+    function validateForm() {
+        let isValid = true;
+        hideError();
+
+        // Username validation
+        const username = usernameInput.value.trim();
+        if (!username) {
+            usernameInput.classList.add('border-red-500');
+            document.getElementById('usernameError').textContent = 'กรุณากรอกชื่อผู้ใช้';
+            document.getElementById('usernameError').classList.remove('hidden');
+            isValid = false;
+        } else if (username.length < 3) {
+            usernameInput.classList.add('border-red-500');
+            document.getElementById('usernameError').textContent = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร';
+            document.getElementById('usernameError').classList.remove('hidden');
+            isValid = false;
+        } else {
+            usernameInput.classList.remove('border-red-500');
+            usernameInput.classList.add('border-green-500');
+            document.getElementById('usernameError').classList.add('hidden');
+        }
+
+        // Password validation
+        const password = passwordInput.value;
+        if (!password) {
+            passwordInput.classList.add('border-red-500');
+            document.getElementById('passwordError').textContent = 'กรุณากรอกรหัสผ่าน';
+            document.getElementById('passwordError').classList.remove('hidden');
+            isValid = false;
+        } else if (password.length < 6) {
+            passwordInput.classList.add('border-red-500');
+            document.getElementById('passwordError').textContent = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+            document.getElementById('passwordError').classList.remove('hidden');
+            isValid = false;
+        } else {
+            passwordInput.classList.remove('border-red-500');
+            passwordInput.classList.add('border-green-500');
+            document.getElementById('passwordError').classList.add('hidden');
+        }
+
+        return isValid;
+    }
+
+    // Real-time validation
+    usernameInput.addEventListener('input', function() {
+        if (this.value.trim().length >= 3) {
+            this.classList.remove('border-red-500');
+            this.classList.add('border-green-500');
+            document.getElementById('usernameError').classList.add('hidden');
+        }
+    });
+
+    passwordInput.addEventListener('input', function() {
+        if (this.value.length >= 6) {
+            this.classList.remove('border-red-500');
+            this.classList.add('border-green-500');
+            document.getElementById('passwordError').classList.add('hidden');
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        setLoading(true);
+        hideError();
+
+        try {
+            const response = await fetch('/api/users/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Success
+                window.location.href = data.redirect || '/';
+            } else {
+                // Error
+                const errorMsg = data.error || data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+                showError(errorMsg);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showError('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+            setLoading(false);
+        }
+    });
+
+    // Helper: Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Focus on username input
+    usernameInput.focus();
+});
+</script>
+{% endblock %}
+
 {% endblock %}

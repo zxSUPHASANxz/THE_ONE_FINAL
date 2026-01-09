@@ -32,7 +32,7 @@ try {
     $tunnels = ($response.Content | ConvertFrom-Json).tunnels
     $newUrl = $tunnels[0].public_url
     
-    Write-Host "✓ New URL: $newUrl" -ForegroundColor Green
+    Write-Host "Success! New URL: $newUrl" -ForegroundColor Green
     
     # 5. Update .env file
     Write-Host "[5/5] Updating .env file..." -ForegroundColor Yellow
@@ -41,14 +41,14 @@ try {
     $updatedContent = $envContent -replace 'NGROK_URL=https://[a-z0-9]+\.ngrok-free\.app', "NGROK_URL=$newUrl"
     $updatedContent | Set-Content $ENV_FILE -Encoding UTF8
     
-    Write-Host "✓ Updated .env file" -ForegroundColor Green
+    Write-Host "Success! Updated .env file" -ForegroundColor Green
     
     # 6. Restart n8n
     Write-Host "`nRestarting n8n..." -ForegroundColor Yellow
     docker compose restart n8n
     
     Write-Host "`n=================================" -ForegroundColor Green
-    Write-Host "✓ ngrok reset complete!" -ForegroundColor Green
+    Write-Host "SUCCESS! ngrok reset complete!" -ForegroundColor Green
     Write-Host "New URL: $newUrl" -ForegroundColor Green
     Write-Host "=================================" -ForegroundColor Green
     
@@ -57,7 +57,7 @@ try {
     Add-Content -Path "$PROJECT_PATH\ngrok_reset.log" -Value $logEntry -Encoding UTF8
     
 } catch {
-    Write-Host "`n✗ Error: $_" -ForegroundColor Red
+    Write-Host "`nERROR: $_" -ForegroundColor Red
     $errorEntry = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - ERROR: $_"
     Add-Content -Path "$PROJECT_PATH\ngrok_reset.log" -Value $errorEntry -Encoding UTF8
     exit 1
