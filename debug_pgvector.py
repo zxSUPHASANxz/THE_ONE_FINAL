@@ -55,7 +55,7 @@ for r in results:
 print("\n4️⃣ Testing vector similarity search...")
 
 # Generate query embedding with Gemini
-genai.configure(api_key='AIzaSyCUG68eKoNRGDWDEd7p6ZIGQHOVjVIUvtU')
+genai.configure(api_key='AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY')
 query = "CBR250rr"
 print(f"   Query: '{query}'")
 

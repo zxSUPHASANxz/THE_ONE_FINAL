@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}เข้าสู่ระบบ - THE ONE{% endblock %}
 
@@ -8,7 +9,7 @@
         <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8">
             <div class="text-center mb-8">
                 <div class="mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4 animate-pulse">
-                    🏍️
+                    <img src="{% static 'Gemini_Generated_Image_g2vtrsg2vtrsg2vt-removebg-preview.png' %}" alt="THE_ONE Logo" class="w-40 h-40 object-contain filter drop-shadow-2xl" />
                 </div>
                 <h2 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
                     เข้าสู่ระบบ
@@ -82,7 +83,7 @@
                     </div>
 
                     <div class="text-sm">
-                        <a href="#" class="font-medium text-gold-400 hover:text-gold-300 transition-colors">
+                        <a href="{% url 'users:password_reset' %}" class="font-medium text-gold-400 hover:text-gold-300 transition-colors">
                             ลืมรหัสผ่าน?
                         </a>
                     </div>

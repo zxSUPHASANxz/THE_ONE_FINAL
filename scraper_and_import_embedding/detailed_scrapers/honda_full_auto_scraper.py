@@ -37,7 +37,7 @@ from tqdm import tqdm
 from chatbot.models import MotorcycleKnowledge
 
 # Gemini API configuration
-GEMINI_API_KEY = "AIzaSyCUG68eKoNRGDWDEd7p6ZIGQHOVjVIUvtU"
+GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
 genai.configure(api_key=GEMINI_API_KEY)
 
 class HondaFullAutoScraper:

@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            sql='UPDATE "KnowBase" SET embedding = NULL',
+            sql='UPDATE "knowbase" SET embedding = NULL',
             reverse_sql="SELECT 1",
         ),
         migrations.AlterField(

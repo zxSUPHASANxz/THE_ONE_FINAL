@@ -3,14 +3,42 @@ Web Views for User Management
 Handles traditional template-based views (not API)
 """
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
+
+
+def direct_password_reset_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if not email or not new_password or not confirm_password:
+            messages.error(request, 'กรุณากรอกข้อมูลให้ครบถ้วน')
+            return render(request, 'users/password_reset/direct_reset.html')
+            
+        if new_password != confirm_password:
+            messages.error(request, 'รหัสผ่านไม่ตรงกัน')
+            return render(request, 'users/password_reset/direct_reset.html')
+            
+        try:
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'เปลี่ยนรหัสผ่านสำเร็จ! กรุณาเข้าสู่ระบบด้วยรหัสผ่านใหม่')
+            return redirect('users:login')
+        except User.DoesNotExist:
+            messages.error(request, 'ไม่พบผู้ใช้ที่มีอีเมลนี้ในระบบ')
+            return render(request, 'users/password_reset/direct_reset.html')
+            
+    return render(request, 'users/password_reset/direct_reset.html')
 
 
 @require_http_methods(["GET", "POST"])

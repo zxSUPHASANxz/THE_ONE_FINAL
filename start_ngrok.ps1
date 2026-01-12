@@ -38,7 +38,7 @@ try {
 NGROK_URL=$url
 NGROK_AUTHTOKEN=32Gc9AiZAGtTZ8yyE8zzbVYAi0B_66EmP2knS61uxe38eYN8J
 N8N_WEBHOOK_URL=http://localhost:5678/webhook/chatbot-rag
-GEMINI_API_KEY=AIzaSyCUG68eKoNRGDWDEd7p6ZIGQHOVjVIUvtU
+GEMINI_API_KEY=AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY
 "@ | Set-Content .env
     
     Write-Host "`n╔════════════════════════════════════════════════╗" -ForegroundColor Green

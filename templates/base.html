@@ -102,8 +102,8 @@
                 <div class="flex">
                     <div class="flex-shrink-0 flex items-center">
                         <a href="/" class="flex items-center space-x-3 group">
-                            <div class="w-12 h-12 flex items-center justify-center text-4xl filter drop-shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                                🏍️
+                            <div class="w-12 h-12 flex items-center justify-center filter drop-shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                                <img src="/static/Gemini_Generated_Image_g2vtrsg2vtrsg2vt-removebg-preview.png" alt="THE_ONE Logo" class="w-12 h-12 object-contain" />
                             </div>
                             <span class="text-2xl font-bold bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent group-hover:from-gold-200 group-hover:to-gold-400 transition-all duration-300 drop-shadow-lg">
                                 THE_ONE
@@ -133,11 +133,11 @@
                 <div class="flex items-center">
                     {% if user.is_authenticated %}
                     <!-- Chat Button -->
-                    <div class="mr-4 relative">
+                    <div class="mr-3 relative">
                         <a href="{% url 'chat:list' %}" 
-                           class="relative bg-white/10 hover:bg-white/20 backdrop-blur-sm p-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-gold-400 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 border border-white/20 inline-block">
+                        class="relative w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full focus:outline-none focus:ring-2 focus:ring-gold-400 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 border border-white/20">
                             <span class="sr-only">View messages</span>
-                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
                             <!-- Chat Badge (if unread) -->
@@ -146,13 +146,13 @@
                     </div>
                     
                     <!-- Notification Button (For All Users) -->
-                    <div class="mr-4 relative" x-data="{ notificationOpen: false }">
+                    <div class="mr-3 relative" x-data="{ notificationOpen: false }">
                         <button @click="notificationOpen = !notificationOpen" 
                                 id="notificationBtn"
                                 type="button" 
-                                class="relative bg-white/10 hover:bg-white/20 backdrop-blur-sm p-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-gold-400 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 border border-white/20">
+                                class="relative w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full focus:outline-none focus:ring-2 focus:ring-gold-400 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 border border-white/20">
                             <span class="sr-only">View notifications</span>
-                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
                             <!-- Notification Badge -->

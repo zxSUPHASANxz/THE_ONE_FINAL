@@ -31,9 +31,9 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Knowledge Base',
                 'verbose_name_plural': 'Knowledge Base',
-                'db_table': 'KnowBase',
+                'db_table': 'knowbase',
                 'ordering': ['-created_at'],
-                'indexes': [models.Index(fields=['source', 'brand'], name='KnowBase_source_da5da4_idx'), models.Index(fields=['brand', 'model'], name='KnowBase_brand_af6223_idx')],
+                'indexes': [models.Index(fields=['source', 'brand'], name='knowbase_source_da5da4_idx'), models.Index(fields=['brand', 'model'], name='knowbase_brand_af6223_idx')],
             },
         ),
     ]

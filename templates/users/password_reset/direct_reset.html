@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}รีเซ็ตรหัสผ่าน - THE ONE{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8">
+            <div class="text-center mb-8">
+                <div class="mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4">
+                    🔐
+                </div>
+                <h2 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
+                    รีเซ็ตรหัสผ่านใหม่
+                </h2>
+                <p class="mt-2 text-sm text-gray-400">
+                    กรุณากรอกอีเมลและรหัสผ่านใหม่ของคุณ
+                </p>
+            </div>
+
+            <form class="mt-8 space-y-6" method="POST">
+                {% csrf_token %}
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="rounded-lg p-4 mb-4 {% if message.tags == 'success' %}bg-green-900/30 border-2 border-green-500 text-green-300{% else %}bg-red-900/30 border-2 border-red-500 text-red-300{% endif %}">
+                            <p class="font-semibold">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">อีเมล</label>
+                        <input 
+                            id="email" 
+                            name="email" 
+                            type="email" 
+                            required 
+                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
+                            placeholder="example@email.com">
+                    </div>
+                    
+                    <div class="relative">
+                        <label for="new_password" class="block text-sm font-medium text-gray-300 mb-2">รหัสผ่านใหม่</label>
+                        <div class="relative">
+                            <input 
+                                id="new_password" 
+                                name="new_password" 
+                                type="password" 
+                                required 
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 pr-10"
+                                placeholder="รหัสผ่านใหม่">
+                            <button type="button" onclick="togglePassword('new_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none">
+                                <span id="icon_new_password">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-300 mb-2">ยืนยันรหัสผ่านใหม่</label>
+                        <div class="relative">
+                            <input 
+                                id="confirm_password" 
+                                name="confirm_password" 
+                                type="password" 
+                                required 
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 pr-10"
+                                placeholder="ยืนยันรหัสผ่านใหม่">
+                            <button type="button" onclick="togglePassword('confirm_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white focus:outline-none">
+                                <span id="icon_confirm_password">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <button 
+                        type="submit" 
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-bold rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                        ตั้งรหัสผ่านใหม่ทันที
+                    </button>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'users:login' %}" class="font-medium text-gray-400 hover:text-white transition-colors">
+                        กลับหน้าเข้าสู่ระบบ
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        const icon = document.getElementById('icon_' + fieldId);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🔒'; // Icon when showing password (click to hide) - or use crossed eye
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️'; // Icon when hiding password (click to show)
+        }
+    }
+</script>
+{% endblock %}
