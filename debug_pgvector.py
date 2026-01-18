@@ -3,14 +3,21 @@ import psycopg2
 import google.generativeai as genai
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
+import os
 
-# Connect to DB
+# Connect to DB using environment variables where possible
+DB_NAME = os.getenv('DB_NAME', 'the_one_db')
+DB_USER = os.getenv('DB_USER', 'suphasan')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_PORT = os.getenv('DB_PORT', '5433')
+
 conn = psycopg2.connect(
-    dbname='the_one_db',
-    user='suphasan', 
-    password='Fenrir@4927',
-    host='localhost',
-    port='5433'
+    dbname=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST,
+    port=DB_PORT
 )
 cur = conn.cursor()
 
@@ -54,8 +61,12 @@ for r in results:
 # 4. Test similarity search manually
 print("\n4️⃣ Testing vector similarity search...")
 
-# Generate query embedding with Gemini
-genai.configure(api_key='AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY')
+# Generate query embedding with Gemini (API key must be provided via env)
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+if not GEMINI_API_KEY:
+    print('WARNING: GEMINI_API_KEY not set. Embedding generation may fail.')
+else:
+    genai.configure(api_key=GEMINI_API_KEY)
 query = "CBR250rr"
 print(f"   Query: '{query}'")
 

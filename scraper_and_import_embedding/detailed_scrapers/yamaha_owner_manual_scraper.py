@@ -9,14 +9,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from the_one.logging_config import setup_logging
+import logging
+logger = logging.getLogger(__name__)
+
 
 def start_scraper():
     # 1. ตั้งค่าโฟลเดอร์เก็บไฟล์
     base_dir = os.path.dirname(os.path.abspath(__file__))
     download_dir = os.path.join(base_dir, "yamaha_manuals_pdf")
+    # logging is initialized in the entrypoint
     if not os.path.exists(download_dir):
         os.makedirs(download_dir)
-        print(f"สร้างโฟลเดอร์เก็บไฟล์ที่: {download_dir}")
+        logger.info("สร้างโฟลเดอร์เก็บไฟล์ที่: %s", download_dir)
 
     # 2. ตั้งค่า Browser
     options = webdriver.ChromeOptions()
@@ -27,22 +32,22 @@ def start_scraper():
     all_data = []
 
     try:
-        print("กำลังเข้าสู่หน้าเว็บหลัก...")
+        logger.info("กำลังเข้าสู่หน้าเว็บหลัก...")
         driver.get("https://www.yamaha-motor.co.th/dealer-services/owners-manual")
         
         # 3. หาลิงก์ "ดูทั้งหมด" ของทุกหมวด
         view_all_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.contentt-1.txt20")))
         category_urls = [el.get_attribute('href') for el in view_all_elements if el.get_attribute('href')]
-        print(f"พบหมวดหมู่ทั้งหมด {len(category_urls)} หมวด")
+        logger.info("พบหมวดหมู่ทั้งหมด %d หมวด", len(category_urls))
 
         for cat_url in category_urls:
-            print(f"\n--- กำลังเข้าหมวดหมู่: {cat_url} ---")
+            logger.info("\n--- กำลังเข้าหมวดหมู่: %s ---", cat_url)
             driver.get(cat_url)
             time.sleep(3) # รอหน้าเว็บโหลดข้อมูลรุ่นรถ
 
             # 4. หาปุ่มภาษาไทยในหมวดนั้นๆ (ต้องนิยามภายใน loop นี้)
             thai_buttons = driver.find_elements(By.CSS_SELECTOR, "a.mainbtnshort.red")
-            print(f"พบปุ่มภาษาไทย {len(thai_buttons)} ปุ่ม")
+            logger.info("พบปุ่มภาษาไทย %d ปุ่ม", len(thai_buttons))
 
             for btn in thai_buttons:
                 try:
@@ -58,7 +63,7 @@ def start_scraper():
                     file_name = f"{clean_name}_TH.pdf"
                     file_path = os.path.join(download_dir, file_name)
 
-                    print(f"กำลังจัดการรุ่น: {model_name}")
+                    logger.info("กำลังจัดการรุ่น: %s", model_name)
                     
                     # ดาวน์โหลดไฟล์
                     res = requests.get(pdf_url)
@@ -86,13 +91,14 @@ def start_scraper():
         with open(json_output, "w", encoding="utf-8") as f:
             json.dump(all_data, f, ensure_ascii=False, indent=4)
         
-        print(f"\n[สำเร็จ] สกัดข้อมูลเสร็จสิ้นทั้งหมด {len(all_data)} รายการ")
-        print(f"ไฟล์ JSON อยู่ที่: {json_output}")
+        logger.info("\n[สำเร็จ] สกัดข้อมูลเสร็จสิ้นทั้งหมด %d รายการ", len(all_data))
+        logger.info("ไฟล์ JSON อยู่ที่: %s", json_output)
 
     except Exception as e:
-        print(f"เกิดข้อผิดพลาดในการทำงาน: {e}")
+        logger.exception("เกิดข้อผิดพลาดในการทำงาน: %s", e)
     finally:
         driver.quit()
 
 if __name__ == "__main__":
+    setup_logging()
     start_scraper()

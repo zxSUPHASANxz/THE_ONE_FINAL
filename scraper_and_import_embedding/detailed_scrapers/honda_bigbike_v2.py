@@ -13,6 +13,10 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import logging
+from the_one.logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
 
 
 class HondaBigBikeV2:
@@ -35,7 +39,7 @@ class HondaBigBikeV2:
     
     def get_model_list(self):
         """ดึงรายชื่อรุ่นทั้งหมด"""
-        print(f"\n🔍 Fetching models from {self.base_url}/motorcycle")
+        logger.info("\n🔍 Fetching models from %s/motorcycle", self.base_url)
         driver = self.setup_driver(headless=False)
         
         try:
@@ -80,7 +84,7 @@ class HondaBigBikeV2:
                     })
                     seen.add(href)
             
-            print(f"✅ Found {len(models)} models")
+            logger.info("✅ Found %d models", len(models))
             return models
         
         finally:
@@ -96,8 +100,8 @@ class HondaBigBikeV2:
         # หาจาก text "ข้อมูลผลิตภัณฑ์"
         spec_headers = soup.find_all(text=re.compile(r'ข้อมูลผลิตภัณฑ์|specification|spec', re.I))
         
-        print(f"  Found {len(spec_sections)} spec sections")
-        print(f"  Found {len(spec_headers)} spec headers")
+        logger.info("  Found %d spec sections", len(spec_sections))
+        logger.info("  Found %d spec headers", len(spec_headers))
         
         # ลองคลิกปุ่ม/tab ข้อมูลผลิตภัณฑ์
         try:
@@ -108,7 +112,7 @@ class HondaBigBikeV2:
                     time.sleep(0.5)
                     driver.execute_script("arguments[0].click();", btn)
                     time.sleep(2)
-                    print(f"  Clicked spec button")
+                    logger.info("  Clicked spec button")
                 except:
                     pass
         except:
@@ -159,14 +163,14 @@ class HondaBigBikeV2:
                 if label and value:
                     specs[label] = value
         
-        print(f"  Extracted {len(specs)} specification items")
+        logger.info("  Extracted %d specification items", len(specs))
         return specs
     
     def scrape_single_model(self, url):
         """สกัดข้อมูลรุ่นเดียว"""
-        print(f"\n{'='*80}")
-        print(f"🏍️  Scraping: {url}")
-        print(f"{'='*80}")
+        logger.info("\n%s", '='*80)
+        logger.info("🏍️  Scraping: %s", url)
+        logger.info("%s", '='*80)
         
         driver = self.setup_driver(headless=False)
         
@@ -177,10 +181,10 @@ class HondaBigBikeV2:
             # หาชื่อรุ่นจาก h1
             try:
                 model_name = driver.find_element(By.TAG_NAME, 'h1').text.strip()
-                print(f"📝 Model: {model_name}")
+                logger.info("📝 Model: %s", model_name)
             except:
                 model_name = url.split('/')[-1]
-                print(f"📝 Model (from URL): {model_name}")
+                logger.info("📝 Model (from URL): %s", model_name)
             
             # Scroll ทั้งหน้า
             for i in range(3):
@@ -206,7 +210,7 @@ class HondaBigBikeV2:
                 if match:
                     price = match.group(1).replace(',', '')
                     price_text = match.group(0)
-                    print(f"💰 Price: {price_text}")
+                    logger.info("💰 Price: %s", price_text)
                     break
             
             # ดึง specifications
@@ -256,16 +260,16 @@ class HondaBigBikeV2:
                 'description': ''
             }
             
-            print(f"\n✅ Scraped successfully!")
-            print(f"  - Specifications: {len(specs)} items")
-            print(f"  - Features: {len(features)} items")
-            print(f"  - Images: {len(images[:15])} items")
-            print(f"  - Colors: {len(colors)} items")
+            logger.info("\n✅ Scraped successfully!")
+            logger.info("  - Specifications: %d items", len(specs))
+            logger.info("  - Features: %d items", len(features))
+            logger.info("  - Images: %d items", len(images[:15]))
+            logger.info("  - Colors: %d items", len(colors))
             
             return result
         
         except Exception as e:
-            print(f"❌ Error: {e}")
+            logger.exception("❌ Error: %s", e)
             import traceback
             traceback.print_exc()
             return None
@@ -277,28 +281,28 @@ class HondaBigBikeV2:
         filepath = f"scraper/detailed_scrapers/{filename}"
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"\n💾 Saved to {filepath}")
+        logger.info("\n💾 Saved to %s", filepath)
 
 
     def scrape_all_models(self, limit=None):
         """สกัดทุกรุ่นอัตโนมัติ"""
-        print(f"\n{'='*80}")
-        print("🏍️  HONDA BIGBIKE AUTO SCRAPER")
-        print(f"{'='*80}")
+        logger.info("\n%s", '='*80)
+        logger.info("🏍️  HONDA BIGBIKE AUTO SCRAPER")
+        logger.info("%s", '='*80)
         
         # ดึงรายชื่อรุ่นทั้งหมด
         models = self.get_model_list()
         
         if limit:
             models = models[:limit]
-            print(f"\n⚡ Scraping {limit} models (limited)")
+            logger.info("\n⚡ Scraping %d models (limited)", limit)
         else:
-            print(f"\n🚀 Scraping ALL {len(models)} models")
+            logger.info("\n🚀 Scraping ALL %d models", len(models))
         
         results = []
         
         for i, model in enumerate(models, 1):
-            print(f"\n[{i}/{len(models)}]")
+            logger.info("\n[%d/%d]", i, len(models))
             result = self.scrape_single_model(model['url'])
             
             if result:
@@ -307,7 +311,7 @@ class HondaBigBikeV2:
             
             # Rate limiting
             if i < len(models):
-                print(f"⏳ Waiting 3 seconds...")
+                logger.info("⏳ Waiting 3 seconds...")
                 time.sleep(3)
         
         return results
@@ -336,23 +340,24 @@ def main():
             scraper.save_json(results, 'honda_bigbike_all.json')
     else:
         # Default: ทดสอบ 5 รุ่น
-        print("Usage:")
-        print("  --single  : Scrape single model (test)")
-        print("  --test    : Scrape 3 models")
-        print("  --all     : Scrape ALL models")
-        print("\nRunning default: 5 models test\n")
+        logger.info("Usage:")
+        logger.info("  --single  : Scrape single model (test)")
+        logger.info("  --test    : Scrape 3 models")
+        logger.info("  --all     : Scrape ALL models")
+        logger.info("\nRunning default: 5 models test\n")
         
         results = scraper.scrape_all_models(limit=5)
         scraper.save_json(results, 'honda_bigbike_test.json')
         
         # แสดงสรุป
-        print(f"\n{'='*80}")
-        print("📊 SUMMARY:")
-        print(f"{'='*80}")
-        print(f"✅ Scraped {len(results)} models")
+        logger.info("\n%s", '='*80)
+        logger.info("📊 SUMMARY:")
+        logger.info("%s", '='*80)
+        logger.info("✅ Scraped %d models", len(results))
         for r in results:
-            print(f"  - {r['model']}: {len(r['specifications'])} specs, ฿{r['price']['price']}")
+            logger.info("  - %s: %d specs, ฿%s", r.get('model'), len(r.get('specifications', {})), r.get('price', {}).get('price'))
 
 
 if __name__ == '__main__':
+    setup_logging()
     main()

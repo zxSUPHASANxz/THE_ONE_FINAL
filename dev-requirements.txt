@@ -1,0 +1,14 @@
+pytest
+pytest-django
+pytest-mock
+black
+ruff
+isort
+mypy
+python-dotenv
+pytest>=7.4.0
+black>=24.3.0
+ruff>=0.6.0
+isort>=5.13.0
+pre-commit>=4.6.0
+mypy>=1.5.1

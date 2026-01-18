@@ -1,0 +1,8 @@
+booking
+chat
+chatbot
+mechanics
+scraper_and_import_embedding
+the_one
+the_one_app
+users

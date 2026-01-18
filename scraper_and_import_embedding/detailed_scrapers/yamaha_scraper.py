@@ -24,6 +24,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+import logging
+
+logger = logging.getLogger(__name__)
+from the_one.logging_config import setup_logging
 
 # =====================
 # Configuration
@@ -114,7 +118,7 @@ def scrape_model_overview(driver, model_info: Dict) -> Optional[Dict]:
     overview_url = f"{BASE_URL}/commuter/{slug}/overview"
     spec_url = f"{BASE_URL}/commuter/{slug}/specification"
     
-    print(f"  📄 Fetching: {overview_url}")
+    logger.info("  📄 Fetching: %s", overview_url)
     
     try:
         driver.get(overview_url)
@@ -138,7 +142,7 @@ def scrape_model_overview(driver, model_info: Dict) -> Optional[Dict]:
             data["price"], data["price_numeric"] = parse_price(price_text)
         
         # Try to get specs from specification page
-        print(f"  � Fetching specs: {spec_url}")
+        logger.info("  � Fetching specs: %s", spec_url)
         driver.get(spec_url)
         time.sleep(2)
         
@@ -148,7 +152,7 @@ def scrape_model_overview(driver, model_info: Dict) -> Optional[Dict]:
         return data
         
     except Exception as e:
-        print(f"  ❌ Error: {e}")
+        logger.exception("  ❌ Error: %s", e)
         return None
 
 
@@ -212,9 +216,9 @@ def extract_specifications(soup: BeautifulSoup) -> Dict[str, str]:
 
 def scrape_all_yamaha():
     """Main scraping function"""
-    print("=" * 60)
-    print("🏍️ Yamaha Thailand Motorcycle Scraper")
-    print("=" * 60)
+    logger.info("%s", "=" * 60)
+    logger.info("🏍️ Yamaha Thailand Motorcycle Scraper")
+    logger.info("%s", "=" * 60)
     
     driver = init_driver()
     all_models = []
@@ -224,19 +228,19 @@ def scrape_all_yamaha():
         total = len(YAMAHA_MODELS)
         
         for idx, model_info in enumerate(YAMAHA_MODELS, 1):
-            print(f"\n[{idx}/{total}] {model_info['name']}")
-            
+            logger.info("\n[%d/%d] %s", idx, total, model_info['name'])
+
             try:
                 model_data = scrape_model_overview(driver, model_info)
                 if model_data:
                     all_models.append(model_data)
-                    print(f"  ✅ Done - Price: {model_data.get('price', 'N/A')}, Specs: {len(model_data.get('specifications', {}))}")
-                
+                    logger.info("  ✅ Done - Price: %s, Specs: %d", model_data.get('price', 'N/A'), len(model_data.get('specifications', {})))
+
                 # Random delay to avoid blocking
                 time.sleep(random.uniform(1.5, 3.0))
-                
+
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                logger.exception("  ❌ Error: %s", e)
                 errors.append({"model": model_info["name"], "error": str(e)})
                 
     finally:
@@ -272,17 +276,18 @@ def scrape_all_yamaha():
         }, f, ensure_ascii=False, indent=2)
     
     # Summary
-    print("\n" + "=" * 60)
-    print("📊 SCRAPING SUMMARY")
-    print("=" * 60)
-    print(f"✅ Total scraped: {len(all_models)}")
-    print(f"❌ Errors: {len(errors)}")
-    print(f"📁 Saved to: {output_file}")
-    print(f"📁 Latest: {latest_file}")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 SCRAPING SUMMARY")
+    logger.info("=" * 60)
+    logger.info("✅ Total scraped: %d", len(all_models))
+    logger.info("❌ Errors: %d", len(errors))
+    logger.info("📁 Saved to: %s", output_file)
+    logger.info("📁 Latest: %s", latest_file)
+    logger.info("=" * 60)
     
     return all_models
 
 
 if __name__ == "__main__":
+    setup_logging()
     scrape_all_yamaha()

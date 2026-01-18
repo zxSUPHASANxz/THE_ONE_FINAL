@@ -3,7 +3,7 @@ name = "the-one-v3"
 version = "0.1.0"
 description = "THE_ONE - Motorcycle Repair Chatbot & Booking System"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "django>=5.2.8",
     "djangorestframework>=3.14.0",
@@ -24,3 +24,45 @@ dependencies = [
     "pandas>=2.3.3",
     "pdfplumber>=0.11.9",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=24.3.0",
+    "ruff>=0.6.0",
+    "isort>=5.13.0",
+    "pre-commit>=4.5.1,<5",
+    "mypy>=1.5.1",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+extend-select = ["I"]
+line-length = 88
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[tool.setuptools]
+packages = [
+    "the_one",
+    "booking",
+    "chatbot",
+    "chat",
+    "mechanics",
+    "users",
+    "scraper_and_import_embedding",
+    "the_one_app",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"

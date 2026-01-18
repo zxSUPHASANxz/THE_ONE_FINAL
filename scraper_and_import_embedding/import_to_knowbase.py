@@ -17,6 +17,10 @@ import google.generativeai as genai
 from pathlib import Path
 from dotenv import load_dotenv
 import django
+import logging
+
+logger = logging.getLogger(__name__)
+from the_one.logging_config import setup_logging
 
 # --- Setup Django Environment (Standalone Script) ---
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,10 +32,11 @@ django.setup()
 from chatbot.models import KnowBase
 
 # --- Configuration ---
+# Load GEMINI API key from environment only. Do NOT keep secrets in source.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    print("Error: GEMINI_API_KEY not found in .env")
+    logger.critical("GEMINI_API_KEY not set. Add it to your .env or environment variables.")
     sys.exit(1)
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -48,7 +53,7 @@ class KnowBaseImporter:
         if total == 0:
             return
         percent = int((current / total) * 100)
-        print(f"{prefix} Progress: {percent}% ({current}/{total})", end='\r')
+        logger.info("%s Progress: %d%% (%d/%d)", prefix, percent, current, total)
 
     def generate_embedding_with_retry(self, text: str, max_retries: int = 3):
         """Generate embedding with retry logic and exponential backoff"""
@@ -61,23 +66,24 @@ class KnowBaseImporter:
                     content=text
                 )
                 return result['embedding']
-            except PermissionDenied:
-                print("\n\n❌ CRITICAL ERROR: API Key refused.")
-                print("Your GEMINI_API_KEY has been reported as leaked or is invalid.")
-                print("Please generate a new key at https://aistudio.google.com/app/apikey")
-                print("Then update your .env file with the new key.")
+                    setup_logging()
+                    main()
+                logger.critical("\n\n❌ CRITICAL ERROR: API Key refused.")
+                logger.critical("Your GEMINI_API_KEY has been reported as leaked or is invalid.")
+                logger.critical("Please generate a new key at https://aistudio.google.com/app/apikey")
+                logger.critical("Then update your .env file with the new key.")
                 sys.exit(1) # Fatal error, stop immediately
             except InvalidArgument as e:
-                print(f"\n❌ Error: Invalid Argument: {e}")
+                logger.error("\n❌ Error: Invalid Argument: %s", e)
                 return None # Skip this item
             except Exception as e:
                 wait_time = (2 ** attempt) * 2
                 if attempt < max_retries - 1:
-                    print(f'\n⚠️  API error (attempt {attempt + 1}/{max_retries}): {str(e)[:100]}')
-                    print(f'   Waiting {wait_time}s before retry...')
+                    logger.warning('⚠️  API error (attempt %d/%d): %s', attempt + 1, max_retries, str(e)[:200])
+                    logger.warning('   Waiting %d s before retry...', wait_time)
                     time.sleep(wait_time)
                 else:
-                    print(f'\n❌ Failed to generate embedding after {max_retries} attempts.')
+                    logger.error('❌ Failed to generate embedding after %d attempts.', max_retries)
                     # Don't raise, just return None so we can continue with other items if possible?
                     # Or raise if we want to be strict. Let's return None to not break the loop.
                     return None
@@ -88,7 +94,7 @@ class KnowBaseImporter:
             # This prevents MultipleObjectsReturned error from update_or_create
             existing = KnowBase.objects.filter(title=title)
             if existing.count() > 1:
-                print(f"  ⚠️ Found {existing.count()} duplicates for '{title}'. Cleaning up...")
+                logger.warning("  ⚠️ Found %d duplicates for '%s'. Cleaning up...", existing.count(), title)
                 existing.delete() # Delete all to ensure clean state
             
             # Embed header/summary or first 2000 chars (safe limit)
@@ -121,12 +127,12 @@ class KnowBaseImporter:
                 
         except Exception as e:
             self.total_errors += 1
-            print(f"\n❌ Error saving {title}: {e}")
+            logger.exception("\n❌ Error saving %s: %s", title, e)
 
     def import_json_files(self, db_dir):
-        print(f"\n--- Importing JSON Files from {db_dir} ---")
+        logger.info("\n--- Importing JSON Files from %s ---", db_dir)
         json_files = list(db_dir.glob('*.json'))
-        print(f"Found {len(json_files)} JSON files.")
+        logger.info("Found %d JSON files.", len(json_files))
 
         total_records = 0
         current_count = 0
@@ -136,13 +142,13 @@ class KnowBaseImporter:
                 with open(json_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
             except Exception as e:
-                print(f"\n❌ Error reading {json_file.name}: {e}")
+                logger.error("\n❌ Error reading %s: %s", json_file.name, e)
                 continue
 
             if isinstance(data, dict):
                 data = [data]
 
-            print(f"\nProcessing {json_file.name} ({len(data)} items)...")
+            logger.info("\nProcessing %s (%d items)...", json_file.name, len(data))
 
             for i, item in enumerate(data):
                 content = item.get('content', json.dumps(item, ensure_ascii=False))
@@ -180,18 +186,18 @@ class KnowBaseImporter:
 
     def import_pdf_files(self, pdf_dir):
         if not pdf_dir.exists():
-            print(f"\n⚠️ Directory not found: {pdf_dir}")
+            logger.warning("\n⚠️ Directory not found: %s", pdf_dir)
             return
 
-        print(f"\n--- Importing PDF Files from {pdf_dir} ---")
+        logger.info("\n--- Importing PDF Files from %s ---", pdf_dir)
         import pdfplumber
         
         pdf_files = list(pdf_dir.glob('*.pdf'))
-        print(f"Found {len(pdf_files)} PDF files.")
+        logger.info("Found %d PDF files.", len(pdf_files))
         
         for i, pdf_file in enumerate(pdf_files):
             try:
-                print(f"Processing ({i+1}/{len(pdf_files)}): {pdf_file.name}")
+                logger.info("Processing (%d/%d): %s", i+1, len(pdf_files), pdf_file.name)
                 text = ""
                 with pdfplumber.open(pdf_file) as pdf:
                     for page in pdf.pages:
@@ -200,7 +206,7 @@ class KnowBaseImporter:
                             text += extracted + "\n"
                 
                 if not text.strip():
-                    print(f"  Skipping empty PDF: {pdf_file.name}")
+                    logger.info("  Skipping empty PDF: %s", pdf_file.name)
                     continue
                 
                 self.save_to_knowbase(
@@ -219,16 +225,16 @@ class KnowBaseImporter:
                     
             except Exception as e:
                 self.total_errors += 1
-                print(f"\n❌ Error reading {pdf_file.name}: {e}")
+                logger.exception("\n❌ Error reading %s: %s", pdf_file.name, e)
 
     def fill_missing_embeddings(self):
-        print(f"\n--- Checking for Missing Embeddings ---")
+        logger.info("\n--- Checking for Missing Embeddings ---")
         missing_count = KnowBase.objects.filter(embedding__isnull=True).count()
         if missing_count == 0:
-            print("✅ All records have embeddings.")
+            logger.info("✅ All records have embeddings.")
             return
 
-        print(f"found {missing_count} records without embeddings. Processing...")
+        logger.info("found %d records without embeddings. Processing...", missing_count)
         
         # Process in chunks to avoid memory issues
         # Django's iterator() is good for this
@@ -236,7 +242,7 @@ class KnowBaseImporter:
         
         for i, obj in enumerate(qs.iterator()):
             try:
-                print(f"Generating embedding for: {obj.title[:50]}...")
+            logger.info("Generating embedding for: %s...", obj.title[:50])
                 embedding_text = f"{obj.title}\n{obj.content[:2000]}"
                 embedding = self.generate_embedding_with_retry(embedding_text)
                 
@@ -244,10 +250,10 @@ class KnowBaseImporter:
                     obj.embedding = embedding
                     obj.save()
                     self.total_updated += 1
-                    print(f"  ✅ Saved embedding for {obj.id}")
+                    logger.info("  ✅ Saved embedding for %s", obj.id)
                 else:
                     self.total_errors += 1
-                    print(f"  ❌ Failed to generate embedding for {obj.id}")
+                    logger.warning("  ❌ Failed to generate embedding for %s", obj.id)
                 
                 # Rate Limiting
                 if (i + 1) % self.batch_size == 0:
@@ -255,7 +261,7 @@ class KnowBaseImporter:
                     
             except Exception as e:
                 self.total_errors += 1
-                print(f"  ❌ Error processing {obj.id}: {e}")
+                logger.exception("  ❌ Error processing %s: %s", obj.id, e)
 
     def run(self):
         db_dir = Path(__file__).parent / 'database'
@@ -267,10 +273,11 @@ class KnowBaseImporter:
         # Sub-task: Fill missing embeddings
         self.fill_missing_embeddings()
         
-        print("\n" + "="*50)
-        print(f"✅ Import & Fix Cycle Completed")
-        print(f"📊 New: {self.total_imported}, Updated: {self.total_updated}, Errors: {self.total_errors}")
+        logger.info("\n" + "="*50)
+        logger.info("✅ Import & Fix Cycle Completed")
+        logger.info("📊 New: %d, Updated: %d, Errors: %d", self.total_imported, self.total_updated, self.total_errors)
 
 if __name__ == "__main__":
+    setup_logging()
     importer = KnowBaseImporter()
     importer.run()

@@ -2,8 +2,25 @@
 import os
 import glob
 
-NEW_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
-OLD_KEY = "AIzaSyCUG68eKoNRGDWDEd7p6ZIGQHOVjVIUvtU"
+import argparse
+
+# Do NOT hard-code keys here. Accept via environment or args.
+NEW_KEY = os.getenv("NEW_GEMINI_KEY")
+OLD_KEY = os.getenv("OLD_GEMINI_KEY")
+
+# Allow command-line overrides for batch updates
+parser = argparse.ArgumentParser(description='Update API keys in repository files')
+parser.add_argument('--old', dest='old', help='Old key to replace')
+parser.add_argument('--new', dest='new', help='New key to write')
+args = parser.parse_args()
+if args.old:
+    OLD_KEY = args.old
+if args.new:
+    NEW_KEY = args.new
+
+if not NEW_KEY or not OLD_KEY:
+    print("ERROR: NEW_GEMINI_KEY and OLD_GEMINI_KEY must be provided via env or --old/--new args")
+    raise SystemExit(1)
 
 FILES_TO_CHECK = [
     ".env",

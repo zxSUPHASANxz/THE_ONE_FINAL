@@ -10,6 +10,10 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 import time
+import logging
+from the_one.logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
 
 # Setup Django
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -35,17 +39,17 @@ class PantipScraper:
         """โหลดข้อมูลจาก JSON ที่มีอยู่"""
         try:
             if not os.path.exists(json_file):
-                print(f"❌ ไม่พบไฟล์: {json_file}")
+                logger.error("❌ ไม่พบไฟล์: %s", json_file)
                 return []
             
             with open(json_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
-            print(f"✅ โหลดข้อมูลจาก {json_file}: {len(data)} records")
+            logger.info("✅ โหลดข้อมูลจาก %s: %d records", json_file, len(data))
             return data
             
         except Exception as e:
-            print(f"❌ Error loading JSON: {str(e)}")
+            logger.exception("❌ Error loading JSON: %s", str(e))
             return []
     
     def transform_to_knowledgebase_format(self, item):
@@ -87,7 +91,7 @@ class PantipScraper:
             return data
             
         except Exception as e:
-            print(f"❌ Transform error: {str(e)}")
+            logger.exception("❌ Transform error: %s", str(e))
             return None
     
     def save_to_database(self, data):
@@ -117,7 +121,7 @@ class PantipScraper:
             return True
             
         except Exception as e:
-            print(f"  ❌ DB Error: {str(e)[:100]}")
+            logger.exception("  ❌ DB Error: %s", str(e)[:200])
             return False
     
     def save_to_json(self, all_data, filename='pantip_knowledge.json'):
@@ -128,31 +132,32 @@ class PantipScraper:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(all_data, f, ensure_ascii=False, indent=2)
             
-            print(f"\n💾 บันทึกไฟล์: {filepath}")
-            print(f"📊 จำนวน: {len(all_data)} records")
+            logger.info("\n💾 บันทึกไฟล์: %s", filepath)
+            logger.info("📊 จำนวน: %d records", len(all_data))
             return True
             
         except Exception as e:
-            print(f"❌ JSON Error: {str(e)}")
+            logger.exception("❌ JSON Error: %s", str(e))
             return False
     
     def run(self, json_source='scraper/bigbike_faq_complete.json', max_items=50, save_json=True):
         """รันการนำเข้าข้อมูลแบบอัตโนมัติ"""
-        print("="*70)
-        print("🤖 Pantip Auto Importer Started")
-        print("="*70)
+        setup_logging()
+        logger.info("%s", "="*70)
+        logger.info("🤖 Pantip Auto Importer Started")
+        logger.info("%s", "="*70)
         
         # Step 1: Load from JSON
         items = self.load_from_json(json_source)
         
         if not items:
-            print("❌ ไม่มีข้อมูลให้ประมวลผล")
+            logger.warning("❌ ไม่มีข้อมูลให้ประมวลผล")
             return
         
         items = items[:max_items]  # Limit
         
         # Step 2: Transform and import
-        print(f"\n📥 กำลังนำเข้าข้อมูล {len(items)} รายการ...\n")
+        logger.info("\n📥 กำลังนำเข้าข้อมูล %d รายการ...\n", len(items))
         
         processed_data = []
         success_count = 0
@@ -162,23 +167,23 @@ class PantipScraper:
         for i, item in enumerate(items, 1):
             # Show title
             title = item.get('question', item.get('title', 'Unknown'))[:60]
-            print(f"[{i}/{len(items)}] {title}...", end=' ')
+            logger.info("[%d/%d] %s...", i, len(items), title)
             
             # Transform
             data = self.transform_to_knowledgebase_format(item)
             
             if not data:
-                print("❌ ไม่สามารถแปลงข้อมูล")
+                logger.warning("❌ ไม่สามารถแปลงข้อมูล")
                 error_count += 1
                 continue
             
             # Save to database
             if self.save_to_database(data):
-                print("✅ บันทึกสำเร็จ")
+                logger.info("✅ บันทึกสำเร็จ")
                 success_count += 1
                 processed_data.append(data)
             else:
-                print("⏭️ มีอยู่แล้ว")
+                logger.info("⏭️ มีอยู่แล้ว")
                 skip_count += 1
         
         # Step 3: Save to JSON
@@ -186,18 +191,18 @@ class PantipScraper:
             self.save_to_json(processed_data)
         
         # Summary
-        print("\n" + "="*70)
-        print("📊 สรุปผลการนำเข้าข้อมูล")
-        print("="*70)
-        print(f"✅ สำเร็จ: {success_count}")
-        print(f"⏭️ ข้ามไป (มีอยู่แล้ว): {skip_count}")
-        print(f"❌ ล้มเหลว: {error_count}")
-        print(f"📊 รวม: {len(items)}")
-        print("="*70)
+        logger.info("\n" + "="*70)
+        logger.info("📊 สรุปผลการนำเข้าข้อมูล")
+        logger.info("="*70)
+        logger.info("✅ สำเร็จ: %d", success_count)
+        logger.info("⏭️ ข้ามไป (มีอยู่แล้ว): %d", skip_count)
+        logger.info("❌ ล้มเหลว: %d", error_count)
+        logger.info("📊 รวม: %d", len(items))
+        logger.info("="*70)
         
         # Show database stats
         total = Knowledgebase.objects.count()
-        print(f"\n📚 ข้อมูลทั้งหมดในฐานข้อมูล: {total} records")
+        logger.info("\n📚 ข้อมูลทั้งหมดในฐานข้อมูล: %d records", total)
         
         return processed_data
 

@@ -19,6 +19,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import logging
+from the_one.logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
 
 
 # =========================
@@ -124,7 +128,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
     relative_url = model_info["url"]
     full_url = f"{BASE_URL}{relative_url}" if not relative_url.startswith("http") else relative_url
     
-    print(f"  📄 Fetching: {full_url}")
+    logger.info("  📄 Fetching: %s", full_url)
     from selenium.webdriver.common.by import By 
     
     # Retry logic variables
@@ -142,7 +146,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
             time.sleep(1)
             break
         except Exception as e:
-            print(f"    ⚠️ Connection error (attempt {attempt+1}/{max_retries}): {e}")
+            logger.warning("    ⚠️ Connection error (attempt %d/%d): %s", attempt+1, max_retries, str(e)[:200])
             if attempt == max_retries - 1:
                 raise e
             time.sleep(5)
@@ -212,7 +216,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
         tech_page_loaded = False
         for attempt in range(max_retries):
             try:
-                print(f"    📄 Fetching Tech Data (Attempt {attempt+1}): {tech_url}")
+                logger.info("    📄 Fetching Tech Data (Attempt %d): %s", attempt+1, tech_url)
                 driver.get(tech_url)
                 time.sleep(3)
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.3);")
@@ -220,7 +224,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
                 tech_page_loaded = True
                 break
             except Exception as e:
-                print(f"    ⚠️ Tech page connection error: {e}")
+                logger.warning("    ⚠️ Tech page connection error: %s", str(e)[:200])
                 time.sleep(2)
         
         if tech_page_loaded:
@@ -232,7 +236,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
             # 1. Direct key-value extraction using specific classes
             val_elements = tech_soup.select(".table__value, [class*='table__value']")
             if val_elements:
-                print(f"    Found {len(val_elements)} potential spec values via class class selectors")
+                logger.info("    Found %d potential spec values via class selectors", len(val_elements))
                 for val in val_elements:
                     val_text = clean(val.get_text())
                     # Look for label in previous sibling or parent->child structure
@@ -269,7 +273,7 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
                              specs[k.rstrip(" :")] = v
         
         else:
-            print("    ❌ Failed to load Tech Data page after retries")
+            logger.error("    ❌ Failed to load Tech Data page after retries")
 
         data["specifications"] = specs
         
@@ -278,13 +282,13 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
         # For now, we accept we might miss features unless we navigate back or scrape them first.
         # User emphasized "ALL Technical Data", so Specs are priority.
         
-        print(f"    found price: {data['price']}")
-        print(f"    found specs: {len(data['specifications'])} items")
+        logger.info("    found price: %s", data.get('price'))
+        logger.info("    found specs: %d items", len(data.get('specifications', {})))
         
         return data
 
     except Exception as e:
-        print(f"  ❌ Error: {e}")
+        logger.exception("  ❌ Error: %s", e)
         return {
             "brand": "BMW",
             "name": model_info["name"],
@@ -297,9 +301,9 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
 
 def run():
     """Main scraping function"""
-    print("=" * 60)
-    print("🏎️ BMW Motorrad Thailand Scraper")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("🏎️ BMW Motorrad Thailand Scraper")
+    logger.info("=" * 60)
     
     driver = create_driver()
     results = []
@@ -307,13 +311,13 @@ def run():
     
     try:
         total = len(BMW_MODELS)
-        print(f"🔍 Scraping {total} BMW models")
+        logger.info("🔍 Scraping %d BMW models", total)
         
         for idx, model_info in enumerate(BMW_MODELS, 1):
             try:
                 current_time = datetime.now().strftime("%H:%M:%S")
                 progress = (idx / total) * 100
-                print(f"\n[{idx}/{total} - {progress:.1f}%] {model_info['name']} (Time: {current_time})")
+                logger.info("\n[%d/%d - %.1f%%] %s (Time: %s)", idx, total, progress, model_info['name'], current_time)
                 data = scrape_bmw_model(driver, model_info)
                 results.append(data)
                 
@@ -321,13 +325,13 @@ def run():
                 spec_count = len(data.get("specifications", {}))
                 feat_count = len(data.get("features", []))
                 
-                print(f"  ✅ Done - Price: {price_disp}, Specs: {spec_count}, Features: {feat_count}")
+                logger.info("  ✅ Done - Price: %s, Specs: %d, Features: %d", price_disp, spec_count, feat_count)
                 
                 # Random delay
                 time.sleep(random.uniform(2.0, 4.0))
                 
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                logger.exception("  ❌ Error: %s", e)
                 errors.append({"model": model_info["name"], "error": str(e)})
                 
     finally:
@@ -348,6 +352,9 @@ def run():
             },
             "motorcycles": results
         }, f, ensure_ascii=False, indent=2)
+    setup_logging()
+    logger.info("=" * 60)
+    logger.info("🏎️ BMW Motorrad Thailand Scraper")
     
     # Latest file
     latest_file = OUTPUT_DIR / "bmw_all_models_latest.json"
@@ -363,14 +370,14 @@ def run():
         }, f, ensure_ascii=False, indent=2)
     
     # Summary
-    print("\n" + "=" * 60)
-    print("📊 SCRAPING SUMMARY")
-    print("=" * 60)
-    print(f"✅ Total scraped: {len(results)}")
-    print(f"❌ Errors: {len(errors)}")
-    print(f"📁 Saved to: {output_file}")
-    print(f"📁 Latest: {latest_file}")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 SCRAPING SUMMARY")
+    logger.info("=" * 60)
+    logger.info("✅ Total scraped: %d", len(results))
+    logger.info("❌ Errors: %d", len(errors))
+    logger.info("📁 Saved to: %s", output_file)
+    logger.info("📁 Latest: %s", latest_file)
+    logger.info("=" * 60)
     
     return results
 

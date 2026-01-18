@@ -9,15 +9,16 @@ import json
 import re
 import time
 import random
+import argparse
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from the_one.logging_config import setup_logging
+from the_one.retry import retry_on_exception
+# Selenium imports moved inside create_driver() to avoid heavy top-level imports
 
 
 # =========================
@@ -92,6 +93,12 @@ KAWASAKI_MODELS = [
 # =========================
 
 def create_driver():
+    # Import here to keep module import lightweight for tests
+    from selenium import webdriver
+    from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.chrome.options import Options
+    from webdriver_manager.chrome import ChromeDriverManager
+
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--disable-gpu")
@@ -99,7 +106,7 @@ def create_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-    
+
     return webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=options
@@ -123,12 +130,13 @@ def price_to_int(text: str) -> Optional[int]:
 # Scraping Functions
 # =========================
 
+@retry_on_exception(max_retries=3, exceptions=(Exception,))
 def scrape_model_detail(driver, model_info: Dict) -> Dict:
     """Scrape model detail page"""
     slug = model_info["slug"]
     url = f"{BASE_URL}/th/motorcycle/{slug}"
     
-    print(f"  � Fetching: {url}")
+    logging.info("  → Fetching: %s", url)
     
     try:
         driver.get(url)
@@ -227,10 +235,11 @@ def scrape_model_detail(driver, model_info: Dict) -> Dict:
         
         data["features"] = features
         
+        logging.info("  ✔ Scraped %s (specs: %d)", model_info.get("name"), len(specifications))
         return data
         
     except Exception as e:
-        print(f"  ❌ Error: {e}")
+        logging.exception("  ❌ Error scraping %s: %s", model_info.get("name"), e)
         return {
             "brand": "Kawasaki",
             "name": model_info["name"],
@@ -246,32 +255,40 @@ def scrape_model_detail(driver, model_info: Dict) -> Dict:
 
 def main():
     """Main scraping function"""
-    print("=" * 60)
-    print("🏍️ Kawasaki Thailand Motorcycle Scraper")
-    print("=" * 60)
-    
+    parser = argparse.ArgumentParser(description="Kawasaki Thailand Motorcycle Scraper")
+    parser.add_argument("--headless", action="store_true", help="Run Chrome in headless mode")
+    parser.add_argument("--output-dir", type=str, default=str(OUTPUT_DIR), help="Directory to write JSON output")
+    parser.add_argument("--log-level", type=str, default="INFO", help="Logging level")
+    args = parser.parse_args()
+
+    setup_logging(args.log_level)
+
+    logging.info("%s", "=" * 60)
+    logging.info("🏍️ Kawasaki Thailand Motorcycle Scraper")
+    logging.info("%s", "=" * 60)
+
     driver = create_driver()
     results = []
     errors = []
     
     try:
         total = len(KAWASAKI_MODELS)
-        print(f"🔍 Scraping {total} Kawasaki models")
+        logging.info("🔍 Scraping %d Kawasaki models", total)
         
         for idx, model_info in enumerate(KAWASAKI_MODELS, 1):
             try:
-                print(f"\n[{idx}/{total}] {model_info['name']}")
+                logging.info("\n[%d/%d] %s", idx, total, model_info["name"])
                 data = scrape_model_detail(driver, model_info)
                 results.append(data)
-                
+
                 spec_count = len(data.get("specifications", {}))
-                print(f"  ✅ Done - Price: {data.get('price', 'N/A')}, Specs: {spec_count}")
-                
+                logging.info("  ✅ Done - Price: %s, Specs: %d", data.get("price", "N/A"), spec_count)
+
                 # Random delay to avoid blocking
                 time.sleep(random.uniform(2.0, 4.0))
-                
+
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                logging.exception("  ❌ Error on model %s: %s", model_info.get("name"), e)
                 errors.append({"model": model_info["name"], "error": str(e)})
                 
     finally:
@@ -320,17 +337,17 @@ def main():
             json.dump(models, f, ensure_ascii=False, indent=2)
     
     # Summary
-    print("\n" + "=" * 60)
-    print("📊 SCRAPING SUMMARY")
-    print("=" * 60)
-    print(f"✅ Total scraped: {len(results)}")
-    print(f"❌ Errors: {len(errors)}")
-    print(f"📁 Saved to: {output_file}")
-    print(f"📁 Latest: {latest_file}")
-    print("\n📂 By Category:")
+    logging.info("\n%s", "=" * 60)
+    logging.info("📊 SCRAPING SUMMARY")
+    logging.info("%s", "=" * 60)
+    logging.info("✅ Total scraped: %d", len(results))
+    logging.info("❌ Errors: %d", len(errors))
+    logging.info("📁 Saved to: %s", output_file)
+    logging.info("📁 Latest: %s", latest_file)
+    logging.info("\n📂 By Category:")
     for cat, models in sorted(categories.items()):
-        print(f"   • {cat}: {len(models)} models")
-    print("=" * 60)
+        logging.info("   • %s: %d models", cat, len(models))
+    logging.info("%s", "=" * 60)
     
     return results
 

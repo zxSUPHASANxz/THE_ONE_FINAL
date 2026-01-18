@@ -27,11 +27,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import google.generativeai as genai
+import logging
+from the_one.logging_config import setup_logging
+
+logger = logging.getLogger(__name__)
 
 from chatbot.models import MotorcycleKnowledge
 
-# Gemini API configuration
-GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
+# Gemini API configuration (from environment)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    logger.critical("GEMINI_API_KEY not set. Add it to your .env or environment variables.")
+    sys.exit(1)
 genai.configure(api_key=GEMINI_API_KEY)
 
 def setup_driver(headless=False):
@@ -58,14 +65,14 @@ def generate_embedding(text):
             content=text,
             task_type="retrieval_document"
         )
-        return result['embedding']
-    except Exception as e:
-        print(f"Error generating embedding: {e}")
+        return result.get('embedding')
+    except Exception:
+        logger.exception("Error generating embedding")
         return None
 
 def get_all_motorcycle_links(driver):
     """Get all motorcycle detail page links from main page"""
-    print("🔍 Fetching all motorcycle links...")
+    logger.info("🔍 Fetching all motorcycle links...")
     base_url = "https://www.thaihonda.co.th/honda/motorcycle"
     
     # Categories to explore
@@ -79,7 +86,7 @@ def get_all_motorcycle_links(driver):
     
     for category in categories:
         category_url = f"{base_url}/{category}"
-        print(f"  🔍 Exploring category: {category}")
+        logger.info("  🔍 Exploring category: %s", category)
         
         try:
             driver.get(category_url)
@@ -113,18 +120,18 @@ def get_all_motorcycle_links(driver):
                                 all_links.add(full_url)
                                 count += 1
             
-            print(f"     Found {count} models in {category}")
+            logger.info("     Found %d models in %s", count, category)
         
-        except Exception as e:
-            print(f"  ⚠️ Error exploring {category}: {e}")
+        except Exception:
+            logger.exception("  ⚠️ Error exploring %s", category)
     
     all_links = list(all_links)
-    print(f"✅ Found {len(all_links)} unique motorcycle models")
+    logger.info("✅ Found %d unique motorcycle models", len(all_links))
     return all_links
 
 def scrape_motorcycle_detail(driver, url):
     """Scrape detailed information from a motorcycle page"""
-    print(f"\n📄 Scraping: {url}")
+    logger.info("\n📄 Scraping: %s", url)
     
     try:
         driver.get(url)
@@ -168,7 +175,7 @@ def scrape_motorcycle_detail(driver, url):
         
         if sp_data:
             items = sp_data.find_all('li')
-            print(f"   Found {len(items)} specification items")
+            logger.info("   Found %d specification items", len(items))
             
             for item in items:
                 name_elem = item.find('div', class_='n_name')
@@ -180,7 +187,7 @@ def scrape_motorcycle_detail(driver, url):
                     if name and value:
                         specifications[name] = value
         else:
-            print(f"   ⚠️ No specification list found")
+            logger.warning("   ⚠️ No specification list found")
         
         # Get colors
         colors = []
@@ -192,7 +199,7 @@ def scrape_motorcycle_detail(driver, url):
         
         # If still no data, skip this URL
         if model_name == "Unknown" and not specifications:
-            print(f"   ⚠️ No valid data found, skipping...")
+            logger.warning("   ⚠️ No valid data found, skipping...")
             return None
         
         bike_data = {
@@ -205,15 +212,15 @@ def scrape_motorcycle_detail(driver, url):
             'scraped_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         
-        print(f"✅ Scraped: {model_name}")
-        print(f"   Price: {price}")
-        print(f"   Specs: {len(specifications)} items")
-        print(f"   Colors: {len(colors)} options")
+        logger.info("✅ Scraped: %s", model_name)
+        logger.info("   Price: %s", price)
+        logger.info("   Specs: %d items", len(specifications))
+        logger.info("   Colors: %d options", len(colors))
         
         return bike_data
         
-    except Exception as e:
-        print(f"❌ Error scraping {url}: {e}")
+    except Exception:
+        logger.exception("❌ Error scraping %s", url)
         return None
 
 def save_to_database(bike_data):
@@ -234,11 +241,11 @@ def save_to_database(bike_data):
 URL: {bike_data['url']}"""
         
         # Generate embedding
-        print(f"   🔄 Generating embedding...")
+        logger.info("   🔄 Generating embedding...")
         embedding = generate_embedding(full_text)
         
         if not embedding:
-            print(f"   ⚠️ Could not generate embedding, skipping database save")
+            logger.warning("   ⚠️ Could not generate embedding, skipping database save")
             return None
         
         # Save to database
@@ -252,7 +259,7 @@ URL: {bike_data['url']}"""
             embedding=embedding
         )
         
-        print(f"   ✅ Saved to database (ID: {motorcycle.id})")
+        logger.info("   ✅ Saved to database (ID: %s)", motorcycle.id)
         
         # Return data with embedding for JSON export
         bike_data_with_embedding = bike_data.copy()
@@ -261,8 +268,8 @@ URL: {bike_data['url']}"""
         
         return bike_data_with_embedding
         
-    except Exception as e:
-        print(f"   ❌ Error saving to database: {e}")
+    except Exception:
+        logger.exception("   ❌ Error saving to database")
         return None
 
 def save_to_json(motorcycles_raw, motorcycles_with_embeddings):
@@ -273,18 +280,18 @@ def save_to_json(motorcycles_raw, motorcycles_with_embeddings):
     raw_file = output_dir / 'honda_motorcycles.json'
     with open(raw_file, 'w', encoding='utf-8') as f:
         json.dump(motorcycles_raw, f, ensure_ascii=False, indent=2)
-    print(f"\n✅ Saved raw data: {raw_file} ({len(motorcycles_raw)} motorcycles)")
+    logger.info("\n✅ Saved raw data: %s (%d motorcycles)", raw_file, len(motorcycles_raw))
     
     # Save data with embeddings
     embedded_file = output_dir / 'honda_motorcycles_with_embeddings.json'
     with open(embedded_file, 'w', encoding='utf-8') as f:
         json.dump(motorcycles_with_embeddings, f, ensure_ascii=False, indent=2)
-    print(f"✅ Saved data with embeddings: {embedded_file} ({len(motorcycles_with_embeddings)} motorcycles)")
+    logger.info("✅ Saved data with embeddings: %s (%d motorcycles)", embedded_file, len(motorcycles_with_embeddings))
 
 def main():
-    print("=" * 60)
-    print("Honda Motorcycle Auto Scraper")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("Honda Motorcycle Auto Scraper")
+    logger.info("=" * 60)
     
     driver = setup_driver(headless=False)
     
@@ -293,7 +300,7 @@ def main():
         links = get_all_motorcycle_links(driver)
         
         if not links:
-            print("❌ No motorcycle links found!")
+            logger.error("❌ No motorcycle links found!")
             return
         
         motorcycles_raw = []
@@ -301,7 +308,7 @@ def main():
         
         # Scrape each motorcycle
         for i, link in enumerate(links, 1):
-            print(f"\n[{i}/{len(links)}] Processing: {link}")
+            logger.info("\n[%d/%d] Processing: %s", i, len(links), link)
             
             bike_data = scrape_motorcycle_detail(driver, link)
             
@@ -319,16 +326,17 @@ def main():
         # Save all data to JSON
         save_to_json(motorcycles_raw, motorcycles_with_embeddings)
         
-        print("\n" + "=" * 60)
-        print("✅ SCRAPING COMPLETED!")
-        print(f"📊 Total motorcycles scraped: {len(motorcycles_raw)}")
-        print(f"💾 Saved to database: {len(motorcycles_with_embeddings)}")
-        print(f"📁 JSON files created: 2 files")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("✅ SCRAPING COMPLETED!")
+        logger.info("📊 Total motorcycles scraped: %d", len(motorcycles_raw))
+        logger.info("💾 Saved to database: %d", len(motorcycles_with_embeddings))
+        logger.info("📁 JSON files created: 2 files")
+        logger.info("=" * 60)
         
     finally:
         driver.quit()
-        print("\n🔒 Browser closed")
+        logger.info("\n🔒 Browser closed")
 
 if __name__ == "__main__":
+    setup_logging()
     main()

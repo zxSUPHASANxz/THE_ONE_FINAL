@@ -23,22 +23,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'the_one.settings')
 import django
 django.setup()
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-import google.generativeai as genai
-from tqdm import tqdm
+import logging
+import argparse
+from typing import Optional
 
-from chatbot.models import MotorcycleKnowledge
+from the_one.logging_config import setup_logging
 
-# Gemini API configuration
-GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
-genai.configure(api_key=GEMINI_API_KEY)
+logger = logging.getLogger(__name__)
 
 class HondaFullAutoScraper:
     def __init__(self):
@@ -49,6 +40,12 @@ class HondaFullAutoScraper:
     
     def setup_driver(self, headless=False):
         """Setup Chrome WebDriver"""
+        # Import heavy browser deps only when needed
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service
+        from selenium.webdriver.chrome.options import Options
+        from webdriver_manager.chrome import ChromeDriverManager
+
         chrome_options = Options()
         if headless:
             chrome_options.add_argument('--headless')
@@ -57,13 +54,13 @@ class HondaFullAutoScraper:
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('--window-size=1920,1080')
         chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
-        
+
         service = Service(ChromeDriverManager().install())
         return webdriver.Chrome(service=service, options=chrome_options)
     
     def get_model_urls(self):
         """ดึง URL ของรถทุกรุ่นจากหน้าหลัก"""
-        print(f"\n🔍 กำลังดึงรายการรถจาก {self.base_url}")
+        logger.info("🔍 กำลังดึงรายการรถจาก %s", self.base_url)
         self.driver = self.setup_driver(headless=False)
         
         try:
@@ -91,17 +88,16 @@ class HondaFullAutoScraper:
                     if full_url not in model_urls:
                         model_urls.append(full_url)
             
-            print(f"✅ พบรถทั้งหมด {len(model_urls)} รุ่น")
+            logger.info("✅ พบรถทั้งหมด %d รุ่น", len(model_urls))
             return model_urls
             
-        except Exception as e:
-            print(f"❌ เกิดข้อผิดพลาดในการดึงรายการรถ: {e}")
+        except Exception:
+            logger.exception("❌ เกิดข้อผิดพลาดในการดึงรายการรถ")
             return []
     
     def extract_price_from_n_top(self, soup):
         """ดึงชื่อและราคาจาก top section (เช่น 'CBR250RR SP | start 269,000 THB')"""
         price_info = {}
-        
         try:
             # วิธีที่ 1: หาจาก h1, h2, h3 ที่มีราคา
             headers = soup.find_all(['h1', 'h2', 'h3', 'div'], class_=re.compile(r'(title|top|price|model)', re.I))
@@ -153,15 +149,14 @@ class HondaFullAutoScraper:
                         }
                         break
         
-        except Exception as e:
-            print(f"⚠️ ไม่สามารถดึงข้อมูลราคาได้: {e}")
-        
+        except Exception:
+            logger.exception("⚠️ ไม่สามารถดึงข้อมูลราคาได้")
+
         return price_info
     
     def extract_specifications(self, soup):
         """ดึง Specifications จาก table/div structure"""
         specs = {}
-        
         try:
             # วิธีที่ 1: ดึงจาก table rows (จากรูปตัวอย่าง)
             # หา table ที่มี specifications
@@ -216,15 +211,15 @@ class HondaFullAutoScraper:
                             if name and value and len(name) < 100:  # ไม่ยาวเกินไป
                                 specs[name] = value
         
-        except Exception as e:
-            print(f"⚠️ ไม่สามารถดึงข้อมูล specifications ได้: {e}")
+        except Exception:
+            logger.exception("⚠️ ไม่สามารถดึงข้อมูล specifications ได้")
         
         return specs
     
     def scrape_model_page(self, url):
         """สกัดข้อมูลจากหน้ารถแต่ละรุ่น"""
         try:
-            print(f"\n📄 กำลังดึงข้อมูลจาก: {url}")
+            logger.info("📄 กำลังดึงข้อมูลจาก: %s", url)
             self.driver.get(url)
             time.sleep(5)
             
@@ -283,22 +278,30 @@ class HondaFullAutoScraper:
             }
             
             return motorcycle_data
-            
-        except Exception as e:
-            print(f"❌ เกิดข้อผิดพลาดในการดึงข้อมูลจาก {url}: {e}")
+        except Exception:
+            logger.exception("❌ เกิดข้อผิดพลาดในการดึงข้อมูลจาก %s", url)
             return None
     
     def create_embedding(self, text):
         """สร้าง embedding ด้วย Gemini API"""
         try:
+            # Import and configure generative AI client only when needed
+            import google.generativeai as genai
+
+            gem_key = os.environ.get('GEMINI_API_KEY')
+            if not gem_key:
+                logger.warning("GEMINI_API_KEY not set; skipping embedding creation")
+                return None
+
+            genai.configure(api_key=gem_key)
             result = genai.embed_content(
                 model="models/text-embedding-004",
                 content=text,
                 task_type="retrieval_document"
             )
-            return result['embedding']
-        except Exception as e:
-            print(f"⚠️ ไม่สามารถสร้าง embedding ได้: {e}")
+            return result.get('embedding')
+        except Exception:
+            logger.exception("⚠️ ไม่สามารถสร้าง embedding ได้")
             return None
     
     def prepare_text_for_embedding(self, motorcycle_data):
@@ -328,16 +331,18 @@ class HondaFullAutoScraper:
         model_urls = self.get_model_urls()
         
         if not model_urls:
-            print("❌ ไม่พบ URL ของรถ")
+            logger.error("❌ ไม่พบ URL ของรถ")
             return
         
         # 2. วนลูปดึงข้อมูลจากแต่ละรถ
-        print(f"\n🚀 เริ่มสกัดข้อมูลจาก {len(model_urls)} รุ่น...")
+        logger.info("🚀 เริ่มสกัดข้อมูลจาก %d รุ่น...", len(model_urls))
         if create_embeddings:
-            print("🤖 โหมด: สกัดข้อมูล + สร้าง embeddings")
+            logger.info("🤖 โหมด: สกัดข้อมูล + สร้าง embeddings")
         else:
-            print("⚠️ โหมด: สกัดข้อมูลอย่างเดียว (ไม่สร้าง embeddings)")
-        
+            logger.info("⚠️ โหมด: สกัดข้อมูลอย่างเดียว (ไม่สร้าง embeddings)")
+
+        from tqdm import tqdm
+
         for idx, url in enumerate(tqdm(model_urls, desc="📊 กำลังสกัดข้อมูล"), 1):
             motorcycle_data = self.scrape_model_page(url)
             
@@ -346,51 +351,62 @@ class HondaFullAutoScraper:
                 if create_embeddings:
                     text = self.prepare_text_for_embedding(motorcycle_data)
                     embedding = self.create_embedding(text)
-                    
+
                     if embedding:
                         motorcycle_data['embedding'] = embedding
                         motorcycle_data['embedding_dimension'] = len(embedding)
                 
                 self.motorcycles.append(motorcycle_data)
-                print(f"✅ [{idx}/{len(model_urls)}] {motorcycle_data.get('model', 'Unknown')} - เสร็จสิ้น")
+                logger.info("✅ [%d/%d] %s - เสร็จสิ้น", idx, len(model_urls), motorcycle_data.get('model', 'Unknown'))
             
             # Delay เพื่อไม่ให้ถูกบล็อก
             time.sleep(2)
         
         # 3. ปิด browser
         if self.driver:
-            self.driver.quit()
+            try:
+                self.driver.quit()
+            except Exception:
+                logger.exception("Error while quitting driver")
     
     def save_to_json(self, filename='honda_motorcycles_full.json'):
         """บันทึกข้อมูลเป็น JSON file"""
         output_path = Path(__file__).parent / filename
-        
+
         try:
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(self.motorcycles, f, ensure_ascii=False, indent=2)
-            
-            print(f"\n✅ บันทึกข้อมูลสำเร็จ: {output_path}")
-            print(f"📊 จำนวนรถทั้งหมด: {len(self.motorcycles)} รุ่น")
-            
-        except Exception as e:
-            print(f"❌ ไม่สามารถบันทึกไฟล์ได้: {e}")
+
+            logger.info("✅ บันทึกข้อมูลสำเร็จ: %s", output_path)
+            logger.info("📊 จำนวนรถทั้งหมด: %d รุ่น", len(self.motorcycles))
+
+        except Exception:
+            logger.exception("❌ ไม่สามารถบันทึกไฟล์ได้")
     
     def save_to_database(self):
         """บันทึกข้อมูลลง Django database"""
-        print("\n💾 กำลังบันทึกข้อมูลลงฐานข้อมูล...")
+        logger.info("\n💾 กำลังบันทึกข้อมูลลงฐานข้อมูล...")
         saved_count = 0
-        
+
+        # Setup Django only when saving to DB
+        try:
+            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'the_one.settings')
+            import django
+            django.setup()
+        except Exception:
+            logger.exception("Failed to setup Django; database saving may fail")
+
+        from chatbot.models import MotorcycleKnowledge
+
         for motorcycle in self.motorcycles:
             try:
-                # เตรียมข้อมูล
                 text = self.prepare_text_for_embedding(motorcycle)
                 embedding = motorcycle.get('embedding')
-                
+
                 if not embedding:
-                    print(f"⚠️ ข้าม {motorcycle.get('model')} - ไม่มี embedding")
+                    logger.warning("⚠️ ข้าม %s - ไม่มี embedding", motorcycle.get('model'))
                     continue
-                
-                # บันทึกลง database
+
                 obj, created = MotorcycleKnowledge.objects.update_or_create(
                     source='honda_website',
                     brand=motorcycle.get('brand', 'Honda'),
@@ -405,46 +421,48 @@ class HondaFullAutoScraper:
                         'embedding': embedding
                     }
                 )
-                
+
                 saved_count += 1
                 status = "สร้างใหม่" if created else "อัพเดท"
-                print(f"✅ {status}: {motorcycle.get('model')} ")
-                
-            except Exception as e:
-                print(f"❌ ไม่สามารถบันทึก {motorcycle.get('model')} ได้: {e}")
-        
-        print(f"\n✅ บันทึกข้อมูลเสร็จสิ้น: {saved_count}/{len(self.motorcycles)} รุ่น")
+                logger.info("✅ %s: %s", status, motorcycle.get('model'))
+
+            except Exception:
+                logger.exception("❌ ไม่สามารถบันทึก %s ได้", motorcycle.get('model'))
+
+        logger.info("\n✅ บันทึกข้อมูลเสร็จสิ้น: %d/%d รุ่น", saved_count, len(self.motorcycles))
 
 
 def main():
     """Main function"""
-    print("=" * 80)
-    print("🏍️  Honda Motorcycle Full Auto Scraper")
-    print("=" * 80)
-    
-    # ถามว่าต้องการสร้าง embeddings หรือไม่
-    create_emb = input("\n🤖 ต้องการสร้าง embeddings ด้วย Gemini API หรือไม่? (y/n): ")
-    create_embeddings = create_emb.lower() == 'y'
-    
+    setup_logging()
+
+    parser = argparse.ArgumentParser(description='Honda Motorcycle Full Auto Scraper')
+    parser.add_argument('--headless', action='store_true', help='Run browser in headless mode')
+    parser.add_argument('--create-embeddings', action='store_true', help='Create embeddings using Gemini API')
+    parser.add_argument('--save-db', action='store_true', help='Save results to Django database (requires embeddings)')
+    args = parser.parse_args()
+
+    logger.info("%s", "=" * 80)
+    logger.info("🏍️  Honda Motorcycle Full Auto Scraper")
+    logger.info("%s", "=" * 80)
+
     scraper = HondaFullAutoScraper()
-    
+
     # 1. สกัดข้อมูล
-    scraper.scrape_all_models(create_embeddings=create_embeddings)
-    
+    scraper.scrape_all_models(create_embeddings=args.create_embeddings)
+
     # 2. บันทึก JSON
     scraper.save_to_json()
-    
+
     # 3. บันทึกลงฐานข้อมูล (เฉพาะกรณีมี embeddings)
-    if create_embeddings:
-        save_db = input("\n💾 ต้องการบันทึกลงฐานข้อมูลหรือไม่? (y/n): ")
-        if save_db.lower() == 'y':
-            scraper.save_to_database()
-    else:
-        print("\n⚠️ ข้าม: ไม่สามารถบันทึกลงฐานข้อมูลได้เนื่องจากไม่มี embeddings")
-    
-    print("\n" + "=" * 80)
-    print("✅ เสร็จสิ้นทั้งหมด!")
-    print("=" * 80)
+    if args.create_embeddings and args.save_db:
+        scraper.save_to_database()
+    elif args.save_db and not args.create_embeddings:
+        logger.warning('ข้าม: ไม่สามารถบันทึกลงฐานข้อมูลได้เนื่องจากไม่มี embeddings')
+
+    logger.info("%s", "=" * 80)
+    logger.info("✅ เสร็จสิ้นทั้งหมด!")
+    logger.info("%s", "=" * 80)
 
 
 if __name__ == "__main__":

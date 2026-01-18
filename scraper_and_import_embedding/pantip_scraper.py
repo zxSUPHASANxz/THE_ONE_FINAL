@@ -18,6 +18,9 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def create_chrome_driver():
@@ -48,7 +51,7 @@ def clean_text(text):
 
 def search_pantip(driver, keywords, max_retries=3):
     """ค้นหากระทู้ใน Pantip ตามคำค้น"""
-    print(f"🔍 {keywords}", end=" ")
+    logger.info("🔍 %s", keywords)
     
     search_url = f"https://pantip.com/search?q={keywords}"
     
@@ -62,12 +65,12 @@ def search_pantip(driver, keywords, max_retries=3):
             error_msg = str(e).lower()
             # ถ้าเป็น session error ให้ raise เพื่อสร้าง driver ใหม่
             if 'session' in error_msg or 'invalid' in error_msg or 'disconnected' in error_msg:
-                print(f"❌ Session error: {str(e)[:50]}")
+                logger.error("❌ Session error: %s", str(e)[:200])
                 raise Exception(f"RECREATE_DRIVER_NEEDED: {e}")
-            
+
             if attempt < max_retries - 1:
                 wait_time = 2 ** attempt
-                print(f"Retry {attempt + 1}...", end=" ")
+                logger.warning("Retry %d...", attempt + 1)
                 time.sleep(wait_time)
             else:
                 raise e
@@ -101,7 +104,7 @@ def search_pantip(driver, keywords, max_retries=3):
             if full_url not in thread_links:
                 thread_links.append(full_url)
     
-    print(f"✅ พบ {len(thread_links)} กระทู้")
+    logger.info("✅ พบ %d กระทู้", len(thread_links))
     return thread_links
 
 
@@ -109,7 +112,7 @@ def scrape_thread_content(driver, url, max_retries=2):
     """สกัดเนื้อหาจากกระทู้ Pantip"""
     for attempt in range(max_retries):
         try:
-            print(f"  🌐 เปิดกระทู้: {url}")
+            logger.info("  🌐 เปิดกระทู้: %s", url)
             driver.get(url)
             
             # รอให้โหลดเนื้อหาด้วย WebDriverWait - เพิ่มเวลารอ
@@ -486,14 +489,14 @@ def main():
     RECREATE_DRIVER_EVERY = 10  # สร้าง driver ใหม่ทุก 10 คำค้น (ลดจาก 20)
     AUTO_SAVE_EVERY = 5  # บันทึกข้อมูลทุก 5 keywords
     
-    print("=" * 80)
-    print("🚀 Pantip Motorcycle Scraper - FAST MODE")
-    print("=" * 80)
-    print(f"📋 คำค้นหา: {len(SEARCH_KEYWORDS)} คำ")
-    print(f"🎯 เป้าหมาย: มอเตอร์ไซด์ 150cc+ และบิ๊กไบค์")
-    print(f"📁 Output: {OUTPUT_FILE}")
-    print(f"🔢 สูงสุด {MAX_THREADS_PER_KEYWORD} กระทู้/คำค้น")
-    print("=" * 80 + "\n")
+    logger.info("%s", "=" * 80)
+    logger.info("🚀 Pantip Motorcycle Scraper - FAST MODE")
+    logger.info("%s", "=" * 80)
+    logger.info("📋 คำค้นหา: %d คำ", len(SEARCH_KEYWORDS))
+    logger.info("🎯 เป้าหมาย: มอเตอร์ไซด์ 150cc+ และบิ๊กไบค์")
+    logger.info("📁 Output: %s", OUTPUT_FILE)
+    logger.info("🔢 สูงสุด %d กระทู้/คำค้น", MAX_THREADS_PER_KEYWORD)
+    logger.info("%s", "=" * 80 + "\n")
     
     driver = create_chrome_driver()
     
@@ -516,53 +519,53 @@ def main():
             else:
                 eta_str = "คำนวณ..."
             
-            print(f"\n[{progress:5.1f}%] [{idx+1}/{len(SEARCH_KEYWORDS)}] ETA: {eta_str} | ", end="")
+            logger.info("\n[%5.1f%%] [%d/%d] ETA: %s | ", progress, idx+1, len(SEARCH_KEYWORDS), eta_str)
             
             # สร้าง driver ใหม่ทุก N keywords
             if idx > 0 and idx % RECREATE_DRIVER_EVERY == 0:
-                print("\n🔄 Driver refresh...", end=" ")
+                logger.info("\n🔄 Driver refresh...")
                 try:
                     driver.quit()
                 except:
                     pass
                 time.sleep(2)
                 driver = create_chrome_driver()
-                print("OK")
+                logger.info("OK")
                 time.sleep(2)
             
             # Auto-save ทุก N keywords
             if idx > 0 and idx % AUTO_SAVE_EVERY == 0 and all_threads:
-                print(f"\n💾 Auto-save... ({len(all_threads)} กระทู้)", end=" ")
+                logger.info("\n💾 Auto-save... (%d กระทู้)", len(all_threads))
                 try:
                     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
                         json.dump(all_threads, f, ensure_ascii=False, indent=2)
-                    print("✅")
+                    logger.info("✅")
                 except Exception as e:
-                    print(f"❌ {e}")
+                    logger.error("❌ %s", e)
             
             # ค้นหากระทู้
             try:
                 thread_urls = search_pantip(driver, keyword)
             except Exception as e:
                 error_msg = str(e)
-                print(f"❌ Error: {error_msg[:80]}")
+                logger.error("❌ Error: %s", error_msg[:200])
                 
                 # ถ้าเป็น session error หรือมีคำว่า RECREATE_DRIVER_NEEDED
                 if 'RECREATE_DRIVER_NEEDED' in error_msg or 'session' in error_msg.lower() or 'invalid' in error_msg.lower() or 'disconnected' in error_msg.lower():
-                    print("🔄 Recreating driver due to session error...", end=" ")
+                    logger.info("🔄 Recreating driver due to session error...")
                     try:
                         driver.quit()
                     except:
                         pass
                     time.sleep(3)
                     driver = create_chrome_driver()
-                    print("✅ Driver recreated")
+                    logger.info("✅ Driver recreated")
                     
                     # ลองอีกครั้งหลังสร้าง driver ใหม่
                     try:
                         thread_urls = search_pantip(driver, keyword)
                     except Exception as retry_error:
-                        print(f"❌ Retry failed: {str(retry_error)[:50]}")
+                        logger.error("❌ Retry failed: %s", str(retry_error)[:200])
                         continue
                 else:
                     continue
@@ -570,10 +573,10 @@ def main():
                 try:
                     thread_urls = search_pantip(driver, keyword)
                 except:
-                    print(" | Skip")
+                    logger.warning("Skip after retry")
                     continue
             
-            print(f"→ {len(thread_urls)} กระทู้")
+            logger.info("→ %d กระทู้", len(thread_urls))
             
             # จำกัดจำนวน
             thread_urls = thread_urls[:MAX_THREADS_PER_KEYWORD]
@@ -587,15 +590,15 @@ def main():
                     continue
                 
                 seen_urls.add(url)
-                print(f"  [{i}/{len(thread_urls)}]", end=" ")
+                logger.info("  [%d/%d]", i, len(thread_urls))
                 
                 # ลองสกัดเนื้อหา ถ้า error ให้สร้าง driver ใหม่
                 thread_data = None
                 try:
                     thread_data = scrape_thread_content(driver, url)
                 except Exception as e:
-                    print(f"  ❌ Error: {e}")
-                    print("  🔄 สร้าง driver ใหม่...")
+                    logger.exception("  ❌ Error: %s", e)
+                    logger.info("  🔄 สร้าง driver ใหม่...")
                     try:
                         driver.quit()
                     except:
@@ -606,45 +609,45 @@ def main():
                     try:
                         thread_data = scrape_thread_content(driver, url)
                     except:
-                        print("  ⏭️  ข้ามกระทู้นี้")
+                        logger.info("  ⏭️  ข้ามกระทู้นี้")
                 
                 if thread_data and thread_data.get('content'):
                     all_threads.append(thread_data)
-                    print(f"✅ {thread_data['title'][:50]}... ({len(thread_data['content'])} chars)")
+                    logger.info("✅ %s... (%d chars)", thread_data['title'][:50], len(thread_data['content']))
                 else:
-                    print("⏭️ Skip (no content)")
+                    logger.info("⏭️ Skip (no content)")
                 
                 # พักเล็กน้อย
                 time.sleep(1)  # ลดจาก 2 เป็น 1
             
             # สรุปสั้นๆ
-            print(f"  → รวม: {len(all_threads)} กระทู้ | ไม่ซ้ำ: {len(seen_urls)} URLs")
+            logger.info("  → รวม: %d กระทู้ | ไม่ซ้ำ: %d URLs", len(all_threads), len(seen_urls))
         
         # บันทึกลงไฟล์
-        print("\n💾 กำลังบันทึกข้อมูล...")
+        logger.info("\n💾 กำลังบันทึกข้อมูล...")
         
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             json.dump(all_threads, f, ensure_ascii=False, indent=2)
         
-        print("\n" + "=" * 80)
-        print(f"✅ สำเร็จ! บันทึกข้อมูลลงไฟล์: {OUTPUT_FILE}")
-        print(f"📊 จำนวนกระทู้ทั้งหมด: {len(all_threads)}")
+        logger.info("\n%s", "=" * 80)
+        logger.info("✅ สำเร็จ! บันทึกข้อมูลลงไฟล์: %s", OUTPUT_FILE)
+        logger.info("📊 จำนวนกระทู้ทั้งหมด: %d", len(all_threads))
         
         # สถิติ
         import os
         file_size = os.path.getsize(OUTPUT_FILE)
-        print(f"📁 ขนาดไฟล์: {file_size:,} bytes ({file_size/1024:.2f} KB)")
+        logger.info("📁 ขนาดไฟล์: %d bytes (%.2f KB)", file_size, file_size/1024)
         
         total_content = sum(len(t['content']) for t in all_threads)
         total_comments = sum(len(t['comments']) for t in all_threads)
         total_views = sum(t['views'] for t in all_threads)
         
-        print(f"\n📈 สถิติ:")
-        print(f"  - เนื้อหาโพสต์รวม: {total_content:,} ตัวอักษร")
-        print(f"  - ความคิดเห็นรวม: {total_comments:,} comments")
-        print(f"  - ยอดวิวรวม: {total_views:,} ครั้ง")
-        print(f"  - เฉลี่ยต่อกระทู้: {total_content//len(all_threads) if all_threads else 0:,} ตัวอักษร")
-        print(f"  - comments ต่อกระทู้: {total_comments//len(all_threads) if all_threads else 0:.1f}")
+        logger.info("\n📈 สถิติ:")
+        logger.info("  - เนื้อหาโพสต์รวม: %d ตัวอักษร", total_content)
+        logger.info("  - ความคิดเห็นรวม: %d comments", total_comments)
+        logger.info("  - ยอดวิวรวม: %d ครั้ง", total_views)
+        logger.info("  - เฉลี่ยต่อกระทู้: %d ตัวอักษร", (total_content//len(all_threads) if all_threads else 0))
+        logger.info("  - comments ต่อกระทู้: %.1f", (total_comments//len(all_threads) if all_threads else 0))
         
         # สรุปยี่ห้อรถที่พบ
         brands_found = {}
@@ -656,53 +659,53 @@ def main():
                     brands_found[brand] = brands_found.get(brand, 0) + 1
         
         if brands_found:
-            print(f"\n🏍️  ยี่ห้อที่พบมากที่สุด:")
+            logger.info("\n🏍️  ยี่ห้อที่พบมากที่สุด:")
             for brand, count in sorted(brands_found.items(), key=lambda x: x[1], reverse=True)[:5]:
-                print(f"  - {brand.upper()}: {count} กระทู้")
+                logger.info("  - %s: %d กระทู้", brand.upper(), count)
         
         # แสดงตัวอย่าง
-        print(f"\n📋 กระทู้ที่สกัดได้ (แสดง 5 อันดับแรก):")
+        logger.info("\n📋 กระทู้ที่สกัดได้ (แสดง 5 อันดับแรก):")
         for i, thread in enumerate(all_threads[:5], 1):
-            print(f"\n  {i}. {thread['title']}")
-            print(f"     📍 URL: {thread['url']}")
-            print(f"     👤 ผู้เขียน: {thread['author']}")
-            print(f"     👁  ยอดวิว: {thread['views']:,}")
-            print(f"     💬 ความคิดเห็น: {thread['comments_count']:,}")
-            print(f"     📝 เนื้อหา: {len(thread['content']):,} ตัวอักษร")
+            logger.info("\n  %d. %s", i, thread['title'])
+            logger.info("     📍 URL: %s", thread['url'])
+            logger.info("     👤 ผู้เขียน: %s", thread['author'])
+            logger.info("     👁  ยอดวิว: %d", thread['views'])
+            logger.info("     💬 ความคิดเห็น: %d", thread['comments_count'])
+            logger.info("     📝 เนื้อหา: %d ตัวอักษร", len(thread['content']))
             if thread['tags']:
-                print(f"     🏷  Tags: {', '.join(thread['tags'][:5])}")
+                logger.info("     🏷  Tags: %s", ', '.join(thread['tags'][:5]))
         
         if len(all_threads) > 5:
-            print(f"\n  ... และอีก {len(all_threads) - 5} กระทู้")
-        
-        print("\n🏁 เสร็จสิ้น")
-        print("=" * 80)
+            logger.info("\n  ... และอีก %d กระทู้", len(all_threads) - 5)
+
+        logger.info("\n🏁 เสร็จสิ้น")
+        logger.info("%s", "=" * 80)
         
     except KeyboardInterrupt:
-        print("\n\n⚠️  ถูกยกเลิกโดยผู้ใช้")
-        print(f"💾 บันทึกข้อมูลที่สกัดได้แล้ว {len(all_threads)} กระทู้...")
+        logger.warning("\n\n⚠️  ถูกยกเลิกโดยผู้ใช้")
+        logger.info("💾 บันทึกข้อมูลที่สกัดได้แล้ว %d กระทู้...", len(all_threads))
         
         try:
             with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
                 json.dump(all_threads, f, ensure_ascii=False, indent=2)
-            print(f"✅ บันทึกเรียบร้อยแล้ว: {OUTPUT_FILE}")
+            logger.info("✅ บันทึกเรียบร้อยแล้ว: %s", OUTPUT_FILE)
         except Exception as save_error:
-            print(f"❌ บันทึกไม่สำเร็จ: {save_error}")
+            logger.error("❌ บันทึกไม่สำเร็จ: %s", save_error)
         
     except Exception as e:
-        print(f"\n❌ เกิดข้อผิดพลาด: {e}")
+        logger.exception("\n❌ เกิดข้อผิดพลาด: %s", e)
         import traceback
         traceback.print_exc()
         
         # พยายามบันทึกข้อมูลที่มีอยู่
         if all_threads:
-            print(f"\n💾 พยายามบันทึกข้อมูลที่สกัดได้...")
+            logger.info("\n💾 พยายามบันทึกข้อมูลที่สกัดได้...")
             try:
                 with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
                     json.dump(all_threads, f, ensure_ascii=False, indent=2)
-                print(f"✅ บันทึกเรียบร้อยแล้ว: {len(all_threads)} กระทู้")
+                logger.info("✅ บันทึกเรียบร้อยแล้ว: %d กระทู้", len(all_threads))
             except Exception as save_error:
-                print(f"❌ บันทึกไม่สำเร็จ: {save_error}")
+                logger.error("❌ บันทึกไม่สำเร็จ: %s", save_error)
     
     finally:
         # ปิด driver อย่างปลอดภัย
@@ -713,4 +716,5 @@ def main():
 
 
 if __name__ == "__main__":
+    setup_logging()
     main()
