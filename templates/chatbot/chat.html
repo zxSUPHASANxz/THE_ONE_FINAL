@@ -266,13 +266,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Focus input on load without causing the page to scroll
-    try {
-        messageInput.focus({ preventScroll: true });
-    } catch (e) {
-        // Fallback for older browsers that don't support the option
-        messageInput.focus();
-    }
+    // Focus input on load
+    messageInput.focus();
 });
 </script>
 {% endblock %}

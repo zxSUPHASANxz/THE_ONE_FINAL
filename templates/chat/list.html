@@ -51,7 +51,7 @@
                                         {% endif %}
                                     </h3>
                                     {% if room.other_user.user_type == 'mechanic' %}
-                                    <span class="text-xs bg-blue-600/30 text-blue-300 px-2 py-0.5 rounded-full">🔧 ช่าง</span>
+                                    <span class="text-xs bg-gray-600/30 text-gray-300 px-2 py-0.5 rounded-full">🔧 ช่าง</span>
                                     {% else %}
                                     <span class="text-xs bg-purple-600/30 text-purple-300 px-2 py-0.5 rounded-full">👤 ลูกค้า</span>
                                     {% endif %}
@@ -199,7 +199,7 @@ function createChatItemHTML(room) {
                     <div class="flex items-center justify-between mb-1">
                         <div class="flex items-center gap-2">
                             <h3 class="text-lg font-bold text-white truncate">${displayName}</h3>
-                            <span class="text-xs ${isMechanic ? 'bg-blue-600/30 text-blue-300' : 'bg-purple-600/30 text-purple-300'} px-2 py-0.5 rounded-full">${isMechanic ? '🔧 ช่าง' : '👤 ลูกค้า'}</span>
+                            <span class="text-xs ${isMechanic ? 'bg-gray-600/30 text-gray-300' : 'bg-purple-600/30 text-purple-300'} px-2 py-0.5 rounded-full">${isMechanic ? '🔧 ช่าง' : '👤 ลูกค้า'}</span>
                         </div>
                         <span class="text-xs text-gray-500 time-ago">${timeText}</span>
                     </div>

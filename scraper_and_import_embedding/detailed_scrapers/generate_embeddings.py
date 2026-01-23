@@ -62,7 +62,7 @@ class Command(BaseCommand):
         errors = 0
         start_time = time.time()
         
-        self.stdout.write(self.style.WARNING(f'\n🚀 Starting embedding generation...'))
+        self.stdout.write(self.style.WARNING('\n🚀 Starting embedding generation...'))
         self.stdout.write(self.style.WARNING(f'⏱️  Estimated time: {total_count * 0.5 / 60:.1f} minutes\n'))
         
         for record in queryset.iterator(chunk_size=batch_size):
@@ -122,7 +122,7 @@ class Command(BaseCommand):
         elapsed_time = time.time() - start_time
         
         self.stdout.write('\n')
-        self.stdout.write(self.style.SUCCESS(f'\n✅ Embedding generation completed!'))
+        self.stdout.write(self.style.SUCCESS('''\n✅ Embedding generation completed!'''))
         self.stdout.write(self.style.SUCCESS(f'📊 Processed: {processed} records'))
         self.stdout.write(self.style.SUCCESS(f'⚠️  Errors: {errors}'))
         self.stdout.write(self.style.SUCCESS(f'⏱️  Time: {elapsed_time/60:.1f} minutes'))

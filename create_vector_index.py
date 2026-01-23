@@ -20,7 +20,7 @@ print('✅ Vector index created successfully!')
 # เช็ค index
 cur.execute("SELECT indexname FROM pg_indexes WHERE tablename = 'KnowBase';")
 indexes = cur.fetchall()
-print(f'\nIndexes on KnowBase table:')
+print('\nIndexes on KnowBase table:')
 for idx in indexes:
     print(f'  - {idx[0]}')
 

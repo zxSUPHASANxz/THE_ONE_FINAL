@@ -183,8 +183,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://localhost:5678',  # n8n
-    'https://*.ngrok-free.app',  # All ngrok app domains
-    'https://*.ngrok-free.dev',  # All ngrok dev domains
+    'https://*.ngrok-free.app',  # All ngrok domains
+    'https://*.ngrok-free.dev',  # ngrok-free.dev variant
 ]
 
 # NGROK ENABLED

@@ -13,7 +13,7 @@
     <div class="max-w-4xl mx-auto text-center relative z-10">
         <!-- Logo -->
         <div class="w-40 h-40 mx-auto mb-8 flex items-center justify-center">
-            <img src="{% static 'Gemini_Generated_Image_g2vtrsg2vtrsg2vt-removebg-preview.png' %}" alt="THE_ONE Logo" class="w-40 h-40 object-contain filter drop-shadow-2xl" />
+            <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-40 h-40 object-contain filter drop-shadow-2xl" />
         </div>
         
         <h1 class="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
@@ -26,7 +26,11 @@
             <a href="/chatbot/" class="bg-white text-red-700 px-10 py-5 rounded-xl font-bold text-lg hover:bg-gold-50 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl border-2 border-white/50">
                 💬 เริ่มคุยกับ Chatbot
             </a>
-            {% if user.is_authenticated and not user.is_mechanic %}
+            {% if user.is_authenticated and user.is_mechanic %}
+            <a href="/mechanics/dashboard/" class="bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:from-gold-500 hover:via-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl border-2 border-gold-300">
+                🛠️ เริ่มใช้งาน (ช่างซ่อม)
+            </a>
+            {% elif user.is_authenticated %}
             <a href="/booking/" class="bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:from-gold-500 hover:via-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl border-2 border-gold-300">
                 📅 จองคิวซ่อม
             </a>
@@ -41,19 +45,27 @@
 
 <!-- Features Section -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-    <a href="{% if user.is_authenticated %}/chatbot/{% else %}{% url 'users:login' %}{% endif %}" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-red-500 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
+    <a href="{% if user.is_authenticated and user.is_mechanic %}/mechanics/dashboard/{% elif user.is_authenticated %}/chatbot/{% else %}{% url 'users:login' %}{% endif %}" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-red-500 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
         <div class="text-7xl mb-6 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">🤖</div>
         <h3 class="text-2xl font-bold mb-3 text-red-600 group-hover:text-red-700">AI Chatbot</h3>
         <p class="text-gray-700 text-lg">ระบบ AI ให้คำปรึกษาและประเมินอาการรถของคุณแบบอัตโนมัติ</p>
     </a>
     
+    {% if user.is_authenticated and user.is_mechanic %}
+    <a href="/mechanics/dashboard/" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
+        <div class="text-7xl mb-6 transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300">📋</div>
+        <h3 class="text-2xl font-bold mb-3 text-gold-600 group-hover:text-gold-700">ตารางงาน</h3>
+        <p class="text-gray-700 text-lg">ดูตารางงานและจัดการคิวซ่อมของคุณ</p>
+    </a>
+    {% else %}
     <a href="{% if user.is_authenticated %}/booking/{% else %}{% url 'users:login' %}{% endif %}" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
         <div class="text-7xl mb-6 transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300">📅</div>
         <h3 class="text-2xl font-bold mb-3 text-gold-600 group-hover:text-gold-700">จองคิวง่าย</h3>
         <p class="text-gray-700 text-lg">จองคิวซ่อมรถได้ง่ายๆ เลือกวันเวลาที่สะดวกได้เลย</p>
     </a>
+    {% endif %}
     
-    <a href="{% if user.is_authenticated %}/chat/{% else %}{% url 'users:login' %}{% endif %}" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
+    <a href="{% if user.is_authenticated and user.is_mechanic %}/mechanics/dashboard/{% elif user.is_authenticated %}/chat/{% else %}{% url 'users:login' %}{% endif %}" class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-8 text-center group hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer transform hover:scale-105 block">
         <div class="text-7xl mb-6 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">👨‍🔧</div>
         <h3 class="text-2xl font-bold mb-3 text-blue-600 group-hover:text-blue-700">ช่างมืออาชีพ</h3>
         <p class="text-gray-700 text-lg">ทีมช่างที่มีความชำนาญพร้อมดูแลรถบิ๊กไบค์ของคุณ</p>
@@ -90,35 +102,52 @@
 <!-- How It Works -->
 <div class="bg-gray-100 border-2 border-gray-300 rounded-2xl p-10 shadow-xl">
     <h2 class="text-4xl font-bold mb-10 text-center bg-gradient-to-r from-red-600 to-gold-600 bg-clip-text text-transparent">วิธีการใช้งาน</h2>
+    {% if user.is_authenticated and user.is_mechanic %}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div class="text-center group">
-            <div class="bg-gradient-to-br from-red-500 to-red-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">
-                1
-            </div>
+            <div class="bg-gradient-to-br from-gold-500 to-gold-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">1</div>
+            <h4 class="font-bold text-gray-900 text-lg mb-2">ตรวจสอบงานที่ได้รับ</h4>
+            <p class="text-sm text-gray-700">ดูคิวงานที่เข้ามาในระบบ</p>
+        </div>
+        <div class="text-center group">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">2</div>
+            <h4 class="font-bold text-gray-900 text-lg mb-2">รับงานซ่อม</h4>
+            <p class="text-sm text-gray-700">กดรับงานที่ต้องการดำเนินการ</p>
+        </div>
+        <div class="text-center group">
+            <div class="bg-gradient-to-br from-yellow-500 to-yellow-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">3</div>
+            <h4 class="font-bold text-gray-900 text-lg mb-2">อัปเดตสถานะงาน</h4>
+            <p class="text-sm text-gray-700">แจ้งความคืบหน้าหรือสถานะงาน</p>
+        </div>
+        <div class="text-center group">
+            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">4</div>
+            <h4 class="font-bold text-gray-900 text-lg mb-2">เสร็จสิ้นงาน</h4>
+            <p class="text-sm text-gray-700">ทำเครื่องหมายว่างานเสร็จสิ้น</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center group">
+            <div class="bg-gradient-to-br from-red-500 to-red-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">1</div>
             <h4 class="font-bold text-gray-900 text-lg mb-2">คุยกับ Chatbot</h4>
             <p class="text-sm text-gray-700">บอกอาการหรือปัญหาของรถ</p>
         </div>
         <div class="text-center group">
-            <div class="bg-gradient-to-br from-gold-500 to-gold-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">
-                2
-            </div>
+            <div class="bg-gradient-to-br from-gold-500 to-gold-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">2</div>
             <h4 class="font-bold text-gray-900 text-lg mb-2">รับคำแนะนำ</h4>
             <p class="text-sm text-gray-700">AI วิเคราะห์และให้คำแนะนำ</p>
         </div>
         <div class="text-center group">
-            <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">
-                3
-            </div>
+            <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">3</div>
             <h4 class="font-bold text-gray-900 text-lg mb-2">จองคิวซ่อม</h4>
             <p class="text-sm text-gray-700">เลือกวันเวลาที่สะดวก</p>
         </div>
         <div class="text-center group">
-            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">
-                4
-            </div>
+            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300">4</div>
             <h4 class="font-bold text-gray-900 text-lg mb-2">รับรถกลับ</h4>
             <p class="text-sm text-gray-700">รถพร้อมใช้งานอีกครั้ง</p>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

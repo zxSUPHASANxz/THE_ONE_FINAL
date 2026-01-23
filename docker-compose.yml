@@ -74,7 +74,7 @@ services :
       - "5433:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U suphasan -d the_one_db"]
       interval: 5s

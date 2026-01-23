@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import views_web
+from booking.views import BookingCancelView
 
 app_name = 'mechanics'
 
@@ -24,6 +25,8 @@ urlpatterns = [
     # Booking actions
     path('api/bookings/<int:pk>/start/', views.BookingStartView.as_view(), name='booking_start'),
     path('api/bookings/<int:pk>/complete/', views.BookingCompleteView.as_view(), name='booking_complete'),
+    # Allow canceling a booking via mechanics namespace (delegates to booking app view)
+    path('api/bookings/<int:pk>/cancel/', BookingCancelView.as_view(), name='booking_cancel'),
     
     # Reviews
     path('api/reviews/', views.ReviewListView.as_view(), name='review_list'),

@@ -2,3 +2,8 @@ selenium
 beautifulsoup4
 webdriver-manager
 lxml
+
+# For import_to_knowbase.py
+PyPDF2
+requests
+psycopg2-binary

@@ -82,7 +82,7 @@ def accept_work_view(request, pk):
         # Check if booking is still available (not taken by another mechanic)
         booking = work_queue.booking
         if booking.status != 'pending':
-            messages.warning(request, f'งานนี้มีช่างคนอื่นรับไปแล้ว')
+            messages.warning(request, 'งานนี้มีช่างคนอื่นรับไปแล้ว')
             return redirect('mechanics:dashboard')
         
         work_queue.status = 'accepted'

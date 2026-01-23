@@ -18,7 +18,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from the_one.logging_config import setup_logging
 
 
 # =========================
@@ -97,7 +96,7 @@ def scrape_bigbike_spec(driver, model_info: Dict) -> Dict:
     spec_url = f"{BASE_URL}/bigbike/{slug}/specification"
     overview_url = f"{BASE_URL}/bigbike/{slug}/overview"
     
-    logger.info("  📄 Fetching: %s", spec_url)
+    print(f"  📄 Fetching: {spec_url}")
     
     try:
         driver.get(spec_url)
@@ -160,8 +159,8 @@ def scrape_bigbike_spec(driver, model_info: Dict) -> Dict:
         
         return data
         
-        except Exception as e:
-            logger.exception("  ❌ Error: %s", e)
+    except Exception as e:
+        print(f"  ❌ Error: {e}")
         return {
             "brand": "Yamaha",
             "name": model_info["name"],
@@ -177,9 +176,9 @@ def scrape_bigbike_spec(driver, model_info: Dict) -> Dict:
 
 def run():
     """Main scraping function"""
-    logger.info("=" * 60)
-    logger.info("🏍️ Yamaha BigBike Thailand Scraper")
-    logger.info("=" * 60)
+    print("=" * 60)
+    print("🏍️ Yamaha BigBike Thailand Scraper")
+    print("=" * 60)
     
     driver = create_driver()
     results = []
@@ -187,23 +186,22 @@ def run():
     
     try:
         total = len(BIGBIKE_MODELS)
-        logger.info("🔍 Scraping %d BigBike models", total)
+        print(f"🔍 Scraping {total} BigBike models")
         
         for idx, model_info in enumerate(BIGBIKE_MODELS, 1):
             try:
-                logger.info("\n[%d/%d] %s", idx, total, model_info['name'])
+                print(f"\n[{idx}/{total}] {model_info['name']}")
                 data = scrape_bigbike_spec(driver, model_info)
                 results.append(data)
                 
                 spec_count = len(data.get("specifications", {}))
-                logger.info("  ✅ Done - Price: %s, Specs: %d", data.get('price', 'N/A'), spec_count)
+                print(f"  ✅ Done - Price: {data.get('price', 'N/A')}, Specs: {spec_count}")
                 
                 # Random delay to avoid blocking
                 time.sleep(random.uniform(2.0, 4.0))
                 
             except Exception as e:
-                logger.exception("  ❌ Error: %s", e)
-                errors.append({"model": model_info["name"], "error": str(e)})
+                print(f"  ❌ Error: {e}")
                 errors.append({"model": model_info["name"], "error": str(e)})
                 
     finally:
@@ -239,18 +237,17 @@ def run():
         }, f, ensure_ascii=False, indent=2)
     
     # Summary
-    logger.info("\n" + "=" * 60)
-    logger.info("📊 SCRAPING SUMMARY")
-    logger.info("=" * 60)
-    logger.info("✅ Total scraped: %d", len(results))
-    logger.info("❌ Errors: %d", len(errors))
-    logger.info("📁 Saved to: %s", output_file)
-    logger.info("📁 Latest: %s", latest_file)
-    logger.info("=" * 60)
+    print("\n" + "=" * 60)
+    print("📊 SCRAPING SUMMARY")
+    print("=" * 60)
+    print(f"✅ Total scraped: {len(results)}")
+    print(f"❌ Errors: {len(errors)}")
+    print(f"📁 Saved to: {output_file}")
+    print(f"📁 Latest: {latest_file}")
+    print("=" * 60)
     
     return results
 
 
 if __name__ == "__main__":
-    setup_logging()
     run()

@@ -14,9 +14,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 from bs4 import BeautifulSoup
-from the_one.logging_config import setup_logging
-import logging
-logger = logging.getLogger(__name__)
 
 
 START_URL = "https://www.thaihonda.co.th/honda/motorcycle"
@@ -126,12 +123,12 @@ def scrape_all():
 
     try:
         model_links = collect_model_links(driver)
-        logger.info("พบรุ่นทั้งหมด: %d", len(model_links))
+        print(f"พบรุ่นทั้งหมด: {len(model_links)}")
 
         results = []
 
         for i, url in enumerate(model_links, 1):
-            logger.info("[%d/%d] %s", i, len(model_links), url)
+            print(f"[{i}/{len(model_links)}] {url}")
             driver.get(url)
 
             try:
@@ -144,7 +141,7 @@ def scrape_all():
                 results.append(data)
 
             except Exception as e:
-                logger.exception("❌ Error page: %s -> %s", url, e)
+                print(f"❌ Error page: {url} -> {e}")
 
         return results
 
@@ -181,7 +178,6 @@ def export(results: List[Dict]):
 
 # ---------- Run ----------
 if __name__ == "__main__":
-    setup_logging()
     data = scrape_all()
     export(data)
-    logger.info("✅ Scraping completed")
+    print("✅ Scraping completed")

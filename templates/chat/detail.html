@@ -65,7 +65,7 @@
                         <div class="flex items-end space-x-2 justify-end">
                             <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-none px-4 py-2 shadow-lg">
                                 <p class="text-sm break-words">{{ msg.message }}</p>
-                                <p class="text-xs text-blue-200 mt-1 text-right">
+                                <p class="text-xs text-gray-300 mt-1 text-right">
                                     {{ msg.created_at|date:"H:i" }}
                                     {% if msg.is_read %}✓✓{% else %}✓{% endif %}
                                 </p>
@@ -177,7 +177,7 @@ function displayMessages(messages) {
                         <div class="flex items-end space-x-2 justify-end">
                             <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-none px-4 py-2 shadow-lg">
                                 <p class="text-sm break-words">${escapeHtml(msg.message)}</p>
-                                <p class="text-xs text-blue-200 mt-1 text-right">
+                                <p class="text-xs text-gray-300 mt-1 text-right">
                                     ${time}
                                     ${msg.is_read ? '✓✓' : '✓'}
                                 </p>

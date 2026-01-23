@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}THE ONE - ระบบจองซ่อมรถจักรยานยนต์{% endblock %}</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏍️</text></svg>">
+    <link rel="icon" href="{% static 'images/the_one_favicon.png' %}">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -103,7 +104,7 @@
                     <div class="flex-shrink-0 flex items-center">
                         <a href="/" class="flex items-center space-x-3 group">
                             <div class="w-12 h-12 flex items-center justify-center filter drop-shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                                <img src="/static/Gemini_Generated_Image_g2vtrsg2vtrsg2vt-removebg-preview.png" alt="THE_ONE Logo" class="w-12 h-12 object-contain" />
+                                <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-12 h-12 object-contain" />
                             </div>
                             <span class="text-2xl font-bold bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent group-hover:from-gold-200 group-hover:to-gold-400 transition-all duration-300 drop-shadow-lg">
                                 THE_ONE

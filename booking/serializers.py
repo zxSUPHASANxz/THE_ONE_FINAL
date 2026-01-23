@@ -69,7 +69,7 @@ class BookingSerializer(serializers.ModelSerializer):
         try:
             if hasattr(obj, 'chat_room'):
                 return obj.chat_room.id
-        except:
+        except Exception:
             pass
         return None
     

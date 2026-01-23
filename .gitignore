@@ -43,6 +43,3 @@ node_modules/
 # Migrations (สำรองก่อน commit)
 # */migrations/*.py
 # !*/migrations/__init__.py
-
-# Ignore sensitive local config
-config/config.json
