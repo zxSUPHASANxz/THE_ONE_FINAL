@@ -7,9 +7,7 @@
     <div class="max-w-md w-full space-y-8">
         <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8">
             <div class="text-center mb-8">
-                <div class="mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4 animate-pulse">
-                    🏍️
-                </div>
+                {% include 'includes/brand.html' with logo_container_class='mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4 animate-pulse' logo_img_class='w-20 h-20 object-contain' logo_text_class='sr-only' %}
                 <h2 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
                     สมัครสมาชิก
                 </h2>
@@ -18,7 +16,7 @@
                 </p>
             </div>
 
-            <form class="mt-8 space-y-6" method="POST" action="{% url 'users:register_web' %}">
+            <form class="mt-8 space-y-6" method="POST" action="{% url 'users:register_web' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 
                 {% if form.non_field_errors %}
@@ -34,26 +32,20 @@
                             id="id_username" 
                             name="username" 
                             type="text" 
-                            required 
+                            required
                             class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
                             placeholder="ชื่อผู้ใช้">
-                        {% if form.username.errors %}
-                            <p class="mt-2 text-sm text-red-400">{{ form.username.errors.0 }}</p>
-                        {% endif %}
                     </div>
 
                     <div>
                         <label for="id_email" class="block text-sm font-medium text-gray-300 mb-2">อีเมล</label>
-                        <input 
-                            id="id_email" 
-                            name="email" 
-                            type="email" 
-                            required 
+                        <input
+                            id="id_email"
+                            name="email"
+                            type="email"
+                            required
                             class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
                             placeholder="your@email.com">
-                        {% if form.email.errors %}
-                            <p class="mt-2 text-sm text-red-400">{{ form.email.errors.0 }}</p>
-                        {% endif %}
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -78,33 +70,114 @@
                     </div>
 
                     <div>
-                        <label for="id_password1" class="block text-sm font-medium text-gray-300 mb-2">รหัสผ่าน</label>
-                        <input 
-                            id="id_password1" 
-                            name="password1" 
-                            type="password" 
-                            required 
-                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
-                            placeholder="รหัสผ่าน">
-                        {% if form.password1.errors %}
-                            <p class="mt-2 text-sm text-red-400">{{ form.password1.errors.0 }}</p>
-                        {% endif %}
+                        <label for="id_password" class="block text-sm font-medium text-gray-300 mb-2">รหัสผ่าน</label>
+                        <div class="relative">
+                            <input 
+                                id="id_password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
+                                placeholder="รหัสผ่าน">
+                            <button type="button" id="togglePassword" aria-label="Toggle password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white">
+                                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.269-2.943-9.543-7a10.05 10.05 0 012.223-3.682M6.1 6.1A9.956 9.956 0 0112 5c4.478 0 8.269 2.943 9.543 7a9.956 9.956 0 01-1.136 2.436M3 3l18 18"/></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <div>
                         <label for="id_password2" class="block text-sm font-medium text-gray-300 mb-2">ยืนยันรหัสผ่าน</label>
-                        <input 
-                            id="id_password2" 
-                            name="password2" 
-                            type="password" 
-                            required 
-                            class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
-                            placeholder="ยืนยันรหัสผ่าน">
-                        {% if form.password2.errors %}
-                            <p class="mt-2 text-sm text-red-400">{{ form.password2.errors.0 }}</p>
-                        {% endif %}
+                        <div class="relative">
+                            <input 
+                                id="id_password2" 
+                                name="password2" 
+                                type="password" 
+                                required 
+                                class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
+                                placeholder="ยืนยันรหัสผ่าน">
+                            <button type="button" id="togglePassword2" aria-label="Toggle password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white">
+                                <svg id="eyeOpen2" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eyeClosed2" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.269-2.943-9.543-7a10.05 10.05 0 012.223-3.682M6.1 6.1A9.956 9.956 0 0112 5c4.478 0 8.269 2.943 9.543 7a9.956 9.956 0 01-1.136 2.436M3 3l18 18"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <div class="space-y-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">ประเภทผู้ใช้</label>
+                    <select id="id_user_type" name="user_type" class="w-full rounded-lg px-4 py-3 bg-gray-700 border border-gray-600 text-white">
+                        <option value="customer">ผู้ใช้งานทั่วไป</option>
+                        <option value="mechanic">ช่างซ่อม (Mechanic)</option>
+                    </select>
+                </div>
+
+                <!-- Mechanic extra fields (hidden unless mechanic selected) -->
+                <div id="mechanicFields" class="space-y-4 hidden">
+                    <div>
+                        <label for="id_specialization" class="block text-sm font-medium text-gray-300 mb-2">ความเชี่ยวชาญ (ถ้ามี)</label>
+                        <select id="id_specialization" name="specialization" class="w-full rounded-lg px-4 py-3 bg-gray-700 border border-gray-600 text-white">
+                            <option value="all">ซ่อมทั่วไป</option>
+                            <option value="engine">เครื่องยนต์</option>
+                            <option value="electrical">ระบบไฟฟ้า</option>
+                            <option value="brake">ระบบเบรก</option>
+                            <option value="suspension">ระบบกันสะเทือน</option>
+                            <option value="transmission">ระบบส่งกำลัง</option>
+                            <option value="body">โครงสร้าง/ตัวถัง</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="id_years_of_experience" class="block text-sm font-medium text-gray-300 mb-2">ประสบการณ์ (ปี)</label>
+                        <input id="id_years_of_experience" name="years_of_experience" type="number" min="0" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white" placeholder="0">
+                    </div>
+                    <div>
+                        <label for="id_shop_address" class="block text-sm font-medium text-gray-300 mb-2">ที่อยู่ร้าน (ถ้ามี)</label>
+                        <textarea id="id_shop_address" name="shop_address" rows="3" class="w-full rounded-lg px-4 py-3 bg-gray-700 border border-gray-600 text-white" placeholder="ที่อยู่ร้าน"></textarea>
+                    </div>
+                    <div>
+                        <label for="id_shop_photo" class="block text-sm font-medium text-gray-300 mb-2">รูปหน้าร้าน (ถ้ามี)</label>
+                        <input id="id_shop_photo" name="shop_photo" type="file" accept="image/*" class="w-full text-sm text-gray-300">
+                    </div>
+                    <div>
+                        <label for="id_qualification" class="block text-sm font-medium text-gray-300 mb-2">วุฒิการศึกษา/ใบรับรอง (คำอธิบาย)</label>
+                        <input id="id_qualification" name="qualification" type="text" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white" placeholder="เช่น ปวส. ช่างยนต์">
+                    </div>
+                    <div>
+                        <label for="id_qualification_file" class="block text-sm font-medium text-gray-300 mb-2">ไฟล์วุฒิการศึกษา (ถ้ามี)</label>
+                        <input id="id_qualification_file" name="qualification_file" type="file" accept="application/pdf,image/*" class="w-full text-sm text-gray-300">
+                    </div>
+                    <div>
+                        <label for="id_license_file" class="block text-sm font-medium text-gray-300 mb-2">ใบอนุญาตประกอบการ (ถ้ามี)</label>
+                        <input id="id_license_file" name="license_file" type="file" accept="application/pdf,image/*" class="w-full text-sm text-gray-300">
+                    </div>
+                </div>
+
+            <script>
+            (function(){
+                var btn = document.getElementById('togglePassword');
+                if(btn){
+                    btn.addEventListener('click', function(){
+                        var inp = document.getElementById('id_password');
+                        var open = document.getElementById('eyeOpen');
+                        var closed = document.getElementById('eyeClosed');
+                        if(inp.type === 'password'){
+                            inp.type = 'text'; open.classList.add('hidden'); closed.classList.remove('hidden');
+                        } else { inp.type = 'password'; open.classList.remove('hidden'); closed.classList.add('hidden'); }
+                    });
+                }
+                var btn2 = document.getElementById('togglePassword2');
+                if(btn2){
+                    btn2.addEventListener('click', function(){
+                        var inp = document.getElementById('id_password2');
+                        var open = document.getElementById('eyeOpen2');
+                        var closed = document.getElementById('eyeClosed2');
+                        if(inp.type === 'password'){
+                            inp.type = 'text'; open.classList.add('hidden'); closed.classList.remove('hidden');
+                        } else { inp.type = 'password'; open.classList.remove('hidden'); closed.classList.add('hidden'); }
+                    });
+                }
+            })();
+            </script>
 
                 <div>
                     <button 
@@ -117,4 +190,23 @@
         </div>
     </div>
 </div>
+<script>
+// Toggle mechanic-specific fields
+document.addEventListener('DOMContentLoaded', function(){
+    const userTypeEl = document.getElementById('id_user_type');
+    const mechFields = document.getElementById('mechanicFields');
+    function update() {
+        if (!userTypeEl) return;
+        if (userTypeEl.value === 'mechanic') {
+            mechFields.classList.remove('hidden');
+        } else {
+            mechFields.classList.add('hidden');
+        }
+    }
+    if (userTypeEl) {
+        userTypeEl.addEventListener('change', update);
+        update();
+    }
+});
+</script>
 {% endblock %}

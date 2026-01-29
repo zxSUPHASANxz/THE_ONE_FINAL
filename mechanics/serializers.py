@@ -9,8 +9,9 @@ class MechanicProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = MechanicProfile
         fields = ('id', 'user', 'username', 'specialization', 'years_of_experience',
-                  'certification', 'bio', 'is_available', 'rating', 'total_jobs',
-                  'created_at', 'updated_at')
+                  'certification', 'qualification', 'shop_address', 'shop_photo',
+                  'qualification_file', 'license_file', 'bio', 'is_available',
+                  'rating', 'total_jobs', 'created_at', 'updated_at')
         read_only_fields = ('id', 'rating', 'total_jobs', 'created_at', 'updated_at')
 
 

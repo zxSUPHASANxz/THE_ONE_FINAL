@@ -37,6 +37,32 @@ class MechanicProfile(models.Model):
         verbose_name='ใบรับรอง'
     )
     bio = models.TextField(blank=True, null=True, verbose_name='ประวัติ')
+    # ข้อมูลเพิ่มเติมสำหรับร้านของช่าง
+    shop_address = models.TextField(blank=True, null=True, verbose_name='ที่อยู่ร้าน')
+    shop_photo = models.ImageField(
+        upload_to='mechanic_shops/',
+        blank=True,
+        null=True,
+        verbose_name='รูปหน้าร้าน'
+    )
+    qualification = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name='วุฒิการศึกษา'
+    )
+    qualification_file = models.FileField(
+        upload_to='mechanic_qualifications/',
+        blank=True,
+        null=True,
+        verbose_name='ไฟล์วุฒิการศึกษา'
+    )
+    license_file = models.FileField(
+        upload_to='mechanic_licenses/',
+        blank=True,
+        null=True,
+        verbose_name='ใบอนุญาตประกอบการ'
+    )
     is_available = models.BooleanField(default=True, verbose_name='พร้อมรับงาน')
     rating = models.DecimalField(
         max_digits=3,

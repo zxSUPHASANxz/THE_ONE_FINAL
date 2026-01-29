@@ -75,8 +75,8 @@
                 <div class="flex items-center justify-between">
                     <div class="text-5xl">❌</div>
                     <div class="text-right">
-                        <p class="text-red-100 text-sm font-semibold">ลูกค้ายกเลิก</p>
-                        <p class="text-white text-4xl font-black">{{ cancelled_by_customer_count|default:0 }}</p>
+                        <p class="text-red-100 text-sm font-semibold">งานที่ยกเลิกทั้งหมด</p>
+                        <p class="text-white text-4xl font-black">{{ cancelled_count|default:0 }}</p>
                     </div>
                 </div>
                 <div class="mt-3 h-1 bg-red-300 rounded-full"></div>
@@ -101,7 +101,7 @@
                 <span class="text-lg">✅</span> เสร็จสิ้น
             </button>
             <button onclick="filterWorks('cancelled')" data-filter="cancelled" class="filter-btn flex-1 min-w-[100px] px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg font-bold transition-all transform hover:scale-105">
-                <span class="text-lg">❌</span> ลูกค้ายกเลิก
+                <span class="text-lg">❌</span> งานที่ยกเลิกทั้งหมด
             </button>
         </div>
 
@@ -186,7 +186,14 @@
                             <td class="p-4">
                                 {% if work.booking.status == 'cancelled' %}
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-red-900/50 text-red-300 border border-red-500">
-                                        ❌ ลูกค้ายกเลิก
+                                        ❌ งานยกเลิก
+                                        {% if work.booking.cancelled_by == 'customer' %}
+                                            <span class="ml-2 text-xs bg-red-500/30 text-red-200 px-2 py-0.5 rounded-full">ลูกค้ายกเลิก</span>
+                                        {% elif work.booking.cancelled_by == 'mechanic' %}
+                                            <span class="ml-2 text-xs bg-gray-500/30 text-gray-200 px-2 py-0.5 rounded-full">ช่างซ่อมยกเลิก</span>
+                                        {% else %}
+                                            <span class="ml-2 text-xs bg-gray-500/30 text-gray-200 px-2 py-0.5 rounded-full">ไม่ระบุ</span>
+                                        {% endif %}
                                     </span>
                                 {% elif work.booking.status == 'confirmed' and work.booking.mechanic != request.user and work.status == 'pending' %}
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-900/50 text-orange-300 border border-orange-500">
@@ -197,8 +204,11 @@
                                         ✅ รับงาน
                                     </button>
                                 {% elif work.status == 'accepted' and work.booking.status == 'confirmed' %}
-                                    <button onclick="handleStartWork({{ work.booking.id }})" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg border border-blue-400">
+                                    <button onclick="handleStartWork({{ work.booking.id }})" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg border border-blue-400 mr-2">
                                         🔧 เริ่มงาน
+                                    </button>
+                                    <button onclick="handleCancelWork({{ work.booking.id }})" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg border border-red-400">
+                                        ❌ ยกเลิกงาน
                                     </button>
                                 {% elif work.booking.status == 'in_progress' %}
                                     <button onclick="handleCompleteWork({{ work.booking.id }})" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white text-sm font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg border border-purple-400">
@@ -250,7 +260,7 @@
                      data-current-user="{{ request.user.id }}">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex items-center space-x-4">
-                            <div class="text-6xl">🏍️</div>
+                            {% include 'includes/brand.html' with logo_container_class='text-6xl flex items-center justify-center' logo_img_class='w-12 h-12 object-contain' logo_text_class='sr-only' %}
                             <div>
                                 <h3 class="text-2xl font-black text-white mb-1">
                                     {% if work.booking.motorcycle %}
@@ -340,8 +350,11 @@
                             ❌ ปฏิเสธ
                         </button>
                         {% elif work.status == 'accepted' and work.booking.status == 'confirmed' %}
-                        <button onclick="handleStartWork({{ work.booking.id }})" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-4 rounded-lg font-black text-lg transition-all transform hover:scale-105 shadow-xl border-2 border-blue-400">
+                        <button onclick="handleStartWork({{ work.booking.id }})" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-4 rounded-lg font-black text-lg transition-all transform hover:scale-105 shadow-xl border-2 border-blue-400 mr-2">
                             🔧 เริ่มงาน
+                        </button>
+                        <button onclick="handleCancelWork({{ work.booking.id }})" class="flex-1 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-4 rounded-lg font-black text-lg transition-all transform hover:scale-105 shadow-xl border-2 border-red-400">
+                            ❌ ยกเลิกงาน
                         </button>
                         {% if work.booking.chat_room %}
                         <a href="{% url 'chat:detail' work.booking.chat_room.id %}" class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-4 rounded-lg font-black text-lg transition-all transform hover:scale-105 shadow-xl border-2 border-green-400 text-center">
@@ -470,73 +483,7 @@ function showConfirmModal(message, icon = '❓', confirmText = 'ยืนยั�
     });
 }
 
-// ==================== Filter Functions ====================
-function filterWorks(status) {
-    // Update active button
-    const buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => {
-        if (btn.dataset.filter === status) {
-            btn.className = 'filter-btn flex-1 min-w-[100px] px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold transition-all';
-        } else {
-            btn.className = 'filter-btn flex-1 min-w-[100px] px-4 py-3 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg font-semibold transition-all';
-        }
-    });
-
-    // Get current user id for comparison
-    const currentUserId = document.querySelector('[data-current-user]')?.dataset.currentUser;
-
-    // Filter work cards
-    const cards = document.querySelectorAll('.work-card');
-    let visibleCount = 0;
-    
-    cards.forEach(card => {
-        const workStatus = card.dataset.status;
-        const bookingStatus = card.dataset.bookingStatus;
-        const bookingMechanic = card.dataset.bookingMechanic;
-        
-        let shouldShow = false;
-        const isTakenByOther = bookingStatus === 'confirmed' && workStatus === 'pending' && bookingMechanic && bookingMechanic !== currentUserId;
-        
-        if (status === 'all') {
-            shouldShow = true;
-        } else if (status === 'pending') {
-            shouldShow = workStatus === 'pending' && bookingStatus === 'pending';
-        } else if (status === 'confirmed') {
-            shouldShow = workStatus === 'accepted' && bookingStatus === 'confirmed';
-        } else if (status === 'in_progress') {
-            shouldShow = bookingStatus === 'in_progress';
-        } else if (status === 'completed') {
-            shouldShow = bookingStatus === 'completed';
-        } else if (status === 'cancelled') {
-            shouldShow = bookingStatus === 'cancelled';
-        } else if (status === 'taken') {
-            shouldShow = isTakenByOther;
-        }
-        
-        if (shouldShow) {
-            card.style.display = 'block';
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    // Show/hide empty state
-    const container = document.getElementById('workQueueContainer');
-    const emptyState = container?.nextElementSibling;
-    
-    if (visibleCount === 0 && emptyState) {
-        container.style.display = 'none';
-        if (emptyState.classList.contains('text-center')) {
-            emptyState.style.display = 'block';
-        }
-    } else if (container) {
-        container.style.display = 'block';
-        if (emptyState && emptyState.classList.contains('text-center')) {
-            emptyState.style.display = 'none';
-        }
-    }
-}
+// Single `filterWorks` implementation is defined later in the script.
 
 // ==================== Dashboard Alert ====================
 const dashboardAlertContainer = document.getElementById('dashboardAlertContainer');
@@ -789,6 +736,45 @@ async function completeWork(bookingId) {
         }
     } catch (error) {
         console.error('Complete work error:', error);
+        showDashboardAlert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
+    }
+}
+
+// ==================== Cancel Work Handler ====================
+function handleCancelWork(bookingId) {
+    cancelWork(bookingId).catch(err => console.error('Error in cancelWork:', err));
+}
+
+async function cancelWork(bookingId) {
+    const confirmed = await showConfirmModal('ต้องการยกเลิกงานนี้หรือไม่?', '❌', 'ยกเลิกงาน', 'ปิด');
+    if (!confirmed) return;
+    try {
+        const response = await fetch(`/mechanics/api/bookings/${bookingId}/cancel/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+            credentials: 'same-origin'
+        });
+        let data;
+        try {
+            data = await response.json();
+        } catch (e) {
+            data = { error: 'ไม่สามารถอ่านข้อมูลตอบกลับได้' };
+        }
+        if (response.ok) {
+            showDashboardAlert(data.message || 'ยกเลิกงานสำเร็จ!', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } else if (response.status === 403) {
+            showDashboardAlert('ไม่มีสิทธิ์เข้าถึง กรุณาเข้าสู่ระบบใหม่', 'error');
+        } else if (response.status === 404) {
+            showDashboardAlert('ไม่พบการจองนี้', 'error');
+        } else {
+            showDashboardAlert(data.message || data.error || 'เกิดข้อผิดพลาด', 'error');
+        }
+    } catch (error) {
+        console.error('Cancel work error:', error);
         showDashboardAlert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
     }
 }

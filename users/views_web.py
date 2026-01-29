@@ -12,6 +12,7 @@ from django.views.decorators.http import require_http_methods
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
+from mechanics.models import MechanicProfile
 
 
 def direct_password_reset_view(request):
@@ -87,23 +88,23 @@ def register_view(request):
         # Validation
         if password != password2:
             messages.error(request, 'รหัสผ่านไม่ตรงกัน')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
         
         if not username or len(username) < 3:
             messages.error(request, 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
         
         if not email:
             messages.error(request, 'กรุณากรอกอีเมล')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
         
         if User.objects.filter(username=username).exists():
             messages.error(request, 'ชื่อผู้ใช้นี้ถูกใช้งานแล้ว')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
         
         if User.objects.filter(email=email).exists():
             messages.error(request, 'อีเมลนี้ถูกใช้งานแล้ว')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
         
         # Create user
         try:
@@ -116,22 +117,50 @@ def register_view(request):
                 phone_number=phone_number,
                 user_type=user_type
             )
-            
+
+            # If registering as mechanic, create a MechanicProfile with optional fields
+            if user_type == 'mechanic':
+                shop_address = request.POST.get('shop_address', '')
+                qualification = request.POST.get('qualification', '')
+                specialization = request.POST.get('specialization', 'all')
+                try:
+                    years_of_experience = int(request.POST.get('years_of_experience', 0))
+                except Exception:
+                    years_of_experience = 0
+
+                profile = MechanicProfile.objects.create(
+                    user=user,
+                    specialization=specialization,
+                    years_of_experience=years_of_experience,
+                    qualification=qualification,
+                    shop_address=shop_address
+                )
+
+                # Handle uploaded files (optional)
+                if 'shop_photo' in request.FILES:
+                    profile.shop_photo = request.FILES['shop_photo']
+                if 'qualification_file' in request.FILES:
+                    profile.qualification_file = request.FILES['qualification_file']
+                if 'license_file' in request.FILES:
+                    profile.license_file = request.FILES['license_file']
+
+                profile.save()
+
             # Auto-login after registration
             login(request, user)
             messages.success(request, f'ยินดีต้อนรับ {username}! สมัครสมาชิกและเข้าสู่ระบบสำเร็จ')
-            
+
             # Redirect based on user type
             if user_type == 'mechanic':
                 return redirect('mechanics:dashboard')
             else:
                 return redirect('home')
-            
+
         except Exception as e:
             messages.error(request, f'เกิดข้อผิดพลาด: {str(e)}')
-            return render(request, 'auth/register.html', {'form_data': request.POST})
+            return render(request, 'users/register.html', {'form_data': request.POST})
     
-    return render(request, 'auth/register.html')
+    return render(request, 'users/register.html')
 
 
 @login_required

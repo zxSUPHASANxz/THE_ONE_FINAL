@@ -8,9 +8,7 @@
     <div class="max-w-md w-full space-y-8">
         <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl p-8">
             <div class="text-center mb-8">
-                <div class="mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4 animate-pulse">
-                    <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-40 h-40 object-contain filter drop-shadow-2xl" />
-                </div>
+                {% include 'includes/brand.html' with logo_container_class='mx-auto h-20 w-20 flex items-center justify-center text-6xl mb-4 animate-pulse' logo_img_class='w-20 h-20 object-contain' logo_text_class='sr-only' %}
                 <h2 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-gold-400 bg-clip-text text-transparent">
                     เข้าสู่ระบบ
                 </h2>
@@ -57,6 +55,7 @@
 
                     <div>
                         <label for="id_password" class="block text-sm font-medium text-gray-300 mb-2">รหัสผ่าน</label>
+                        <div class="relative">
                         <input 
                             id="id_password" 
                             name="password" 
@@ -64,6 +63,11 @@
                             required 
                             class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200"
                             placeholder="รหัสผ่าน">
+                            <button type="button" id="togglePassword" aria-label="Toggle password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white">
+                                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.269-2.943-9.543-7a10.05 10.05 0 012.223-3.682M6.1 6.1A9.956 9.956 0 0112 5c4.478 0 8.269 2.943 9.543 7a9.956 9.956 0 01-1.136 2.436M3 3l18 18"/></svg>
+                            </button>
+                        </div>
                         {% if form.password.errors %}
                             <p class="mt-2 text-sm text-red-400">{{ form.password.errors.0 }}</p>
                         {% endif %}
@@ -97,6 +101,24 @@
                     </button>
                 </div>
             </form>
+            <script>
+            (function(){
+                var btn = document.getElementById('togglePassword');
+                if(!btn) return;
+                btn.addEventListener('click', function(){
+                    var inp = document.getElementById('id_password');
+                    var open = document.getElementById('eyeOpen');
+                    var closed = document.getElementById('eyeClosed');
+                    if(inp.type === 'password'){
+                        inp.type = 'text';
+                        open.classList.add('hidden'); closed.classList.remove('hidden');
+                    } else {
+                        inp.type = 'password';
+                        open.classList.remove('hidden'); closed.classList.add('hidden');
+                    }
+                });
+            })();
+            </script>
         </div>
     </div>
 </div>

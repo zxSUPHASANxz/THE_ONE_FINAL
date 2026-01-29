@@ -1,0 +1,9 @@
+{% load static %}
+<div class="flex items-center space-x-3">
+    <div class="{{ logo_container_class|default:'w-12 h-12 flex items-center justify-center' }}">
+        <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="{{ logo_img_class|default:'w-12 h-12 object-contain' }} filter drop-shadow-2xl" />
+    </div>
+    {% if logo_text|default:'THE_ONE' %}
+    <span class="{{ logo_text_class|default:'text-2xl font-bold bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent' }}">{{ logo_text|default:'THE_ONE' }}</span>
+    {% endif %}
+</div>

@@ -59,6 +59,8 @@ def dashboard_view(request):
         'accepted_count': accepted_count,
         'rejected_count': rejected_count,
         'cancelled_by_customer_count': cancelled_by_customer_count,
+        # kept for templates expecting `cancelled_count`
+        'cancelled_count': cancelled_by_customer_count,
         'taken_by_others_count': taken_by_others_count,
         'in_progress_count': in_progress_bookings.count(),
         'completed_count': completed_count,
