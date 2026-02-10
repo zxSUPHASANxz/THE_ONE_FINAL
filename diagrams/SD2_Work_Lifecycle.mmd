@@ -1,0 +1,70 @@
+sequenceDiagram
+    autonumber
+    actor Mechanic as ช่าง (Mechanic)
+    participant Frontend as Tailwind_CSS
+    participant Django as Django REST Framework
+    participant DB as PostgreSQL
+    participant Signal as Django Signal
+    actor Customer as ลูกค้า (Customer)
+
+    Note over Mechanic: ช่างเห็น WorkQueue (status=pending)
+
+    rect rgb(200, 255, 200)
+    Note right of Mechanic: ขั้นตอนที่ 1: รับงาน
+    Mechanic->>Frontend: คลิก "รับงาน"
+    Frontend->>Django: POST /api/mechanics/work/{id}/accept/
+    Django->>Django: ตรวจสอบ Authentication (JWT)
+    Django->>DB: WorkQueue.objects.get(pk=id, mechanic=user)
+    DB-->>Django: WorkQueue instance
+
+    alt WorkQueue.status == 'pending'
+        Django->>DB: WorkQueue.status = 'accepted', responded_at = now()
+        Django->>DB: Booking.mechanic = user, Booking.status = 'confirmed'
+        Django->>DB: MechanicProfile.total_jobs += 1
+
+        Note over Django,Signal: Signal: post_save Booking (status=confirmed)
+        Signal->>DB: ChatRoom.objects.create(booking, customer, mechanic)
+        Signal->>DB: Notification.objects.create(type='booking_confirmed') → ลูกค้า
+        Signal->>DB: Notification.objects.create(type='booking_taken') → ช่างคนอื่น
+
+        Django-->>Frontend: 200 OK "รับงานเรียบร้อยแล้ว"
+        Frontend-->>Mechanic: แสดงสถานะ "ยืนยันแล้ว"
+        Note over Customer: ลูกค้าได้รับแจ้งเตือน "มีช่างรับงานแล้ว"
+    else WorkQueue.status != 'pending'
+        Django-->>Frontend: 400 Bad Request "ไม่สามารถรับงานได้ในสถานะปัจจุบัน"
+    end
+    end
+
+    rect rgb(255, 255, 200)
+    Note right of Mechanic: ขั้นตอนที่ 2: เริ่มซ่อม
+    Mechanic->>Frontend: คลิก "เริ่มซ่อม"
+    Frontend->>Django: POST /api/mechanics/booking/{id}/start/
+    Django->>DB: Booking.objects.get(pk=id, mechanic=user, status='confirmed')
+
+    alt พบ Booking (status=confirmed)
+        Django->>DB: Booking.status = 'in_progress'
+        Note over Django,Signal: Signal: post_save Booking (status=in_progress)
+        Signal->>DB: Notification.objects.create(type='booking_in_progress') → ลูกค้า
+        Django-->>Frontend: 200 OK "เริ่มงานเรียบร้อยแล้ว"
+        Note over Customer: ลูกค้าได้รับแจ้งเตือน "กำลังซ่อม"
+    else ไม่พบ Booking หรือสถานะไม่ถูกต้อง
+        Django-->>Frontend: 404 Not Found "ไม่พบการจองหรือสถานะไม่ถูกต้อง"
+    end
+    end
+
+    rect rgb(200, 230, 255)
+    Note right of Mechanic: ขั้นตอนที่ 3: เสร็จงาน
+    Mechanic->>Frontend: คลิก "ส่งมอบงาน"
+    Frontend->>Django: POST /api/mechanics/booking/{id}/complete/
+    Django->>DB: Booking.objects.get(pk=id, mechanic=user, status='in_progress')
+
+    alt พบ Booking (status=in_progress)
+        Django->>DB: Booking.status = 'completed'
+        Note over Django,Signal: Signal: post_save Booking (status=completed)
+        Signal->>DB: Notification.objects.create(type='booking_completed') → ลูกค้า
+        Django-->>Frontend: 200 OK "ทำงานเสร็จเรียบร้อยแล้ว"
+        Note over Customer: ลูกค้าได้รับแจ้งเตือน "งานเสร็จสิ้น"
+    else ไม่พบ Booking หรือสถานะไม่ถูกต้อง
+        Django-->>Frontend: 404 Not Found "ไม่พบการจองหรือสถานะไม่ถูกต้อง"
+    end
+    end
