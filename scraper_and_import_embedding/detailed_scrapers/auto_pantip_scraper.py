@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'the_one.settings')
 django.setup()
 
-from chatbot.models import Knowledgebase
+from chatbot.models import KnowBase
 
 
 class PantipScraper:
@@ -94,24 +94,25 @@ class PantipScraper:
         """บันทึกลง Database"""
         try:
             # Check if already exists
-            if Knowledgebase.objects.filter(source_url=data['url']).exists():
+            if KnowBase.objects.filter(source_url=data['url']).exists():
                 return False
             
             # Create new record
-            kb = Knowledgebase.objects.create(
+            kb = KnowBase.objects.create(
                 title=data['title'][:500],
                 content=data['content'],
                 category=data.get('category', ''),
                 source='pantip',
                 source_url=data['url'],
-                author=data.get('author', '')[:200],
-                views=data.get('views', 0),
-                replies=data.get('replies', 0),
-                likes=data.get('likes', 0),
-                tags=data.get('tags', []),
-                raw_data=data,
-                is_active=True,
-                is_verified=False
+                raw_data={
+                    'author': data.get('author', ''),
+                    'views': data.get('views', 0),
+                    'replies': data.get('replies', 0),
+                    'likes': data.get('likes', 0),
+                    'tags': data.get('tags', []),
+                    'original': data
+                },
+                is_active=True
             )
             
             return True
@@ -196,7 +197,7 @@ class PantipScraper:
         print("="*70)
         
         # Show database stats
-        total = Knowledgebase.objects.count()
+        total = KnowBase.objects.count()
         print(f"\n📚 ข้อมูลทั้งหมดในฐานข้อมูล: {total} records")
         
         return processed_data

@@ -28,7 +28,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import google.generativeai as genai
 
-from chatbot.models import MotorcycleKnowledge
+from chatbot.models import KnowBase
 
 # Gemini API configuration
 GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
@@ -52,11 +52,9 @@ def setup_driver(headless=False):
 def generate_embedding(text):
     """Generate embedding using Gemini API"""
     try:
-        model = 'models/text-embedding-004'
         result = genai.embed_content(
-            model=model,
+            model="models/gemini-embedding-001",
             content=text,
-            task_type="retrieval_document"
         )
         return result['embedding']
     except Exception as e:
@@ -242,13 +240,15 @@ URL: {bike_data['url']}"""
             return None
         
         # Save to database
-        motorcycle = MotorcycleKnowledge.objects.create(
+        motorcycle = KnowBase.objects.create(
+            title=bike_data['model'],
+            content=full_text,
+            source='honda',
             brand=bike_data['brand'],
             model=bike_data['model'],
+            category='specifications',
             source_url=bike_data['url'],
-            symptom=f"ข้อมูล {bike_data['model']}\nราคา: {bike_data['price']}\nสี: {colors_text}",
-            solution=specs_text,
-            scraped_data=bike_data['specifications'],
+            raw_data=bike_data['specifications'],
             embedding=embedding
         )
         

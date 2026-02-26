@@ -77,8 +77,8 @@ class Command(BaseCommand):
                 
                 # Generate embedding with Google Gemini (new API)
                 response = client.models.embed_content(
-                    model='text-embedding-004',
-                    contents=text
+                    model='gemini-embedding-001',
+                    contents=text,
                 )
                 
                 # Update record with embedding

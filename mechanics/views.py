@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
-from .models import MechanicProfile, WorkQueue, Review
-from .serializers import MechanicProfileSerializer, WorkQueueSerializer, ReviewSerializer
+from .models import MechanicProfile, WorkQueue
+from .serializers import MechanicProfileSerializer, WorkQueueSerializer
 from booking.models import Booking
 
 
@@ -107,29 +107,7 @@ class RejectWorkView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ReviewListView(generics.ListAPIView):
-    """List all reviews for a mechanic"""
-    serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get_queryset(self):
-        return Review.objects.filter(mechanic=self.request.user)
-
-
-class ReviewCreateView(generics.CreateAPIView):
-    """Create a review for a mechanic"""
-    serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def perform_create(self, serializer):
-        review = serializer.save(customer=self.request.user)
-        
-        # Update mechanic rating
-        mechanic_profile = review.mechanic.mechanic_profile
-        reviews = Review.objects.filter(mechanic=review.mechanic)
-        avg_rating = sum([r.rating for r in reviews]) / len(reviews)
-        mechanic_profile.rating = round(avg_rating, 2)
-        mechanic_profile.save()
+# Review endpoints removed (Review model not present)
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 

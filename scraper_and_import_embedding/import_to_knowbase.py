@@ -57,8 +57,8 @@ class KnowBaseImporter:
         for attempt in range(max_retries):
             try:
                 result = genai.embed_content(
-                    model="models/text-embedding-004",
-                    content=text
+                    model="models/gemini-embedding-001",
+                    content=text,
                 )
                 return result['embedding']
             except PermissionDenied:

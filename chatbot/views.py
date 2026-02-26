@@ -5,8 +5,100 @@ from rest_framework.decorators import api_view, permission_classes
 from django.conf import settings
 import requests
 import uuid
-from .models import ChatSession, ChatMessage, KnowlageDatabase
-from .serializers import ChatSessionSerializer, ChatMessageSerializer, KnowlageDatabaseSerializer
+import json
+import logging
+from .models import ChatSession, ChatMessage, Knowbase
+from .serializers import ChatSessionSerializer, ChatMessageSerializer, KnowbaseSerializer
+
+logger = logging.getLogger(__name__)
+
+
+def generate_simple_response(message):
+    """
+    Fallback response generator when n8n is unavailable.
+    Tries Gemini API first, then falls back to keyword matching.
+    """
+    # 1) Try Gemini API if available
+    gemini_key = getattr(settings, 'GEMINI_API_KEY', '')
+    if gemini_key:
+        try:
+            gemini_response = _call_gemini_api(message, gemini_key)
+            if gemini_response:
+                return gemini_response
+        except Exception as e:
+            logger.warning(f"Gemini API fallback failed: {e}")
+
+    # 2) Keyword-based fallback
+    msg = message.lower()
+
+    if any(w in msg for w in ['สวัสดี', 'หวัดดี', 'hello', 'hi']):
+        return 'สวัสดีครับ! 👋 ยินดีต้อนรับสู่ THE ONE AI ผมช่วยอะไรเกี่ยวกับรถจักรยานยนต์ได้บ้างครับ?'
+
+    if any(w in msg for w in ['น้ำมัน', 'เปลี่ยนน้ำมัน', 'oil']):
+        return ('🔧 **การเปลี่ยนน้ำมันเครื่อง**\n\n'
+                'ควรเปลี่ยนน้ำมันเครื่องทุก 3,000–5,000 กม. หรือทุก 3–6 เดือน '
+                'ขึ้นอยู่กับการใช้งานครับ\n\n'
+                'หากต้องการจองคิวเปลี่ยนน้ำมัน สามารถไปที่เมนู **"จองตัวช่อม"** ได้เลยครับ!')
+
+    if any(w in msg for w in ['เบรก', 'brake', 'ผ้าเบรก']):
+        return ('🔧 **ระบบเบรก**\n\n'
+                'ควรตรวจสอบผ้าเบรกทุก 10,000 กม. หากรู้สึกว่าเบรกไม่อยู่หรือมีเสียงดัง '
+                'ควรนำรถเข้าตรวจทันทีครับ')
+
+    if any(w in msg for w in ['ยาง', 'tire', 'ลม']):
+        return ('🏍️ **การดูแลยาง**\n\n'
+                'ตรวจเช็คลมยางทุกสัปดาห์ ค่าลมยางที่เหมาะสมอยู่ที่ 28-32 PSI (ดูตามคู่มือรถ) '
+                'และควรเปลี่ยนยางเมื่อดอกยางสึกหรอครับ')
+
+    if any(w in msg for w in ['จอง', 'booking', 'นัด', 'คิว']):
+        return ('📅 หากต้องการจองคิวซ่อมรถ สามารถกดที่เมนู **"จองตัวช่อม"** ด้านบน '
+                'หรือ [คลิกที่นี่](/booking/create/) เพื่อจองคิวได้เลยครับ!')
+
+    if any(w in msg for w in ['ราคา', 'ค่า', 'price', 'cost']):
+        return ('💰 ราคาค่าบริการขึ้นอยู่กับประเภทงานและรุ่นรถครับ\n\n'
+                'สามารถจองคิวเพื่อให้ช่างประเมินราคาได้ฟรี!')
+
+    if any(w in msg for w in ['ขอบคุณ', 'thank']):
+        return 'ยินดีครับ! 😊 หากมีคำถามเพิ่มเติมสามารถถามได้ตลอดเลยนะครับ'
+
+    # Default response
+    return ('ขอบคุณสำหรับคำถามครับ 🙏\n\n'
+            'ขออภัยครับ ตอนนี้ระบบ AI กำลังเชื่อมต่ออยู่ '
+            'กรุณาลองใหม่อีกครั้งในอีกสักครู่ หรือสามารถจองคิวปรึกษาช่างได้โดยตรง '
+            'ที่เมนู **"จองตัวช่อม"** ครับ')
+
+
+def _call_gemini_api(message, api_key):
+    """Call Google Gemini API for intelligent fallback responses."""
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+
+    payload = {
+        "contents": [{
+            "parts": [{
+                "text": (
+                    "คุณเป็น AI ผู้เชี่ยวชาญด้านรถจักรยานยนต์ของระบบ THE ONE "
+                    "ให้คำปรึกษาเกี่ยวกับการดูแลรักษารถมอเตอร์ไซค์ การซ่อมบำรุง "
+                    "และปัญหาทั่วไป ตอบเป็นภาษาไทยสุภาพ กระชับ ไม่เกิน 200 คำ "
+                    "ถ้าไม่เกี่ยวกับรถจักรยานยนต์ ให้บอกว่าเชี่ยวชาญเรื่องรถจักรยานยนต์เท่านั้น\n\n"
+                    f"คำถาม: {message}"
+                )
+            }]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 500
+        }
+    }
+
+    resp = requests.post(url, json=payload, timeout=15)
+    if resp.status_code == 200:
+        data = resp.json()
+        candidates = data.get('candidates', [])
+        if candidates:
+            parts = candidates[0].get('content', {}).get('parts', [])
+            if parts:
+                return parts[0].get('text', '')
+    return None
 
 
 @api_view(['POST'])
@@ -25,117 +117,41 @@ def simple_chat_view(request):
         n8n_url = getattr(settings, 'N8N_WEBHOOK_URL', 'http://localhost:5678/webhook/chatbot-rag')
         
         # Always try to send to n8n first
-        print(f"📤 Sending to n8n: {n8n_url}")
-        print(f"👤 User: {request.user.username} (ID: {request.user.id}, Type: {request.user.user_type})")
-        print(f"💬 Message: {message}")
+        logger.info("Sending to n8n: %s", n8n_url)
+        logger.info("User: %s (ID: %s, Type: %s)", request.user.username, request.user.id, request.user.user_type)
+        logger.info("Message: %s", message)
         
         response = requests.post(n8n_url, json={
             'message': message,
             'user_id': request.user.id,
             'username': request.user.username,
-            'user_type': request.user.user_type
-        }, timeout=30)
+        }, timeout=20)
         
-        print(f"📥 n8n response status: {response.status_code}")
+        logger.info("n8n response status: %s", response.status_code)
         
         if response.status_code == 200:
             response_data = response.json()
             # n8n AI Agent returns 'output' field
             bot_response = response_data.get('output', response_data.get('response', response_data.get('text', 'ไม่สามารถประมวลผลได้')))
-            print(f"✅ Bot response: {bot_response[:100]}...")
+            logger.info("Bot response received (length: %d)", len(bot_response))
         else:
-            print(f"⚠️ n8n error: {response.status_code} - {response.text[:200]}")
+            logger.warning("n8n error: %s - %s", response.status_code, response.text[:200])
             bot_response = generate_simple_response(message)
             
     except requests.exceptions.Timeout:
-        print("⏱️ n8n timeout, using fallback response")
+        logger.warning("n8n timeout, using fallback response")
         bot_response = generate_simple_response(message)
     except requests.exceptions.RequestException as e:
-        print(f"❌ n8n connection error: {e}")
+        logger.warning("n8n connection error: %s", str(e))
         bot_response = generate_simple_response(message)
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        logger.error("Unexpected error in chat view: %s", str(e), exc_info=True)
         bot_response = generate_simple_response(message)
     
     return Response({
         'response': bot_response,
         'message': message
     }, status=status.HTTP_200_OK)
-
-
-def generate_simple_response(message):
-    """Generate a simple response based on keywords"""
-    message_lower = message.lower()
-    
-    # Keywords mapping
-    if any(word in message_lower for word in ['สวัสดี', 'หวัดดี', 'hello', 'hi']):
-        return 'สวัสดีครับ! ผมคือ AI ผู้ช่วยของ THE ONE ยินดีให้คำปรึกษาเกี่ยวกับรถจักรยานยนต์ครับ'
-    
-    elif any(word in message_lower for word in ['สตาร์ท', 'ติด', 'เครื่อง']):
-        return '''หากรถสตาร์ทไม่ติด อาจเกิดจากสาเหตุดังนี้:
-1. 🔋 แบตเตอรี่หมด - ลองตรวจสอบไฟหน้ารถว่าสว่างหรือไม่
-2. ⛽ น้ำมันหมด - ตรวจสอบปริมาณน้ำมันในถัง
-3. 🔌 หัวเทียนชำรุด - อายุการใช้งานประมาณ 10,000-15,000 กม.
-4. 🛢️ น้ำมันเครื่องน้อย - อาจทำให้เครื่องยนต์ล็อค
-
-แนะนำให้นำรถเข้าตรวจสอบที่ THE ONE ครับ'''
-    
-    elif any(word in message_lower for word in ['เบรค', 'ห้าม']):
-        return '''การดูแลระบบเบรค:
-🛑 อาการที่ต้องระวัง:
-- มีเสียงดังเวลาเบรค
-- เบรคไม่แน่น ต้องบีบแรง
-- มีเสียงเครือเวลาหยุด
-- รถดันหรือเบรคด้านเดียว
-
-💡 คำแนะนำ:
-- ตรวจสอบผ้าเบรคทุก 5,000 กม.
-- เปลี่ยนน้ำมันเบรคทุก 10,000 กม.
-- อย่าปล่อยให้ผ้าเบรคบางจนหมด
-
-หากพบอาการดังกล่าว แนะนำให้จองคิวซ่อมที่ THE ONE ครับ'''
-    
-    elif any(word in message_lower for word in ['น้ำมัน', 'เปลี่ยน', 'ถ่าย']):
-        return '''การเปลี่ยนน้ำมันเครื่อง:
-🛢️ ระยะเวลาเปลี่ยน:
-- รถเครื่องเล็ก 100-150cc: ทุก 1,000-1,500 กม.
-- รถเครื่องกลาง 250-500cc: ทุก 3,000-4,000 กม.
-- รถเครื่องใหญ่ 600cc+: ทุก 5,000-6,000 กม.
-
-💰 ราคาโดยประมาณ:
-- น้ำมันสังเคราะห์: 250-500 บาท
-- น้ำมันกึ่งสังเคราะห์: 150-300 บาท
-- น้ำมันแร่: 80-150 บาท
-
-จองคิวเปลี่ยนน้ำมันที่ THE ONE ได้เลยครับ!'''
-    
-    elif any(word in message_lower for word in ['ราคา', 'ค่า', 'เท่าไหร่']):
-        return '''💰 ค่าบริการโดยประมาณ:
-
-🔧 ซ่อมบำรุงทั่วไป: 300-800 บาท
-⚙️ ซ่อมเครื่องยนต์: 1,000-5,000 บาท
-🛑 ซ่อมเบรค: 500-1,500 บาท
-⚡ ระบบไฟฟ้า: 500-2,000 บาท
-🛞 เปลี่ยนยาง: 800-3,000 บาท
-
-*ราคาอาจแตกต่างตามรุ่นรถและอะไหล่*
-
-สามารถจองคิวเพื่อประเมินราคาที่แม่นยำได้ครับ!'''
-    
-    elif any(word in message_lower for word in ['จอง', 'นัด', 'คิว']):
-        return 'คุณสามารถจองคิวซ่อมได้ที่หน้า "จองคิวซ่อม" หรือคลิกที่เมนูด้านบนครับ เพียงเลือกรถ วันที่ และประเภทการซ่อมที่ต้องการ เราจะดูแลรถของคุณอย่างดีที่สุดครับ!'
-    
-    else:
-        return f'''ขอบคุณสำหรับคำถามครับ! 
-
-สำหรับ "{message}" แนะนำให้คุณ:
-1. 📝 จองคิวเพื่อตรวจสอบรถให้แน่ใจ
-2. 🔍 ถ่ายรูปอาการส่งให้ช่างดู
-3. 📞 โทรติดต่อ THE ONE โดยตรง
-
-เรามีช่างมืออาชีพพร้อมให้บริการครับ!'''
-
-
 class ChatSessionListCreateView(generics.ListCreateAPIView):
     """List all chat sessions or create a new one"""
     serializer_class = ChatSessionSerializer
@@ -222,7 +238,7 @@ class N8NWebhookView(APIView):
         
         # Save to knowledge base if it's scraping data
         if data.get('type') == 'knowledge':
-            KnowlageDatabase.objects.create(
+            Knowbase.objects.create(
                 source=data.get('source', 'n8n'),
                 title=data.get('title', f"{data.get('brand', '')} {data.get('model', '')}"),
                 content=f"{data.get('symptom', '')}\n\n{data.get('solution', '')}",
@@ -236,11 +252,11 @@ class N8NWebhookView(APIView):
         return Response({'status': 'success'}, status=status.HTTP_200_OK)
 
 
-class KnowlageDatabaseListView(generics.ListAPIView):
-    """List all knowledge database entries"""
-    serializer_class = KnowlageDatabaseSerializer
+class KnowbaseListView(generics.ListAPIView):
+    """List all knowbase entries"""
+    serializer_class = KnowbaseSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = KnowlageDatabase.objects.filter(is_active=True)
+    queryset = Knowbase.objects.filter(is_active=True)
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -256,7 +272,7 @@ class KnowlageDatabaseListView(generics.ListAPIView):
         if model:
             queryset = queryset.filter(model__icontains=model)
         if category:
-            queryset = queryset.filter(problem_category__icontains=category)
+            queryset = queryset.filter(category__icontains=category)
         
         return queryset
 

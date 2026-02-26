@@ -51,8 +51,8 @@ class Command(BaseCommand):
             try:
                 # ไม่ระบุ task_type เพื่อให้ match กับ n8n Embeddings node (ใช้ default)
                 result = genai.embed_content(
-                    model="models/text-embedding-004",
-                    content=text
+                    model="models/gemini-embedding-001",
+                    content=text,
                 )
                 return result['embedding']
             except Exception as e:

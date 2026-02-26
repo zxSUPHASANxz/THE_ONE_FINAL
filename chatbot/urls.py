@@ -19,5 +19,5 @@ urlpatterns = [
     path('webhook/', views.N8NWebhookView.as_view(), name='n8n_webhook'),
     
     # Knowledge base
-    path('knowledge/', views.KnowlageDatabaseListView.as_view(), name='knowledge_list'),
+    path('knowledge/', views.KnowbaseListView.as_view(), name='knowledge_list'),
 ]

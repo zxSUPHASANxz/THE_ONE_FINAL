@@ -147,39 +147,3 @@ class WorkQueue(models.Model):
     def __str__(self):
         return f"{self.mechanic.username} - Booking #{self.booking.id}"
 
-
-class Review(models.Model):
-    """รีวิวช่างซ่อม"""
-    booking = models.OneToOneField(
-        'booking.Booking',
-        on_delete=models.CASCADE,
-        related_name='review',
-        verbose_name='การจอง'
-    )
-    mechanic = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='ช่าง'
-    )
-    customer = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='given_reviews',
-        verbose_name='ลูกค้า'
-    )
-    rating = models.IntegerField(
-        choices=[(i, str(i)) for i in range(1, 6)],
-        verbose_name='คะแนน'
-    )
-    comment = models.TextField(blank=True, null=True, verbose_name='ความคิดเห็น')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='วันที่รีวิว')
-    
-    class Meta:
-        verbose_name = 'รีวิว'
-        verbose_name_plural = 'รีวิวทั้งหมด'
-        ordering = ['-created_at']
-    
-    def __str__(self):
-        return f"Review for {self.mechanic.username} - {self.rating}★"
-

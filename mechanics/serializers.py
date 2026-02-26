@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MechanicProfile, WorkQueue, Review
+from .models import MechanicProfile, WorkQueue
 
 
 class MechanicProfileSerializer(serializers.ModelSerializer):
@@ -29,15 +29,3 @@ class WorkQueueSerializer(serializers.ModelSerializer):
     def get_booking_details(self, obj):
         from booking.serializers import BookingSerializer
         return BookingSerializer(obj.booking).data
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    """Serializer for Review model"""
-    mechanic_name = serializers.CharField(source='mechanic.username', read_only=True)
-    customer_name = serializers.CharField(source='customer.username', read_only=True)
-    
-    class Meta:
-        model = Review
-        fields = ('id', 'booking', 'mechanic', 'mechanic_name', 'customer', 
-                  'customer_name', 'rating', 'comment', 'created_at')
-        read_only_fields = ('id', 'created_at')

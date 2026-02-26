@@ -11,7 +11,7 @@ from typing import List
 
 
 class Command(BaseCommand):
-    help = 'Import Honda BigBike data from JSON file into KnowBase with Gemini 2.0 Flash embeddings'
+    help = 'Import Honda BigBike data from JSON file into KnowBase with Gemini embedding-001 (3072 dimensions)'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -49,7 +49,7 @@ class Command(BaseCommand):
             try:
                 # ไม่ระบุ task_type เพื่อให้ match กับ n8n Embeddings node (ใช้ default)
                 result = genai.embed_content(
-                    model="models/text-embedding-004",
+                    model="models/gemini-embedding-001",
                     content=text
                 )
                 return result['embedding']

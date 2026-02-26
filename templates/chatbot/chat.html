@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}AI Chatbot - THE ONE{% endblock %}
 
 {% block extra_css %}
 <style>
+    .chat-page {
+        min-height: calc(100vh - 120px);
+    }
+
     .chat-container {
-        height: calc(100vh - 300px);
-        min-height: 500px;
+        height: calc(100vh - 290px);
+        min-height: 420px;
     }
     
     .message-bubble {
-        max-width: 70%;
+        max-width: 78%;
         word-wrap: break-word;
     }
     
@@ -32,57 +37,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="py-8">
-    <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-2xl shadow-2xl p-6 mb-6 border border-purple-700">
-            <div class="flex items-center space-x-4">
-                <div class="text-5xl animate-bounce">🤖</div>
-                <div>
-                    <h1 class="text-3xl font-bold text-white mb-1">AI Chatbot</h1>
-                    <p class="text-purple-200">ผู้ช่วยให้คำปรึกษาเกี่ยวกับรถจักรยานยนต์</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chat Container -->
-        <div class="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Chat Messages Area -->
-            <div class="chat-container overflow-y-auto p-6 space-y-4" id="chatMessages">
+<div class="chat-page bg-gray-100 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="max-w-5xl mx-auto h-full flex flex-col">
+        <div class="bg-transparent rounded-2xl overflow-hidden flex-1 flex flex-col">
+            <div class="chat-container overflow-y-auto px-0 py-6 flex flex-col justify-end gap-4" id="chatMessages">
                 <!-- Welcome Message -->
-                <div class="flex justify-start message-enter">
-                    <div class="message-bubble bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-2xl rounded-tl-none px-6 py-4 shadow-lg">
-                        <div class="flex items-start space-x-3">
-                            <div class="text-3xl">🤖</div>
-                            <div>
-                                <p class="font-semibold mb-2">สวัสดีครับ! ยินดีต้อนรับสู่ THE ONE</p>
-                                <p class="text-sm text-purple-100">ผมคือ AI ผู้ช่วยที่พร้อมให้คำปรึกษาเกี่ยวกับรถจักรยานยนต์ของคุณ</p>
-                                <div class="mt-3 space-y-2">
-                                    <p class="text-xs text-purple-200">คุณสามารถถามผมได้เกี่ยวกับ:</p>
-                                    <ul class="text-xs text-purple-100 space-y-1 ml-4">
-                                        <li>🔧 ปัญหาและอาการผิดปกติของรถ</li>
-                                        <li>🛠️ การบำรุงรักษารถ</li>
-                                        <li>💡 คำแนะนำการใช้งาน</li>
-                                        <li>📋 ราคาและค่าซ่อม</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                <div class="flex justify-center items-center message-enter mt-auto mb-auto" id="welcomeMessage">
+                    <div class="flex flex-col items-center text-center px-4">
+                        <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-20 h-20 sm:w-24 sm:h-24 object-contain mb-4" />
+                        <p class="text-gray-700 text-base sm:text-lg font-medium max-w-xl">
+                            THE_ONE Ai อัฉริยะที่จะช่วยให้คำแนะนำปรึกษาเบื้องต้นเกี่ยวกับรถจักรยานยนต์
+                        </p>
                     </div>
                 </div>
 
                 <!-- User Message Example (Hidden by default) -->
                 <div class="flex justify-end message-enter" style="display: none;" data-template="user">
-                    <div class="message-bubble bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-2xl rounded-tr-none px-6 py-4 shadow-lg">
+                    <div class="message-bubble bg-gray-200 border border-gray-300 text-gray-900 rounded-2xl rounded-br-md px-5 py-3 shadow-sm">
                         <p class="message-text"></p>
                     </div>
                 </div>
 
                 <!-- Bot Message Example (Hidden by default) -->
                 <div class="flex justify-start message-enter" style="display: none;" data-template="bot">
-                    <div class="message-bubble bg-gray-700 border border-gray-600 text-white rounded-2xl rounded-tl-none px-6 py-4 shadow-lg">
+                    <div class="message-bubble bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-tl-md px-5 py-4 shadow-sm">
                         <div class="flex items-start space-x-3">
-                            <div class="text-2xl">🤖</div>
+                            <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-7 h-7 object-contain mt-0.5" />
                             <div class="message-text"></div>
                         </div>
                     </div>
@@ -90,9 +70,9 @@
 
                 <!-- Typing Indicator (Hidden by default) -->
                 <div class="flex justify-start" id="typingIndicator" style="display: none;">
-                    <div class="message-bubble bg-gray-700 border border-gray-600 text-white rounded-2xl rounded-tl-none px-6 py-4 shadow-lg">
+                    <div class="message-bubble bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-tl-md px-5 py-4 shadow-sm">
                         <div class="flex items-center space-x-3">
-                            <div class="text-2xl">🤖</div>
+                            <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-7 h-7 object-contain" />
                             <div class="flex space-x-2">
                                 <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
                                 <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
@@ -103,39 +83,18 @@
                 </div>
             </div>
 
-            <!-- Suggested Questions -->
-            <div class="border-t border-gray-700 px-6 py-4 bg-gray-900/50">
-                <p class="text-gray-400 text-xs mb-3">💬 คำถามที่ถามบ่อย:</p>
-                <div class="flex flex-wrap gap-2">
-                    <button class="suggested-question px-4 py-2 bg-gray-700 hover:bg-purple-600 text-gray-300 hover:text-white text-sm rounded-lg transition-all duration-200 border border-gray-600 hover:border-purple-500">
-                        รถสตาร์ทไม่ติดแก้ยังไง?
-                    </button>
-                    <button class="suggested-question px-4 py-2 bg-gray-700 hover:bg-purple-600 text-gray-300 hover:text-white text-sm rounded-lg transition-all duration-200 border border-gray-600 hover:border-purple-500">
-                        ควรเปลี่ยนน้ำมันเครื่องบ่อยแค่ไหน?
-                    </button>
-                    <button class="suggested-question px-4 py-2 bg-gray-700 hover:bg-purple-600 text-gray-300 hover:text-white text-sm rounded-lg transition-all duration-200 border border-gray-600 hover:border-purple-500">
-                        เบรคมีเสียงดังต้องซ่อมไหม?
-                    </button>
-                    <button class="suggested-question px-4 py-2 bg-gray-700 hover:bg-purple-600 text-gray-300 hover:text-white text-sm rounded-lg transition-all duration-200 border border-gray-600 hover:border-purple-500">
-                        ค่าซ่อมประมาณเท่าไหร่?
-                    </button>
-                </div>
-            </div>
-
-            <!-- Input Area -->
-            <div class="border-t border-gray-700 p-6 bg-gray-900/50">
-                <form id="chatForm" class="flex gap-3">
+            <div class="px-0 pt-3 pb-2">
+                <form id="chatForm" class="max-w-3xl mx-auto flex items-center gap-3 bg-white border border-gray-300 rounded-3xl px-4 py-3 shadow-sm">
                     <input 
                         type="text" 
                         id="messageInput"
                         placeholder="พิมพ์คำถามของคุณที่นี่..."
-                        class="flex-1 appearance-none rounded-xl px-6 py-4 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                        class="flex-1 appearance-none bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none"
                         autocomplete="off">
                     <button 
                         type="submit"
-                        class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 transform hover:scale-105 shadow-xl flex items-center space-x-2">
-                        <span>ส่ง</span>
-                        <span>🚀</span>
+                        class="bg-black hover:bg-gray-900 text-white w-9 h-9 rounded-full font-semibold transition-colors duration-200 flex items-center justify-center">
+                        ↑
                     </button>
                 </form>
             </div>
@@ -150,7 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('chatForm');
     const messageInput = document.getElementById('messageInput');
     const typingIndicator = document.getElementById('typingIndicator');
-    const suggestedQuestions = document.querySelectorAll('.suggested-question');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+
+    function hideWelcomeMessage() {
+        if (welcomeMessage && welcomeMessage.style.display !== 'none') {
+            welcomeMessage.style.display = 'none';
+        }
+    }
 
     // Auto-scroll to bottom
     function scrollToBottom() {
@@ -159,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add user message
     function addUserMessage(text) {
+        hideWelcomeMessage();
         const template = document.querySelector('[data-template="user"]');
         const messageDiv = template.cloneNode(true);
         messageDiv.style.display = 'flex';
@@ -170,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add bot message
     function addBotMessage(text) {
+        hideWelcomeMessage();
         const template = document.querySelector('[data-template="bot"]');
         const messageDiv = template.cloneNode(true);
         messageDiv.style.display = 'flex';
@@ -181,8 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Show/hide typing indicator
     function setTyping(show) {
-        typingIndicator.style.display = show ? 'flex' : 'none';
-        if (show) scrollToBottom();
+        if (show) {
+            chatMessages.appendChild(typingIndicator);
+            typingIndicator.style.display = 'flex';
+            scrollToBottom();
+            return;
+        }
+
+        typingIndicator.style.display = 'none';
     }
 
     // Send message to backend
@@ -256,17 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Suggested questions click handler
-    suggestedQuestions.forEach(button => {
-        button.addEventListener('click', function() {
-            if (!isSending) {  // Check if not already sending
-                const question = this.textContent;
-                sendMessage(question);
-            }
-        });
-    });
-
     // Focus input on load
+    scrollToBottom();
     messageInput.focus();
 });
 </script>

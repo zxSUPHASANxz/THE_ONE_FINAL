@@ -35,8 +35,17 @@ class Motorcycle(models.Model):
         unique=True,
         verbose_name='ทะเบียนรถ'
     )
-    color = models.CharField(max_length=50, blank=True, null=True, verbose_name='สี')
-    mileage = models.IntegerField(default=0, verbose_name='เลขไมล์')
+    color = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='สี'
+    )
+    mileage = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='เลขไมล์ (กม.)'
+    )
     notes = models.TextField(blank=True, null=True, verbose_name='หมายเหตุ')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='วันที่เพิ่ม')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='วันที่อัปเดต')
@@ -88,37 +97,42 @@ class Booking(models.Model):
         default='pending',
         verbose_name='สถานะ'
     )
-    estimated_cost = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        verbose_name='ราคาโดยประมาณ'
-    )
-    actual_cost = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        verbose_name='ราคาจริง'
-    )
     repair_notes = models.TextField(
         blank=True,
         null=True,
         verbose_name='รายละเอียดการซ่อม'
     )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='วันที่จอง')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='วันที่อัปเดต')
+
+    # เพิ่มฟิลด์ค่าประเมินการซ่อม (สามารถเป็นทศนิยม)
+    estimated_cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='ค่าประเมินการซ่อม'
+    )
+    
+    actual_cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='ค่าซ่อมจริง'
+    )
+    
     completion_date = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name='วันที่เสร็จสิ้น'
+        verbose_name='วันที่ซ่อมเสร็จ'
     )
+    
     pickup_date = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name='วันที่นัดรับรถ'
+        verbose_name='วันที่รับรถ'
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='วันที่จอง')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='วันที่อัปเดต')
     
     class Meta:
         verbose_name = 'การจองคิว'

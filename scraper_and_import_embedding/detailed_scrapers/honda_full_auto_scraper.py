@@ -34,7 +34,7 @@ from bs4 import BeautifulSoup
 import google.generativeai as genai
 from tqdm import tqdm
 
-from chatbot.models import MotorcycleKnowledge
+from chatbot.models import KnowBase
 
 # Gemini API configuration
 GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
@@ -292,9 +292,8 @@ class HondaFullAutoScraper:
         """สร้าง embedding ด้วย Gemini API"""
         try:
             result = genai.embed_content(
-                model="models/text-embedding-004",
+                model="models/gemini-embedding-001",
                 content=text,
-                task_type="retrieval_document"
             )
             return result['embedding']
         except Exception as e:
@@ -391,7 +390,7 @@ class HondaFullAutoScraper:
                     continue
                 
                 # บันทึกลง database
-                obj, created = MotorcycleKnowledge.objects.update_or_create(
+                obj, created = KnowBase.objects.update_or_create(
                     source='honda_website',
                     brand=motorcycle.get('brand', 'Honda'),
                     model=motorcycle.get('model', 'Unknown'),
@@ -399,9 +398,11 @@ class HondaFullAutoScraper:
                         'category': 'specifications',
                         'title': motorcycle.get('model', 'Unknown'),
                         'content': text,
-                        'price': motorcycle.get('price', ''),
-                        'specifications': json.dumps(motorcycle.get('specifications', {}), ensure_ascii=False),
-                        'url': motorcycle.get('url', ''),
+                        'source_url': motorcycle.get('url', ''),
+                        'raw_data': {
+                            'price': motorcycle.get('price', ''),
+                            'specifications': motorcycle.get('specifications', {})
+                        },
                         'embedding': embedding
                     }
                 )

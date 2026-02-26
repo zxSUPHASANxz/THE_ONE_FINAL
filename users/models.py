@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 
 
-class User(AbstractUser):
+class   User(AbstractUser):
     """
     Custom User Model for THE_ONE application
     Extends Django's AbstractUser with additional fields

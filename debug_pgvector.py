@@ -60,9 +60,8 @@ query = "CBR250rr"
 print(f"   Query: '{query}'")
 
 result = genai.embed_content(
-    model="models/text-embedding-004",
+    model="models/gemini-embedding-001",
     content=query,
-    task_type="retrieval_query"  # Use query type for searching
 )
 query_embedding = result['embedding']
 print(f"   Query embedding dimensions: {len(query_embedding)}")

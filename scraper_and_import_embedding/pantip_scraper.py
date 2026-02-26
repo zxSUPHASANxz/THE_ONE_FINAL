@@ -566,12 +566,9 @@ def main():
                         continue
                 else:
                     continue
-            time.sleep(2)
-            try:
-                thread_urls = search_pantip(driver, keyword)
-            except Exception:
-                print(" | Skip")
-                continue
+            
+            # พักเล็กน้อยหลังค้นหา
+            time.sleep(1)
             
             print(f"→ {len(thread_urls)} กระทู้")
             
@@ -607,7 +604,7 @@ def main():
                         thread_data = scrape_thread_content(driver, url)
                     except Exception:
                         print("  ⏭️  ข้ามกระทู้นี้")
-                
+                s
                 if thread_data and thread_data.get('content'):
                     all_threads.append(thread_data)
                     print(f"✅ {thread_data['title'][:50]}... ({len(thread_data['content'])} chars)")

@@ -57,7 +57,7 @@ class ChatMessage(models.Model):
     # For tracking n8n integration
     n8n_response = models.JSONField(
         null=True,
-        blank=True,
+            blank=True,
         verbose_name='ข้อมูลจาก n8n'
     )
     
@@ -148,9 +148,9 @@ class KnowlageDatabase(models.Model):
     # Status
     is_active = models.BooleanField(default=True, verbose_name='ใช้งาน')
     
-    # Vector Embedding for RAG (768 dimensions for Google Gemini)
+    # Vector Embedding for RAG (3072 dimensions for gemini-embedding-001)
     embedding = VectorField(
-        dimensions=768,
+        dimensions=3072,
         null=True,
         blank=True,
         verbose_name='Vector Embedding'
@@ -172,7 +172,7 @@ class KnowlageDatabase(models.Model):
         return f"[{self.source}] {self.title[:80]}"
 
 
-class KnowBase(models.Model):
+class Knowbase(models.Model):
     """
     Knowledge Base for RAG - Simple structure optimized for PGVector Store
     """
@@ -188,9 +188,8 @@ class KnowBase(models.Model):
     category = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     source_url = models.URLField(blank=True, null=True)
     
-    # Vector Embedding (768 dimensions for Gemini text-embedding-004)
-    # For OpenAI: use 1536 dimensions with import_honda_openai/import_pantip_openai
-    embedding = VectorField(dimensions=768, null=True, blank=True)
+    # Vector Embedding (3072 dimensions for gemini-embedding-001 default output)
+    embedding = VectorField(dimensions=3072, null=True, blank=True)
     
     # Additional data
     raw_data = models.JSONField(blank=True, null=True)
@@ -202,8 +201,8 @@ class KnowBase(models.Model):
     
     class Meta:
         db_table = 'knowbase'
-        verbose_name = 'Knowledge Base'
-        verbose_name_plural = 'Knowledge Base'
+        verbose_name = 'Knowbase'
+        verbose_name_plural = 'Knowbases'
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['source', 'brand']),
@@ -212,3 +211,9 @@ class KnowBase(models.Model):
     
     def __str__(self):
         return f"{self.brand} {self.model}" if self.brand and self.model else self.title[:80]
+
+
+# Backwards compatibility aliases for older imports
+# Some scripts and management commands reference `KnowBase` (capital B).
+# Keep that name working by pointing it to the current `Knowbase` class.
+KnowBase = Knowbase

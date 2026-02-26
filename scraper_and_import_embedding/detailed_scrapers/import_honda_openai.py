@@ -1,11 +1,11 @@
 """
-Management command to import Honda BigBike data with OpenAI embeddings
+Management command to import Honda BigBike data with Gemini embedding-001 (3072 dimensions)
 """
 import json
 import os
 from django.core.management.base import BaseCommand
 from chatbot.models import KnowBase
-from openai import OpenAI
+import google.generativeai as genai
 import time
 from typing import List
 import warnings
@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 
 
 class Command(BaseCommand):
-    help = 'Import Honda BigBike data with OpenAI text-embedding-3-large (1536 dimensions)'
+    help = 'Import Honda BigBike data with Gemini embedding-001 (3072 dimensions)'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -28,9 +28,9 @@ class Command(BaseCommand):
             help='Skip generating embeddings (import data only)'
         )
         parser.add_argument(
-            '--openai-key',
+            '--gemini-key',
             type=str,
-            help='OpenAI API key (or set OPENAI_API_KEY env variable)'
+            help='Gemini API key (or set GEMINI_API_KEY env variable)'
         )
         parser.add_argument(
             '--batch-size',
@@ -45,16 +45,15 @@ class Command(BaseCommand):
             help='Delay in seconds between API calls'
         )
 
-    def generate_embedding(self, client: OpenAI, text: str, max_retries: int = 3) -> List[float]:
-        """Generate embedding with OpenAI text-embedding-3-large"""
+    def generate_embedding(self, text: str, max_retries: int = 3) -> List[float]:
+        """Generate embedding with Gemini embedding-001 (3072 dimensions)"""
         for attempt in range(max_retries):
             try:
-                response = client.embeddings.create(
-                    model="text-embedding-3-large",
-                    input=text,
-                    dimensions=1536
+                result = genai.embed_content(
+                    model="models/gemini-embedding-001",
+                    content=text,
                 )
-                return response.data[0].embedding
+                return result['embedding']
             except Exception as e:
                 wait_time = (2 ** attempt) * 2
                 if attempt < max_retries - 1:
@@ -69,7 +68,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         file_path = options['file']
         no_embed = options['no_embed']
-        api_key = options['openai_key'] or os.getenv('OPENAI_API_KEY')
+        api_key = options['gemini_key'] or os.getenv('GEMINI_API_KEY')
         batch_size = options['batch_size']
         delay = options['delay']
         
@@ -92,14 +91,13 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS(f'✅ Loaded {len(honda_data)} records'))
         
-        # Initialize OpenAI client
-        client = None
+        # Initialize Gemini
         if not no_embed:
             if not api_key:
-                self.stdout.write(self.style.ERROR('❌ OpenAI API key not provided'))
+                self.stdout.write(self.style.ERROR('❌ Gemini API key not provided'))
                 return
-            client = OpenAI(api_key=api_key)
-            self.stdout.write(self.style.SUCCESS('✅ OpenAI client initialized'))
+            genai.configure(api_key=api_key)
+            self.stdout.write(self.style.SUCCESS('✅ Gemini client initialized'))
         
         self.stdout.write(self.style.WARNING(f'📦 Batch size: {batch_size}, Delay: {delay}s'))
         
@@ -126,9 +124,9 @@ Honda {name}
             
             # Generate embedding
             embedding = None
-            if not no_embed and client:
+            if not no_embed:
                 try:
-                    embedding = self.generate_embedding(client, content)
+                    embedding = self.generate_embedding(content)
                     time.sleep(delay)
                 except Exception as e:
                     self.stdout.write(self.style.ERROR(f'❌ Embedding error for {name}: {e}'))

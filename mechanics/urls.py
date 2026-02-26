@@ -28,7 +28,5 @@ urlpatterns = [
     # Allow canceling a booking via mechanics namespace (delegates to booking app view)
     path('api/bookings/<int:pk>/cancel/', BookingCancelView.as_view(), name='booking_cancel'),
     
-    # Reviews
-    path('api/reviews/', views.ReviewListView.as_view(), name='review_list'),
-    path('api/reviews/create/', views.ReviewCreateView.as_view(), name='review_create'),
+    # Reviews: endpoints removed (Review model not available)
 ]

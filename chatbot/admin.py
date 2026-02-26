@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ChatSession, ChatMessage, KnowlageDatabase
+from .models import ChatSession, ChatMessage, Knowbase
 
 
 @admin.register(ChatSession)
@@ -22,37 +22,11 @@ class ChatMessageAdmin(admin.ModelAdmin):
     message_preview.short_description = 'ข้อความ'
 
 
-@admin.register(KnowlageDatabase)
-class KnowledgeDatabaseAdmin(admin.ModelAdmin):
-    list_display = ('title_preview', 'source', 'brand', 'model', 'category', 'views', 'created_at')
+@admin.register(Knowbase)
+class KnowbaseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'source', 'brand', 'model', 'category', 'created_at')
     list_filter = ('source', 'category', 'brand', 'is_active', 'created_at')
-    search_fields = ('title', 'content', 'brand', 'model', 'author')
+    search_fields = ('title', 'content', 'brand', 'model')
     readonly_fields = ('created_at', 'updated_at')
     list_per_page = 50
-    
-    def title_preview(self, obj):
-        return obj.title[:80] + '...' if len(obj.title) > 80 else obj.title
-    title_preview.short_description = 'หัวข้อ'
-    
-    fieldsets = (
-        ('ข้อมูลหลัก', {
-            'fields': ('source', 'title', 'content', 'category')
-        }),
-        ('แหล่งที่มา', {
-            'fields': ('source_url', 'author')
-        }),
-        ('ข้อมูลรถ', {
-            'fields': ('brand', 'model', 'price')
-        }),
-        ('สถิติ', {
-            'fields': ('views', 'comments_count')
-        }),
-        ('ข้อมูลดิบ', {
-            'fields': ('raw_data',),
-            'classes': ('collapse',)
-        }),
-        ('อื่นๆ', {
-            'fields': ('is_active', 'published_at', 'created_at', 'updated_at')
-        }),
-    )
 

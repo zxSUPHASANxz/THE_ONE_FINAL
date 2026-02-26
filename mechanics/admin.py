@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MechanicProfile, WorkQueue, Review
+from .models import MechanicProfile, WorkQueue
 
 
 @admin.register(MechanicProfile)
@@ -16,11 +16,3 @@ class WorkQueueAdmin(admin.ModelAdmin):
     list_filter = ('status', 'assigned_at')
     search_fields = ('mechanic__username', 'booking__id')
     readonly_fields = ('assigned_at',)
-
-
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('booking', 'mechanic', 'customer', 'rating', 'created_at')
-    list_filter = ('rating', 'created_at')
-    search_fields = ('mechanic__username', 'customer__username', 'comment')
-    readonly_fields = ('created_at',)
