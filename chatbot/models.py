@@ -217,3 +217,17 @@ class Knowbase(models.Model):
 # Some scripts and management commands reference `KnowBase` (capital B).
 # Keep that name working by pointing it to the current `Knowbase` class.
 KnowBase = Knowbase
+
+
+class KnowbaseEmbedQueue(Knowbase):
+    """
+    Proxy model สำหรับหน้าจัดการ 'คิว Embedding' ใน Admin โดยเฉพาะ
+    ไม่สร้าง DB table ใหม่ (proxy=True) — ใช้ตาราง 'knowbase' ตารางเดิม
+    Admin จะ filter เฉพาะ record ที่ embedding=NULL เท่านั้น
+    เมื่อ embed สำเร็จ record จะหายออกจากหน้านี้อัตโนมัติ
+    เมื่อ embed ล้มเหลว record จะยังอยู่ให้ retry ได้
+    """
+    class Meta:
+        proxy = True
+        verbose_name = 'คิว Embedding (รอดำเนินการ)'
+        verbose_name_plural = 'จัดการ Embedding (รอดำเนินการ)'
