@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Motorcycle, Booking
+from .models import Motorcycle, Booking, BookingImage
 from .serializers import MotorcycleSerializer, BookingSerializer
 import logging
 
@@ -42,7 +42,11 @@ class BookingListCreateView(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         # Pass customer to serializer, it will handle the creation
-        serializer.save(customer=self.request.user)
+        booking = serializer.save(customer=self.request.user)
+        # Handle uploaded images
+        images = self.request.FILES.getlist('images')
+        for img in images:
+            BookingImage.objects.create(booking=booking, image=img)
     
     def create(self, request, *args, **kwargs):
         """Override create to catch errors and return proper JSON response"""

@@ -166,6 +166,7 @@
                                 {% if work.booking.motorcycle %}
                                     {{ work.booking.motorcycle.brand }} {{ work.booking.motorcycle.model }}
                                     <span class="text-gray-400 text-sm block">{{ work.booking.motorcycle.license_plate }}</span>
+                                    <span class="text-blue-400 text-xs block">ประเภท: {{ work.booking.motorcycle.get_bike_type_display }}</span>
                                 {% else %}
                                     <span class="text-gray-400">ไม่ระบุ</span>
                                 {% endif %}
@@ -272,6 +273,7 @@
                                 <p class="text-gray-400 text-sm">
                                     {% if work.booking.motorcycle %}
                                         🏷️ ทะเบียน: <span class="text-gold-400 font-semibold">{{ work.booking.motorcycle.license_plate }}</span>
+                                        · 🏍️ ประเภท: <span class="text-blue-400">{{ work.booking.motorcycle.get_bike_type_display }}</span>
                                     {% endif %}
                                 </p>
                                 <p class="text-gray-400 text-sm">👤 ลูกค้า: <span class="text-blue-300 font-semibold">{{ work.booking.customer.username }}</span></p>

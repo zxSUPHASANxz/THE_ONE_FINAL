@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import Motorcycle, Booking
+from .models import Motorcycle, Booking, BookingImage
+
+
+class BookingImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingImage
+        fields = ('id', 'image', 'caption', 'uploaded_at')
+        read_only_fields = ('id', 'uploaded_at')
 
 
 class MotorcycleSerializer(serializers.ModelSerializer):
@@ -35,6 +42,8 @@ class BookingSerializer(serializers.ModelSerializer):
     problem_description = serializers.CharField(required=False)
     appointment_date = serializers.DateTimeField(required=False)
     
+    images = BookingImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Booking
         fields = ('id', 'customer', 'customer_name', 'motorcycle', 'motorcycle_info',
@@ -43,7 +52,7 @@ class BookingSerializer(serializers.ModelSerializer):
                   'status', 'estimated_cost', 'actual_cost', 'repair_notes',
                   'completion_date', 'pickup_date', 'created_at', 'updated_at',
                   'service_type', 'service_type_input', 'description', 'scheduled_date', 
-                  'time_slot', 'notes', 'chat_room_id')
+                  'time_slot', 'notes', 'chat_room_id', 'images')
         read_only_fields = ('id', 'customer', 'created_at', 'updated_at')
     
     def get_service_type(self, obj):

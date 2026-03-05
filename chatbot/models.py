@@ -182,7 +182,7 @@ class Knowbase(models.Model):
     content = models.TextField(verbose_name='Content')
     
     # Metadata
-    source = models.CharField(max_length=100, default='honda', db_index=True)
+    source = models.CharField(max_length=100, default='Brand', db_index=True)
     brand = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     model = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     category = models.CharField(max_length=100, blank=True, null=True, db_index=True)
@@ -229,5 +229,5 @@ class KnowbaseEmbedQueue(Knowbase):
     """
     class Meta:
         proxy = True
-        verbose_name = 'คิว Embedding (รอดำเนินการ)'
-        verbose_name_plural = 'จัดการ Embedding (รอดำเนินการ)'
+        verbose_name = 'Embedding (รอดำเนินการ)'
+        verbose_name_plural = 'Embedding '

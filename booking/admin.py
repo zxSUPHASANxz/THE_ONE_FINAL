@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Motorcycle, Booking
+from .models import Motorcycle, Booking, BookingImage
+
+
+class BookingImageInline(admin.TabularInline):
+    model = BookingImage
+    extra = 0
+    readonly_fields = ('uploaded_at',)
 
 
 @admin.register(Motorcycle)
@@ -17,3 +23,4 @@ class BookingAdmin(admin.ModelAdmin):
     search_fields = ('customer__username', 'motorcycle__license_plate', 'problem_description')
     readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'appointment_date'
+    inlines = [BookingImageInline]

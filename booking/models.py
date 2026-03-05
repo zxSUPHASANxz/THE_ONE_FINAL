@@ -5,13 +5,15 @@ from django.conf import settings
 class Motorcycle(models.Model):
     """รถจักรยานยนต์ของลูกค้า"""
     BIKE_TYPES = (
-        ('standard', 'รถมาตรฐาน 150cc'),
-        ('sport', 'รถสปอร์ต'),
-        ('cruiser', 'รถครูเซอร์'),
-        ('touring', 'รถทัวร์ริ่ง'),
-        ('adventure', 'รถแอดเวนเจอร์'),
-        ('superbike', 'ซุปเปอร์ไบค์'),
-        ('other', 'อื่นๆ'),
+        ('classic', 'Classic'),
+        ('standard', 'Standard'),
+        ('sport', 'Sport'),
+        ('touring', 'Touring'),
+        ('adventure', 'Adventure'),
+        ('super_sport', 'Super Sport'),
+        ('sport_touring', 'Sport Touring'),
+        ('custom_bobber', 'Custom Bobber'),
+        ('race', 'Race (Track only)'),
     )
     
     owner = models.ForeignKey(
@@ -27,7 +29,7 @@ class Motorcycle(models.Model):
     bike_type = models.CharField(
         max_length=20,
         choices=BIKE_TYPES,
-        default='standard',
+        default='classic',
         verbose_name='ประเภทรถ'
     )
     license_plate = models.CharField(
@@ -141,4 +143,33 @@ class Booking(models.Model):
     
     def __str__(self):
         return f"Booking #{self.id} - {self.customer.username} - {self.get_status_display()}"
+
+
+class BookingImage(models.Model):
+    """รูปภาพประกอบการจอง (อาการรถ)"""
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='การจอง'
+    )
+    image = models.ImageField(
+        upload_to='booking_images/',
+        verbose_name='รูปภาพ'
+    )
+    caption = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name='คำอธิบายรูป'
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name='อัปโหลดเมื่อ')
+
+    class Meta:
+        verbose_name = 'รูปภาพการจอง'
+        verbose_name_plural = 'รูปภาพการจองทั้งหมด'
+        ordering = ['uploaded_at']
+
+    def __str__(self):
+        return f"Image for Booking #{self.booking_id}"
 

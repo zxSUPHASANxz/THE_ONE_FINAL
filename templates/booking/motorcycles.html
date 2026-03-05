@@ -65,6 +65,24 @@
                         <input type="number" id="cc" name="cc" min="50" max="2000" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium" placeholder="เช่น 150, 1000">
                         <p id="ccError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">
+                            ประเภทรถ <span class="text-red-400">*</span>
+                        </label>
+                        <select id="bike_type" name="bike_type" required class="appearance-none rounded-lg relative block w-full px-4 py-3 border-2 border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200 font-medium">
+                            <option value="classic">Classic</option>
+                            <option value="standard">Standard</option>
+                            <option value="sport">Sport</option>
+                            <option value="touring">Touring</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="super_sport">Super Sport</option>
+                            <option value="sport_touring">Sport Touring</option>
+                            <option value="custom_bobber">Custom Bobber</option>
+                            <option value="race">Race (Track only)</option>
+                        </select>
+                        <p id="bikeTypeError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
+                    </div>
                 </div>
 
                 <div>
@@ -100,6 +118,7 @@
                         {% if motorcycle.year %}
                         <p class="text-gray-500 text-sm">ปี: {{ motorcycle.year }}</p>
                         {% endif %}
+                        <p class="text-gray-500 text-sm">ประเภท: <span class="text-blue-400">{{ motorcycle.get_bike_type_display }}</span></p>
                     </div>
                 </div>
 
@@ -112,7 +131,7 @@
 
                 <div class="flex gap-3">
                     <button 
-                        onclick="editMotorcycle({{ motorcycle.id }}, '{{ motorcycle.brand|escapejs }}', '{{ motorcycle.model|escapejs }}', '{{ motorcycle.license_plate|escapejs }}', {{ motorcycle.year|default:'null' }}, {{ motorcycle.cc|default:'null' }}, '{{ motorcycle.notes|default:''|escapejs }}')" 
+                        onclick="editMotorcycle({{ motorcycle.id }}, '{{ motorcycle.brand|escapejs }}', '{{ motorcycle.model|escapejs }}', '{{ motorcycle.license_plate|escapejs }}', {{ motorcycle.year|default:'null' }}, {{ motorcycle.cc|default:'null' }}, '{{ motorcycle.notes|default:''|escapejs }}', '{{ motorcycle.bike_type|default:'classic'|escapejs }}')"  
                         class="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
                         แก้ไข
                     </button>
@@ -172,6 +191,7 @@
     const yearInput = document.getElementById('year');
     const ccInput = document.getElementById('cc');
     const notesInput = document.getElementById('notes');
+    const bikeTypeInput = document.getElementById('bike_type');
 
     // Delete Modal
     const deleteModal = document.getElementById('deleteModal');
@@ -279,6 +299,7 @@
             license_plate: licensePlateInput.value.trim(),
             year: yearInput.value ? parseInt(yearInput.value) : new Date().getFullYear(),
             cc: ccInput.value ? parseInt(ccInput.value) : 150,
+            bike_type: bikeTypeInput.value,
             notes: notesInput.value.trim() || null
         };
 
@@ -388,7 +409,7 @@
 
     // ==================== Edit Motorcycle ====================
     
-    function editMotorcycle(id, brand, model, licensePlate, year, cc, notes) {
+    function editMotorcycle(id, brand, model, licensePlate, year, cc, notes, bikeType) {
         console.log('Editing motorcycle:', id);
         
         // Set editing mode
@@ -401,6 +422,7 @@
         yearInput.value = year || new Date().getFullYear();
         ccInput.value = cc || 150;
         notesInput.value = notes || '';
+        bikeTypeInput.value = bikeType || 'classic';
         
         // Change button text
         submitText.textContent = 'บันทึกการแก้ไข';

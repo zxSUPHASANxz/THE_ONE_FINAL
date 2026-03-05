@@ -54,12 +54,29 @@
                     </select>
                 </div>
 
-                <!-- Description -->
+                <!-- Description + Photo Upload (combined) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">
                         อาการหรือรายละเอียดการซ่อม
                     </label>
-                    <textarea name="description" rows="4" class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all duration-200" placeholder="บอกอาการหรือรายละเอียดการซ่อม เช่น รถสตาร์ทไม่ติด, เบรกไม่ค่อยแน่น เป็นต้น"></textarea>
+                    <div class="border border-gray-600 rounded-lg bg-gray-700 focus-within:ring-2 focus-within:ring-gold-500 focus-within:border-transparent transition-all duration-200 overflow-hidden">
+                        <textarea name="description" rows="4" class="appearance-none block w-full px-4 py-3 bg-transparent text-white placeholder-gray-400 focus:outline-none resize-y" placeholder="บอกอาการหรือรายละเอียดการซ่อม เช่น รถสตาร์ทไม่ติด, เบรกไม่ค่อยแน่น เป็นต้น"></textarea>
+
+                        <!-- Image preview area -->
+                        <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 px-4 pb-3 hidden"></div>
+
+                        <!-- Attach button bar -->
+                        <div class="flex items-center justify-between px-4 py-2 border-t border-gray-600 bg-gray-750">
+                            <div class="flex items-center gap-3">
+                                <button type="button" onclick="document.getElementById('imageInput').click()" class="flex items-center gap-2 text-gray-400 hover:text-gold-400 transition-colors text-sm font-medium">
+                                    📷 แนบรูปภาพ
+                                </button>
+                                <span id="imageCount" class="text-gray-500 text-xs hidden"></span>
+                            </div>
+                        </div>
+                        <input type="file" id="imageInput" name="images" multiple accept="image/*" capture="environment" class="hidden">
+                    </div>
+                    <p id="imageError" class="hidden text-red-400 text-xs mt-1 font-semibold"></p>
                 </div>
 
                 <!-- Date -->
@@ -266,17 +283,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get form data
         const formData = new FormData(form);
-        const data = {
-            motorcycle: parseInt(formData.get('motorcycle')),
-            service_type_input: formData.get('service_type'),
-            description: formData.get('description') || '',
-            scheduled_date: formData.get('scheduled_date'),
-            time_slot: formData.get('time_slot') || '',
-            notes: formData.get('notes') || '',
-            status: 'pending'
-        };
+        const data = new FormData();
+        data.append('motorcycle', formData.get('motorcycle'));
+        data.append('service_type_input', formData.get('service_type'));
+        data.append('description', formData.get('description') || '');
+        data.append('scheduled_date', formData.get('scheduled_date'));
+        data.append('time_slot', formData.get('time_slot') || '');
+        data.append('notes', formData.get('notes') || '');
+        data.append('status', 'pending');
 
-        console.log('📤 Sending booking data:', data);
+        // Append images
+        if (selectedFiles.length > 0) {
+            selectedFiles.forEach(file => {
+                data.append('images', file);
+            });
+        }
+
+        console.log('📤 Sending booking data with', selectedFiles.length, 'images');
 
         lockForm(); // Lock form completely
         setLoading(true);
@@ -286,11 +309,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('/booking/api/bookings/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 credentials: 'same-origin',
-                body: JSON.stringify(data)
+                body: data
             });
 
             // Try to parse JSON, fallback to error message
@@ -413,6 +435,58 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     });
+
+    // ==================== Image Upload ====================
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const imageError = document.getElementById('imageError');
+    const imageCount = document.getElementById('imageCount');
+    let selectedFiles = [];
+
+    imageInput.addEventListener('change', function(e) {
+        handleFiles(Array.from(e.target.files));
+    });
+
+    function handleFiles(files) {
+        imageError.classList.add('hidden');
+        for (const file of files) {
+            if (!file.type.startsWith('image/')) continue;
+            selectedFiles.push(file);
+        }
+        renderPreviews();
+    }
+
+    function renderPreviews() {
+        if (selectedFiles.length === 0) {
+            previewContainer.classList.add('hidden');
+            previewContainer.innerHTML = '';
+            imageCount.classList.add('hidden');
+            return;
+        }
+        previewContainer.classList.remove('hidden');
+        previewContainer.innerHTML = '';
+        imageCount.textContent = `${selectedFiles.length} รูป`;
+        imageCount.classList.remove('hidden');
+        selectedFiles.forEach((file, idx) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative group';
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-20 object-cover rounded-lg border border-gray-600">
+                    <button type="button" onclick="removeImage(${idx})" class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-5 h-5 text-xs font-bold flex items-center justify-center hover:bg-red-700 shadow-lg">✕</button>
+                `;
+                previewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    window.removeImage = function(idx) {
+        selectedFiles.splice(idx, 1);
+        renderPreviews();
+        imageError.classList.add('hidden');
+    };
 });
 </script>
 {% endblock %}

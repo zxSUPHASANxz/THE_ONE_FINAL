@@ -1,0 +1,126 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <div id="content-main">
+      <h1>เพิ่ม Embedding</h1>
+      <p>คงค้างทั้งหมด: <strong>{{ pending_total }}</strong> รายการ</p>
+      <p>หน้านี้แสดงรายการค้างทั้งหมด และเลือกได้สูงสุด 10 รายการต่อครั้ง</p>
+
+      <form method="get" style="margin: 10px 0 12px 0;">
+        <label for="id_sort" style="margin-right:6px;"><strong>เรียงลำดับ:</strong></label>
+        <select id="id_sort" name="sort" style="margin-right:10px;">
+          <option value="created_desc" {% if sort_key == 'created_desc' %}selected{% endif %}>วันที่สร้าง: ใหม่ → เก่า</option>
+          <option value="created_asc" {% if sort_key == 'created_asc' %}selected{% endif %}>วันที่สร้าง: เก่า → ใหม่</option>
+          <option value="title_asc" {% if sort_key == 'title_asc' %}selected{% endif %}>ตัวอักษร: A → Z</option>
+          <option value="title_desc" {% if sort_key == 'title_desc' %}selected{% endif %}>ตัวอักษร: Z → A</option>
+        </select>
+
+        <input
+          type="text"
+          name="q"
+          value="{{ search_query }}"
+          placeholder="ค้นหา title/content/brand/model/source/category"
+          style="width:100%; max-width:560px;"
+        >
+        <input type="submit" value="ค้นหา" class="button" style="margin-left: 6px;">
+        {% if search_query %}
+          <a href="{{ clear_search_url }}" class="button" style="margin-left: 6px;">ล้างค้นหา</a>
+        {% endif %}
+      </form>
+
+      {% if pending_items %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="q" value="{{ search_query }}">
+          <input type="hidden" name="sort" value="{{ sort_key }}">
+          <fieldset class="module aligned" style="margin-bottom:16px;">
+            <div class="form-row">
+              <div>
+                <label for="id_api_key"><strong>API Key (Gemini):</strong></label>
+                <input
+                  id="id_api_key"
+                  type="password"
+                  name="api_key"
+                  placeholder="ใส่ API key ชั่วคราวสำหรับรอบนี้ (ถ้าไม่ใส่จะใช้ .env)"
+                  style="width: 100%; max-width: 560px;"
+                  autocomplete="off"
+                >
+                <p class="help" style="margin-top:6px;">
+                  ฟิลด์นี้เป็นแบบชั่วคราว ใช้เฉพาะตอนกดปุ่ม Embedding รอบนี้เท่านั้น
+                </p>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="submit-row" style="margin-bottom:12px;">
+            <input type="submit" value="Embedding" class="default">
+            <a href="{{ back_url }}" class="button cancel-link">ย้อนกลับหน้า Embedding</a>
+          </div>
+
+          <table class="adminlist" style="width:100%; margin-bottom: 16px;">
+            <thead>
+              <tr>
+                <th style="width: 50px;">เลือก</th>
+                <th>Title</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Source</th>
+                <th>Category</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in pending_items %}
+                <tr>
+                  <td><input type="checkbox" name="selected_ids" value="{{ item.id }}"></td>
+                  <td>{{ item.title }}</td>
+                  <td>{{ item.brand|default:"-" }}</td>
+                  <td>{{ item.model|default:"-" }}</td>
+                  <td>{{ item.source|default:"-" }}</td>
+                  <td>{{ item.category|default:"-" }}</td>
+                  <td>{{ item.created_at }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <p class="help" id="selection-count" style="margin: 6px 0 12px 0;">
+            เลือกแล้ว 0 รายการ (สูงสุด 10)
+          </p>
+        </form>
+      {% else %}
+        <p>✅ ไม่พบรายการค้าง Embedding แล้ว</p>
+        <div class="submit-row">
+          <a href="{{ back_url }}" class="button">กลับหน้า Embedding</a>
+        </div>
+      {% endif %}
+  </div>
+
+  <script>
+    (function () {
+      const maxSelected = 10;
+      const checkboxes = document.querySelectorAll('input[name="selected_ids"]');
+      const counter = document.getElementById('selection-count');
+
+      function updateCounter() {
+        const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+        if (counter) {
+          counter.textContent = `เลือกแล้ว ${checked} รายการ (สูงสุด ${maxSelected})`;
+        }
+      }
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+          const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+          if (checkedCount > maxSelected) {
+            checkbox.checked = false;
+            alert('เลือกได้สูงสุด 10 รายการต่อครั้ง');
+          }
+          updateCounter();
+        });
+      });
+
+      updateCounter();
+    })();
+  </script>
+{% endblock %}

@@ -4,9 +4,9 @@ from .models import MechanicProfile, WorkQueue
 
 @admin.register(MechanicProfile)
 class MechanicProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'specialization', 'years_of_experience', 'rating', 'total_jobs', 'is_available')
+    list_display = ('user', 'specialization', 'years_of_experience', 'shop_address', 'certification', 'license_file', 'total_jobs', 'is_available')
     list_filter = ('specialization', 'is_available', 'years_of_experience')
-    search_fields = ('user__username', 'certification')
+    search_fields = ('user__username', 'certification', 'shop_address')
     readonly_fields = ('created_at', 'updated_at', 'total_jobs', 'rating')
 
 

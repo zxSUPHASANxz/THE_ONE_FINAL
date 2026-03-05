@@ -66,6 +66,7 @@ class Notification(models.Model):
     Notification model for user notifications
     """
     NOTIFICATION_TYPES = (
+        ('system_announcement', 'ประกาศจากระบบ'),
         # Customer notifications
         ('booking_confirmed', 'การจองได้รับการยืนยัน'),
         ('booking_in_progress', 'เริ่มดำเนินการซ่อม'),
