@@ -5,190 +5,699 @@
 
 {% block extra_css %}
 <style>
-    .chat-page {
-        min-height: calc(100vh - 120px);
+    /* ─── Override base layout for full-width chatbot ─── */
+    .chatbot-fullwidth {
+        margin: -1rem -1rem 0 -1rem;
+    }
+    @media (min-width: 640px) {
+        .chatbot-fullwidth { margin: -1.5rem -1.5rem 0 -1.5rem; }
+    }
+    @media (min-width: 1024px) {
+        .chatbot-fullwidth { margin: -2rem -2rem 0 -2rem; }
     }
 
-    .chat-container {
-        height: calc(100vh - 290px);
-        min-height: 420px;
+    /* ─── Main Layout ─── */
+    .chat-layout {
+        display: flex;
+        height: calc(100vh - 64px);
+        overflow: hidden;
     }
-    
-    .message-bubble {
+
+    /* ─── Sidebar ─── */
+    .chat-sidebar {
+        width: 280px;
+        min-width: 280px;
+        background: #171717;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, min-width 0.3s ease;
+        z-index: 40;
+    }
+
+    .chat-sidebar.hidden-sidebar {
+        transform: translateX(-280px);
+        width: 0;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    /* ─── Session List ─── */
+    .session-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem;
+    }
+
+    .session-list::-webkit-scrollbar { width: 4px; }
+    .session-list::-webkit-scrollbar-track { background: transparent; }
+    .session-list::-webkit-scrollbar-thumb { background: #404040; border-radius: 2px; }
+
+    .session-item {
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        color: #d4d4d4;
+        font-size: 0.875rem;
+        transition: background 0.15s;
+        position: relative;
+    }
+
+    .session-item:hover {
+        background: #262626;
+    }
+
+    .session-item.active {
+        background: #262626;
+    }
+
+    .session-item .session-title {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .session-item .session-actions {
+        display: none;
+        gap: 0.25rem;
+        margin-left: 0.5rem;
+    }
+
+    .session-item:hover .session-actions {
+        display: flex;
+    }
+
+    .session-action-btn {
+        padding: 0.2rem;
+        border-radius: 0.25rem;
+        color: #a3a3a3;
+        transition: color 0.15s, background 0.15s;
+    }
+
+    .session-action-btn:hover {
+        color: #fff;
+        background: #404040;
+    }
+
+    /* ─── Chat Area ─── */
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #f5f5f5;
+        min-width: 0;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+
+    /* ─── Message bubbles ─── */
+    .msg-row {
+        display: flex;
+        margin-bottom: 1.25rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    .msg-row.user-msg { justify-content: flex-end; }
+    .msg-row.bot-msg { justify-content: flex-start; }
+
+    .msg-bubble {
         max-width: 78%;
         word-wrap: break-word;
+        line-height: 1.6;
     }
-    
+
+    .msg-bubble.user {
+        background: #e5e5e5;
+        border: 1px solid #d4d4d4;
+        color: #171717;
+        border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .msg-bubble.bot {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        color: #262626;
+        border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        padding: 0.75rem 1.25rem;
+    }
+
     @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-enter {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    /* ─── Welcome screen ─── */
+    .welcome-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        height: 100%;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    /* ─── Input area ─── */
+    .chat-input-area {
+        padding: 0.75rem 1rem 1rem;
+        background: #f5f5f5;
+    }
+
+    .chat-input-box {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #fff;
+        border: 1px solid #d4d4d4;
+        border-radius: 1.5rem;
+        padding: 0.6rem 0.75rem 0.6rem 1.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .chat-input-box:focus-within {
+        border-color: #a3a3a3;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .chat-input-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.95rem;
+        color: #171717;
+    }
+
+    .chat-input-box input::placeholder {
+        color: #a3a3a3;
+    }
+
+    .send-btn {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        background: #171717;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s;
+        flex-shrink: 0;
+    }
+
+    .send-btn:hover { background: #404040; }
+    .send-btn:disabled { background: #a3a3a3; cursor: not-allowed; }
+
+    /* ─── Mobile sidebar overlay ─── */
+    @media (max-width: 768px) {
+        .chat-sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            min-width: 280px;
+            z-index: 50;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .chat-sidebar.hidden-sidebar {
+            transform: translateX(-280px);
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            top: 64px;
+            background: rgba(0,0,0,0.5);
+            z-index: 45;
+        }
+        .sidebar-overlay.active {
+            display: block;
         }
     }
-    
-    .message-enter {
-        animation: slideUp 0.3s ease-out;
+
+    /* ─── Rename input ─── */
+    .rename-input {
+        background: #333;
+        border: 1px solid #555;
+        color: #fff;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        width: 100%;
+        outline: none;
+    }
+    .rename-input:focus {
+        border-color: #888;
+    }
+
+    /* ─── Typing dots ─── */
+    .typing-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        background: #a3a3a3;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+
+    /* ─── Date group headers ─── */
+    .date-group {
+        padding: 0.5rem 0.75rem 0.25rem;
+    }
+    .date-group-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #737373;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        padding: 0.2rem 0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="chat-page bg-gray-100 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-    <div class="max-w-5xl mx-auto h-full flex flex-col">
-        <div class="bg-transparent rounded-2xl overflow-hidden flex-1 flex flex-col">
-            <div class="chat-container overflow-y-auto px-0 py-6 flex flex-col justify-end gap-4" id="chatMessages">
-                <!-- Welcome Message -->
-                <div class="flex justify-center items-center message-enter mt-auto mb-auto" id="welcomeMessage">
-                    <div class="flex flex-col items-center text-center px-4">
-                        <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-20 h-20 sm:w-24 sm:h-24 object-contain mb-4" />
-                        <p class="text-gray-700 text-base sm:text-lg font-medium max-w-xl">
-                            THE_ONE Ai อัฉริยะที่จะช่วยให้คำแนะนำปรึกษาเบื้องต้นเกี่ยวกับรถจักรยานยนต์
-                        </p>
-                    </div>
-                </div>
+<div class="chatbot-fullwidth">
+    <div class="chat-layout">
+        <!-- ═══════════ Sidebar ═══════════ -->
+        <aside class="chat-sidebar" id="chatSidebar">
+            <!-- New Chat Button -->
+            <div class="p-3 border-b border-neutral-800">
+                <button onclick="createNewChat()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-neutral-700 text-neutral-200 hover:bg-neutral-800 transition-colors text-sm font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    บทสนทนาใหม่
+                </button>
+            </div>
 
-                <!-- User Message Example (Hidden by default) -->
-                <div class="flex justify-end message-enter" style="display: none;" data-template="user">
-                    <div class="message-bubble bg-gray-200 border border-gray-300 text-gray-900 rounded-2xl rounded-br-md px-5 py-3 shadow-sm">
-                        <p class="message-text"></p>
-                    </div>
+            <!-- Session List -->
+            <div class="session-list" id="sessionList">
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-neutral-500"></div>
                 </div>
+            </div>
+        </aside>
 
-                <!-- Bot Message Example (Hidden by default) -->
-                <div class="flex justify-start message-enter" style="display: none;" data-template="bot">
-                    <div class="message-bubble bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-tl-md px-5 py-4 shadow-sm">
-                        <div class="flex items-start space-x-3">
-                            <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-7 h-7 object-contain mt-0.5" />
-                            <div class="message-text"></div>
-                        </div>
-                    </div>
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- ═══════════ Main Chat Area ═══════════ -->
+        <main class="chat-main">
+            <!-- Top bar -->
+            <div class="flex items-center px-4 py-2.5 bg-white border-b border-neutral-200">
+                <button onclick="toggleSidebar()" class="p-1.5 rounded-lg hover:bg-neutral-100 transition-colors mr-3" title="Toggle sidebar">
+                    <svg class="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <h2 class="text-sm font-semibold text-neutral-700 truncate" id="currentSessionTitle">THE ONE AI</h2>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE" class="w-20 h-20 object-contain mb-4" />
+                    <h1 class="text-2xl font-bold text-neutral-800 mb-2">THE ONE AI</h1>
+                    <p class="text-neutral-500 text-sm max-w-md">ระบบ AI อัจฉริยะที่จะช่วยให้คำแนะนำปรึกษาเบื้องต้นเกี่ยวกับรถจักรยานยนต์</p>
                 </div>
+            </div>
 
-                <!-- Typing Indicator (Hidden by default) -->
-                <div class="flex justify-start" id="typingIndicator" style="display: none;">
-                    <div class="message-bubble bg-white border border-gray-200 text-gray-800 rounded-2xl rounded-tl-md px-5 py-4 shadow-sm">
-                        <div class="flex items-center space-x-3">
-                            <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE Logo" class="w-7 h-7 object-contain" />
-                            <div class="flex space-x-2">
-                                <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
-                                <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
-                                <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
+            <!-- Typing Indicator (hidden) -->
+            <div id="typingIndicator" style="display: none;" class="px-4 pb-2">
+                <div class="max-w-[800px] mx-auto">
+                    <div class="msg-row bot-msg msg-enter">
+                        <div class="msg-bubble bot flex items-center gap-3">
+                            <img src="{% static 'images/the_one_logo.png' %}" class="w-6 h-6 object-contain" />
+                            <div class="flex gap-1.5 py-1">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="px-0 pt-3 pb-2">
-                <form id="chatForm" class="max-w-3xl mx-auto flex items-center gap-3 bg-white border border-gray-300 rounded-3xl px-4 py-3 shadow-sm">
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <form id="chatForm" class="chat-input-box">
                     <input 
                         type="text" 
                         id="messageInput"
                         placeholder="พิมพ์คำถามของคุณที่นี่..."
-                        class="flex-1 appearance-none bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none"
                         autocomplete="off">
-                    <button 
-                        type="submit"
-                        class="bg-black hover:bg-gray-900 text-white w-9 h-9 rounded-full font-semibold transition-colors duration-200 flex items-center justify-center">
-                        ↑
+                    <button type="submit" class="send-btn" id="sendBtn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </button>
                 </form>
             </div>
-        </div>
+        </main>
     </div>
 </div>
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ─── State ───
+    let currentSessionId = null;
+    let isSending = false;
+    let sessions = [];
+
+    // ─── DOM refs ───
     const chatMessages = document.getElementById('chatMessages');
     const chatForm = document.getElementById('chatForm');
     const messageInput = document.getElementById('messageInput');
     const typingIndicator = document.getElementById('typingIndicator');
-    const welcomeMessage = document.getElementById('welcomeMessage');
+    const sessionList = document.getElementById('sessionList');
+    const sidebar = document.getElementById('chatSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const titleEl = document.getElementById('currentSessionTitle');
 
-    function hideWelcomeMessage() {
-        if (welcomeMessage && welcomeMessage.style.display !== 'none') {
-            welcomeMessage.style.display = 'none';
+    // ─── CSRF ───
+    function getCookie(name) {
+        let v = null;
+        if (document.cookie) {
+            document.cookie.split(';').forEach(c => {
+                c = c.trim();
+                if (c.startsWith(name + '=')) v = decodeURIComponent(c.substring(name.length + 1));
+            });
+        }
+        return v;
+    }
+
+    // ─── Sidebar Toggle ───
+    window.toggleSidebar = function() {
+        sidebar.classList.toggle('hidden-sidebar');
+        overlay.classList.toggle('active');
+    };
+
+    // ─── Load Sessions ───
+    async function loadSessions() {
+        try {
+            const resp = await fetch('/chatbot/api/sessions/', {
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                credentials: 'same-origin'
+            });
+            sessions = await resp.json();
+            renderSessionList();
+        } catch (e) {
+            console.error('Failed to load sessions:', e);
+            sessionList.innerHTML = '<p class="text-neutral-500 text-xs text-center py-4">ไม่สามารถโหลดประวัติได้</p>';
         }
     }
 
-    // Auto-scroll to bottom
+    function renderSessionList() {
+        if (!sessions.length) {
+            sessionList.innerHTML = '<p class="text-neutral-500 text-xs text-center py-8">ยังไม่มีประวัติการสนทนา</p>';
+            return;
+        }
+
+        // Group by date
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+        const weekAgo = new Date(today); weekAgo.setDate(weekAgo.getDate() - 7);
+        const monthAgo = new Date(today); monthAgo.setDate(monthAgo.getDate() - 30);
+
+        const groups = { 'วันนี้': [], 'เมื่อวาน': [], '7 วันก่อน': [], '30 วันก่อน': [], 'เก่ากว่านั้น': [] };
+
+        sessions.forEach(s => {
+            const d = new Date(s.updated_at);
+            if (d >= today) groups['วันนี้'].push(s);
+            else if (d >= yesterday) groups['เมื่อวาน'].push(s);
+            else if (d >= weekAgo) groups['7 วันก่อน'].push(s);
+            else if (d >= monthAgo) groups['30 วันก่อน'].push(s);
+            else groups['เก่ากว่านั้น'].push(s);
+        });
+
+        let html = '';
+        for (const [label, items] of Object.entries(groups)) {
+            if (!items.length) continue;
+            html += `<div class="date-group"><div class="date-group-label">${label}</div>`;
+            items.forEach(s => {
+                const isActive = s.session_id === currentSessionId ? 'active' : '';
+                html += `
+                    <div class="session-item ${isActive}" data-sid="${s.session_id}" onclick="loadSession('${s.session_id}')">
+                        <span class="session-title">${escapeHtml(s.title)}</span>
+                        <div class="session-actions">
+                            <button class="session-action-btn" onclick="event.stopPropagation(); renameSession('${s.session_id}')" title="เปลี่ยนชื่อ">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button class="session-action-btn" onclick="event.stopPropagation(); deleteSession('${s.session_id}')" title="ลบ">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>`;
+            });
+            html += `</div>`;
+        }
+        sessionList.innerHTML = html;
+    }
+
+    // ─── Load a session's messages ───
+    window.loadSession = async function(sessionId) {
+        currentSessionId = sessionId;
+        renderSessionList();
+
+        // Clear messages
+        chatMessages.innerHTML = '';
+
+        // Close sidebar on mobile
+        if (window.innerWidth < 768) toggleSidebar();
+
+        try {
+            const resp = await fetch(`/chatbot/api/sessions/${sessionId}/`, {
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                credentials: 'same-origin'
+            });
+            const data = await resp.json();
+            titleEl.textContent = data.title || 'THE ONE AI';
+
+            data.messages.forEach(m => {
+                if (m.sender === 'user') addUserMessage(m.message, false);
+                else addBotMessage(m.message, false);
+            });
+
+            scrollToBottom();
+        } catch (e) {
+            console.error('Failed to load session:', e);
+        }
+
+        messageInput.focus();
+    };
+
+    // ─── Create New Chat ───
+    window.createNewChat = function() {
+        currentSessionId = null;
+        chatMessages.innerHTML = `
+            <div class="welcome-screen" id="welcomeScreen">
+                <img src="{% static 'images/the_one_logo.png' %}" alt="THE_ONE" class="w-20 h-20 object-contain mb-4" />
+                <h1 class="text-2xl font-bold text-neutral-800 mb-2">THE ONE AI</h1>
+                <p class="text-neutral-500 text-sm max-w-md">ระบบ AI อัจฉริยะที่จะช่วยให้คำแนะนำปรึกษาเบื้องต้นเกี่ยวกับรถจักรยานยนต์</p>
+            </div>`;
+
+        titleEl.textContent = 'THE ONE AI';
+        renderSessionList();
+        
+        // Close sidebar on mobile
+        if (window.innerWidth < 768) toggleSidebar();
+        
+        messageInput.focus();
+    };
+
+    // ─── Rename Session ───
+    window.renameSession = async function(sessionId) {
+        const item = document.querySelector(`.session-item[data-sid="${sessionId}"]`);
+        if (!item) return;
+        const titleSpan = item.querySelector('.session-title');
+        const oldTitle = titleSpan.textContent;
+
+        // Replace with input
+        const input = document.createElement('input');
+        input.className = 'rename-input';
+        input.value = oldTitle;
+        titleSpan.replaceWith(input);
+        input.focus();
+        input.select();
+
+        const doRename = async () => {
+            const newTitle = input.value.trim();
+            if (newTitle && newTitle !== oldTitle) {
+                try {
+                    await fetch(`/chatbot/api/sessions/${sessionId}/rename/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ title: newTitle })
+                    });
+                    const s = sessions.find(x => x.session_id === sessionId);
+                    if (s) s.title = newTitle;
+                    if (sessionId === currentSessionId) titleEl.textContent = newTitle;
+                } catch (e) {
+                    console.error('Rename failed:', e);
+                }
+            }
+            renderSessionList();
+        };
+
+        input.addEventListener('blur', doRename);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+            if (e.key === 'Escape') { input.value = oldTitle; input.blur(); }
+        });
+    };
+
+    // ─── Delete Session ───
+    window.deleteSession = async function(sessionId) {
+        if (!confirm('ต้องการลบบทสนทนานี้?')) return;
+        try {
+            await fetch(`/chatbot/api/sessions/${sessionId}/delete/`, {
+                method: 'DELETE',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                credentials: 'same-origin'
+            });
+            sessions = sessions.filter(s => s.session_id !== sessionId);
+            if (sessionId === currentSessionId) {
+                createNewChat();
+            }
+            renderSessionList();
+        } catch (e) {
+            console.error('Delete failed:', e);
+        }
+    };
+
+    // ─── Add Messages ───
+    function addUserMessage(text, animate = true) {
+        const welcomeEl = document.getElementById('welcomeScreen');
+        if (welcomeEl) welcomeEl.style.display = 'none';
+
+        const div = document.createElement('div');
+        div.className = `msg-row user-msg ${animate ? 'msg-enter' : ''}`;
+        div.innerHTML = `<div class="msg-bubble user">${escapeHtml(text)}</div>`;
+        chatMessages.appendChild(div);
+        if (animate) scrollToBottom();
+    }
+
+    function addBotMessage(text, animate = true) {
+        const welcomeEl = document.getElementById('welcomeScreen');
+        if (welcomeEl) welcomeEl.style.display = 'none';
+
+        const div = document.createElement('div');
+        div.className = `msg-row bot-msg ${animate ? 'msg-enter' : ''}`;
+        div.innerHTML = `
+            <div class="msg-bubble bot">
+                <div class="flex items-start gap-2.5">
+                    <img src="{% static 'images/the_one_logo.png' %}" class="w-6 h-6 object-contain mt-0.5 flex-shrink-0" />
+                    <div class="bot-text">${formatBotMessage(text)}</div>
+                </div>
+            </div>`;
+        chatMessages.appendChild(div);
+        if (animate) scrollToBottom();
+    }
+
+    function setTyping(show) {
+        typingIndicator.style.display = show ? 'block' : 'none';
+        if (show) scrollToBottom();
+    }
+
     function scrollToBottom() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Add user message
-    function addUserMessage(text) {
-        hideWelcomeMessage();
-        const template = document.querySelector('[data-template="user"]');
-        const messageDiv = template.cloneNode(true);
-        messageDiv.style.display = 'flex';
-        messageDiv.removeAttribute('data-template');
-        messageDiv.querySelector('.message-text').textContent = text;
-        chatMessages.appendChild(messageDiv);
-        scrollToBottom();
+    // ─── Format bot message (markdown-like) ───
+    function formatBotMessage(text) {
+        let html = escapeHtml(text);
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-red-700 underline hover:text-red-500">$1</a>');
+        html = html.replace(/\n/g, '<br>');
+        return html;
     }
 
-    // Add bot message
-    function addBotMessage(text) {
-        hideWelcomeMessage();
-        const template = document.querySelector('[data-template="bot"]');
-        const messageDiv = template.cloneNode(true);
-        messageDiv.style.display = 'flex';
-        messageDiv.removeAttribute('data-template');
-        messageDiv.querySelector('.message-text').innerHTML = text;
-        chatMessages.appendChild(messageDiv);
-        scrollToBottom();
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
-    // Show/hide typing indicator
-    function setTyping(show) {
-        if (show) {
-            chatMessages.appendChild(typingIndicator);
-            typingIndicator.style.display = 'flex';
-            scrollToBottom();
-            return;
-        }
-
-        typingIndicator.style.display = 'none';
-    }
-
-    // Send message to backend
-    let isSending = false;  // Prevent duplicate sends
-    
+    // ─── Send Message ───
     async function sendMessage(message) {
-        // Prevent duplicate sends
-        if (isSending) {
-            console.log('Already sending a message, please wait...');
-            return;
-        }
-        
+        if (isSending) return;
         isSending = true;
+
         addUserMessage(message);
         messageInput.value = '';
-        messageInput.disabled = true;  // Disable input while sending
+        messageInput.disabled = true;
+        document.getElementById('sendBtn').disabled = true;
         setTyping(true);
 
         try {
-            const response = await fetch('/chatbot/api/chat/', {
+            const resp = await fetch('/chatbot/api/chat/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 credentials: 'same-origin',
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({
+                    message: message,
+                    session_id: currentSessionId || ''
+                })
             });
 
-            const data = await response.json();
+            const data = await resp.json();
             setTyping(false);
-            isSending = false;  // Re-enable sending
-            messageInput.disabled = false;  // Re-enable input
+
+            // Update session state
+            if (data.session_id) {
+                currentSessionId = data.session_id;
+            }
+
+            if (data.is_new_session) {
+                sessions.unshift({
+                    session_id: data.session_id,
+                    title: data.session_title || message.substring(0, 60),
+                    updated_at: new Date().toISOString(),
+                    message_count: 2
+                });
+                titleEl.textContent = data.session_title || message.substring(0, 60);
+            } else {
+                const s = sessions.find(x => x.session_id === currentSessionId);
+                if (s) {
+                    s.updated_at = new Date().toISOString();
+                    s.message_count = (s.message_count || 0) + 2;
+                }
+            }
+
+            renderSessionList();
 
             if (data.response) {
                 addBotMessage(data.response);
@@ -198,40 +707,30 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Chat error:', error);
             setTyping(false);
-            isSending = false;  // Re-enable sending on error
-            messageInput.disabled = false;  // Re-enable input
             addBotMessage('ขออภัยครับ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่ภายหลัง');
         }
+
+        isSending = false;
+        messageInput.disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        messageInput.focus();
     }
 
-    // Helper: Get CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Form submit handler
+    // ─── Form Submit ───
     chatForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const message = messageInput.value.trim();
-        if (message && !isSending) {  // Check if not already sending
-            sendMessage(message);
-        }
+        if (message && !isSending) sendMessage(message);
     });
 
-    // Focus input on load
-    scrollToBottom();
+    // ─── Init ───
+    loadSessions();
     messageInput.focus();
+
+    // Mobile: hide sidebar by default
+    if (window.innerWidth < 768) {
+        sidebar.classList.add('hidden-sidebar');
+    }
 });
 </script>
 {% endblock %}

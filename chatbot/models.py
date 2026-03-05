@@ -16,7 +16,14 @@ class ChatSession(models.Model):
         unique=True,
         verbose_name='รหัสเซสชัน'
     )
+    title = models.CharField(
+        max_length=200,
+        blank=True,
+        default='',
+        verbose_name='ชื่อบทสนทนา'
+    )
     started_at = models.DateTimeField(auto_now_add=True, verbose_name='เริ่มเมื่อ')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='อัปเดตล่าสุด')
     ended_at = models.DateTimeField(
         null=True,
         blank=True,
@@ -27,10 +34,10 @@ class ChatSession(models.Model):
     class Meta:
         verbose_name = 'เซสชันแชท'
         verbose_name_plural = 'เซสชันแชททั้งหมด'
-        ordering = ['-started_at']
+        ordering = ['-updated_at']
     
     def __str__(self):
-        return f"Chat #{self.session_id} - {self.user.username}"
+        return self.title or f"Chat #{self.session_id[:8]}"
 
 
 class ChatMessage(models.Model):

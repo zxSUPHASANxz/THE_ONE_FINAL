@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 import requests
 import uuid
 import json
@@ -104,13 +105,41 @@ def _call_gemini_api(message, api_key):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def simple_chat_view(request):
-    """Simple chat endpoint without session management - sends to n8n"""
+    """Chat endpoint with session management - sends to n8n and saves history"""
     message = request.data.get('message', '')
+    session_id = request.data.get('session_id', '')
     
     if not message:
         return Response({
             'error': 'Message is required'
         }, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Get or create session
+    session = None
+    is_new_session = False
+    if session_id:
+        try:
+            session = ChatSession.objects.get(session_id=session_id, user=request.user)
+        except ChatSession.DoesNotExist:
+            pass
+    
+    if not session:
+        session = ChatSession.objects.create(
+            user=request.user,
+            session_id=str(uuid.uuid4()),
+            title=message[:80]  # First message as session title
+        )
+        is_new_session = True
+    
+    # Save user message
+    ChatMessage.objects.create(
+        session=session,
+        sender='user',
+        message=message
+    )
+    
+    # Update session timestamp
+    session.save()  # triggers updated_at
     
     try:
         # Get n8n webhook URL from settings
@@ -125,6 +154,7 @@ def simple_chat_view(request):
             'message': message,
             'user_id': request.user.id,
             'username': request.user.username,
+            'session_id': session.session_id,
         }, timeout=20)
         
         logger.info("n8n response status: %s", response.status_code)
@@ -148,9 +178,19 @@ def simple_chat_view(request):
         logger.error("Unexpected error in chat view: %s", str(e), exc_info=True)
         bot_response = generate_simple_response(message)
     
+    # Save bot message
+    ChatMessage.objects.create(
+        session=session,
+        sender='bot',
+        message=bot_response
+    )
+    
     return Response({
         'response': bot_response,
-        'message': message
+        'message': message,
+        'session_id': session.session_id,
+        'is_new_session': is_new_session,
+        'session_title': session.title,
     }, status=status.HTTP_200_OK)
 class ChatSessionListCreateView(generics.ListCreateAPIView):
     """List all chat sessions or create a new one"""
@@ -275,4 +315,89 @@ class KnowbaseListView(generics.ListAPIView):
             queryset = queryset.filter(category__icontains=category)
         
         return queryset
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Session History APIs (ChatGPT-like)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def session_list_api(request):
+    """List all chat sessions for the current user (sidebar)"""
+    sessions = ChatSession.objects.filter(
+        user=request.user, is_active=True
+    ).order_by('-updated_at')
+    
+    data = []
+    for s in sessions:
+        last_msg = s.messages.order_by('-created_at').first()
+        data.append({
+            'session_id': s.session_id,
+            'title': s.title or (last_msg.message[:60] if last_msg else 'บทสนทนาใหม่'),
+            'updated_at': s.updated_at.isoformat(),
+            'message_count': s.messages.count(),
+        })
+    
+    return Response(data)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def session_messages_api(request, session_id):
+    """Get all messages for a specific session"""
+    session = get_object_or_404(ChatSession, session_id=session_id, user=request.user)
+    messages = session.messages.order_by('created_at')
+    
+    data = [{
+        'id': m.id,
+        'sender': m.sender,
+        'message': m.message,
+        'created_at': m.created_at.isoformat(),
+    } for m in messages]
+    
+    return Response({
+        'session_id': session.session_id,
+        'title': session.title,
+        'messages': data,
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def session_rename_api(request, session_id):
+    """Rename a chat session"""
+    session = get_object_or_404(ChatSession, session_id=session_id, user=request.user)
+    new_title = request.data.get('title', '').strip()
+    if not new_title:
+        return Response({'error': 'Title is required'}, status=400)
+    
+    session.title = new_title[:200]
+    session.save()
+    return Response({'status': 'ok', 'title': session.title})
+
+
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def session_delete_api(request, session_id):
+    """Delete (soft-delete) a chat session"""
+    session = get_object_or_404(ChatSession, session_id=session_id, user=request.user)
+    session.is_active = False
+    session.save()
+    return Response({'status': 'deleted'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def session_create_api(request):
+    """Create a new empty session"""
+    session = ChatSession.objects.create(
+        user=request.user,
+        session_id=str(uuid.uuid4()),
+        title='บทสนทนาใหม่',
+    )
+    return Response({
+        'session_id': session.session_id,
+        'title': session.title,
+    }, status=201)
 
