@@ -1,0 +1,68 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor C as Customer
+    actor M as Mechanic
+    participant UI as ChatUI
+    participant API as ChatAPI
+    participant DB as PostgreSQL
+
+    C->>UI: เปิดรายการห้องแชท
+    activate UI
+    UI->>API: GET ChatRooms
+    deactivate UI
+    activate API
+    API->>DB: SELECT rooms by membership
+    activate DB
+    DB-->>API: รายการห้อง + unread count
+    deactivate DB
+    API-->>UI: room list
+    deactivate API
+    UI-->>C: แสดงรายการห้องแชท
+
+    C->>UI: เปิดข้อความในห้อง
+    activate UI
+    UI->>API: GET RoomMessages
+    deactivate UI
+    activate API
+    API->>DB: Validate membership + SELECT messages
+    activate DB
+    DB-->>API: message history
+    deactivate DB
+    API-->>UI: messages
+    deactivate API
+    UI-->>C: แสดงประวัติแชท
+
+    C->>UI: ส่งข้อความ
+    activate UI
+    UI->>API: POST NewMessage
+    deactivate UI
+    activate API
+    API->>DB: INSERT Message(is_read=false)
+    activate DB
+    DB-->>API: บันทึกข้อความสำเร็จ
+    deactivate DB
+    API->>DB: UPDATE ChatRoom.updated_at
+    activate DB
+    DB-->>API: อัปเดตเวลาแชทสำเร็จ
+    deactivate DB
+    API-->>UI: ส่งข้อความสำเร็จ
+    deactivate API
+    UI-->>C: แสดงข้อความใหม่
+
+    M->>UI: เปิดห้องเดียวกัน
+    activate UI
+    UI->>API: GET RoomDetail
+    deactivate UI
+    activate API
+    API->>DB: UPDATE unread -> read (exclude sender)
+    activate DB
+    DB-->>API: อัปเดตสถานะอ่านแล้ว
+    deactivate DB
+    API->>DB: SELECT messages
+    activate DB
+    DB-->>API: message history updated
+    deactivate DB
+    API-->>UI: messages with read status
+    deactivate API
+    UI-->>M: แสดงข้อความล่าสุด
+

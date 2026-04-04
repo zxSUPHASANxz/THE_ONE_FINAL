@@ -1,0 +1,73 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor U as User
+    participant UI as ChatbotSidebarUI
+    participant API as ChatbotSessionAPI
+    participant DB as PostgreSQL
+
+    U->>UI: ขอรายการบทสนทนา
+    activate UI
+    UI->>API: GET Sessions
+    deactivate UI
+    activate API
+    API->>DB: SELECT active sessions by user
+    activate DB
+    DB-->>API: session list
+    deactivate DB
+    API-->>UI: sessions payload
+    deactivate API
+    UI-->>U: แสดง session list
+
+    U->>UI: สร้าง session ใหม่
+    activate UI
+    UI->>API: POST CreateSession
+    deactivate UI
+    activate API
+    API->>API: generate uuid session_id
+    API->>DB: INSERT ChatSession
+    activate DB
+    DB-->>API: create success
+    deactivate DB
+    API-->>UI: new session_id
+    deactivate API
+    UI-->>U: เปิด session ใหม่
+
+    U->>UI: เปิดประวัติ session
+    activate UI
+    UI->>API: GET SessionMessages
+    deactivate UI
+    activate API
+    API->>DB: SELECT ChatMessages by session
+    activate DB
+    DB-->>API: message history
+    deactivate DB
+    API-->>UI: messages payload
+    deactivate API
+    UI-->>U: แสดงประวัติแชท
+
+    U->>UI: เปลี่ยนชื่อ session
+    activate UI
+    UI->>API: POST RenameSession
+    deactivate UI
+    activate API
+    API->>DB: UPDATE ChatSession.title
+    activate DB
+    DB-->>API: rename success
+    deactivate DB
+    API-->>UI: rename result
+    deactivate API
+    UI-->>U: แสดงชื่อใหม่
+
+    U->>UI: ลบ session
+    activate UI
+    UI->>API: DELETE Session
+    deactivate UI
+    activate API
+    API->>DB: UPDATE ChatSession.is_active=false
+    activate DB
+    DB-->>API: soft delete success
+    deactivate DB
+    API-->>UI: delete result
+    deactivate API
+    UI-->>U: อัปเดตรายการ session
+

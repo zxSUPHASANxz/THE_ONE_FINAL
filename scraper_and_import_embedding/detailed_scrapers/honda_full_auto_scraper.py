@@ -37,7 +37,7 @@ from tqdm import tqdm
 from chatbot.models import KnowBase
 
 # Gemini API configuration
-GEMINI_API_KEY = "AIzaSyDu2sGMNZPdAIhZUp0tsZ_7DrKDPqhwhtY"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
 class HondaFullAutoScraper:
@@ -362,7 +362,8 @@ class HondaFullAutoScraper:
     
     def save_to_json(self, filename='honda_motorcycles_full.json'):
         """บันทึกข้อมูลเป็น JSON file"""
-        output_path = Path(__file__).parent / filename
+        output_path = Path(__file__).parent.parent / "database" / filename
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         
         try:
             with open(output_path, 'w', encoding='utf-8') as f:

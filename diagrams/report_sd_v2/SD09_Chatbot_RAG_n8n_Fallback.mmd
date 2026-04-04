@@ -1,0 +1,63 @@
+    %%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+    sequenceDiagram
+        actor U as User
+        participant UI as ChatbotUI
+        participant API as ChatbotAPI
+        participant DB as PostgreSQL
+        participant N8N as n8nWebhook
+        participant VDB as PGVectorKnowbase
+        participant GM as GeminiAPI
+
+        U->>UI: ส่งคำถาม
+        activate UI
+        UI->>API: POST ChatMessage
+        deactivate UI
+        activate API
+
+        API->>DB: GET or CREATE ChatSession
+        activate DB
+        DB-->>API: session info
+        deactivate DB
+
+        API->>DB: INSERT ChatMessage(sender=user)
+        activate DB
+        DB-->>API: save success
+        deactivate DB
+
+        API->>N8N: Webhook POST(message,user_id,session_id)
+        activate N8N
+        N8N->>VDB: retrieve relevant vectors
+        activate VDB
+        VDB-->>N8N: context documents
+        deactivate VDB
+        N8N->>GM: generate answer with context
+        activate GM
+        GM-->>N8N: generated answer
+        deactivate GM
+        N8N-->>API: AI response payload
+        deactivate N8N
+
+        API->>DB: INSERT ChatMessage(sender=bot,n8n_response)
+        activate DB
+        DB-->>API: save success
+        deactivate DB
+
+        API-->>UI: chatbot response
+        deactivate API
+        UI-->>U: แสดงคำตอบ
+
+        alt n8n timeout หรือ request error
+            activate API
+            API->>GM: fallback direct generate
+            activate GM
+            GM-->>API: fallback answer
+            deactivate GM
+            API->>DB: INSERT ChatMessage(sender=bot,fallback)
+            activate DB
+            DB-->>API: save fallback success
+            deactivate DB
+            API-->>UI: fallback response
+            deactivate API
+            UI-->>U: แสดงคำตอบสำรอง
+        end
+

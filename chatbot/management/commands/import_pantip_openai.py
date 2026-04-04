@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--file',
             type=str,
-            default='scraper/database/pantip.json',
+            default='scraper_and_import_embedding/database/pantip.json',
             help='Path to Pantip JSON file'
         )
         parser.add_argument(

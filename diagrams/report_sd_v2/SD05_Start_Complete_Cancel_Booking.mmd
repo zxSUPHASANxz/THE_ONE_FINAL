@@ -1,0 +1,101 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor M as Mechanic
+    actor C as Customer
+    participant UI as WebUI
+    participant API as MechanicsBookingAPI
+    participant DB as PostgreSQL
+    participant N as NotificationService
+
+    M->>UI: กดเริ่มงานซ่อม
+    activate UI
+    UI->>API: POST StartBooking
+    deactivate UI
+    activate API
+    API->>DB: ตรวจสิทธิ์ช่างและ status=confirmed
+    activate DB
+    DB-->>API: ผลการตรวจสอบ
+    deactivate DB
+
+    alt เงื่อนไขถูกต้อง
+        API->>DB: UPDATE Booking = in_progress
+        activate DB
+        DB-->>API: อัปเดตสถานะสำเร็จ
+        deactivate DB
+
+        API->>N: แจ้งลูกค้าว่าเริ่มงานแล้ว
+        activate N
+        N->>DB: INSERT Notification
+        activate DB
+        DB-->>N: บันทึกแจ้งเตือนสำเร็จ
+        deactivate DB
+        N-->>API: แจ้งเตือนเสร็จ
+        deactivate N
+
+        API-->>UI: Start success
+    else เงื่อนไขไม่ผ่าน
+        API-->>UI: Start failed
+    end
+    deactivate API
+    UI-->>M: แสดงผลการเริ่มงาน
+
+    M->>UI: กดงานเสร็จ
+    activate UI
+    UI->>API: POST CompleteBooking
+    deactivate UI
+    activate API
+    API->>DB: ตรวจสิทธิ์ช่างและ status=in_progress
+    activate DB
+    DB-->>API: ผลการตรวจสอบ
+    deactivate DB
+
+    alt เงื่อนไขถูกต้อง
+        API->>DB: UPDATE Booking = completed
+        activate DB
+        DB-->>API: อัปเดตสถานะสำเร็จ
+        deactivate DB
+        API->>N: แจ้งลูกค้าว่างานเสร็จแล้ว
+        activate N
+        N->>DB: INSERT Notification
+        activate DB
+        DB-->>N: บันทึกแจ้งเตือนสำเร็จ
+        deactivate DB
+        N-->>API: แจ้งเตือนเสร็จ
+        deactivate N
+        API-->>UI: Complete success
+    else เงื่อนไขไม่ผ่าน
+        API-->>UI: Complete failed
+    end
+    deactivate API
+    UI-->>M: แสดงผลการปิดงาน
+
+    C->>UI: กดยกเลิกการจอง
+    activate UI
+    UI->>API: POST CancelBooking
+    deactivate UI
+    activate API
+    API->>DB: ตรวจสิทธิ์และสถานะที่ยกเลิกได้
+    activate DB
+    DB-->>API: ผลการตรวจสอบ
+    deactivate DB
+
+    alt status เป็น pending หรือ confirmed
+        API->>DB: UPDATE Booking = cancelled
+        activate DB
+        DB-->>API: ยกเลิกสำเร็จ
+        deactivate DB
+        API->>N: แจ้งผู้เกี่ยวข้องว่ามียกเลิกงาน
+        activate N
+        N->>DB: INSERT Notification(*)
+        activate DB
+        DB-->>N: บันทึกแจ้งเตือนสำเร็จ
+        deactivate DB
+        N-->>API: แจ้งเตือนเสร็จ
+        deactivate N
+        API-->>UI: Cancel success
+    else สถานะไม่อนุญาต
+        API-->>UI: Cancel failed
+    end
+    deactivate API
+    UI-->>C: แสดงผลการยกเลิก
+

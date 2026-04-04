@@ -1,0 +1,73 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor M as Mechanic
+    participant UI as MechanicDashboard
+    participant API as MechanicsAPI
+    participant DB as PostgreSQL
+    participant CH as ChatService
+    participant N as NotificationService
+
+    M->>UI: กดรับงาน
+    activate UI
+    UI->>API: POST AcceptQueue
+    deactivate UI
+    activate API
+    API->>DB: SELECT WorkQueue และ Booking
+    activate DB
+    DB-->>API: ข้อมูลคิวงานและสถานะ booking
+    deactivate DB
+
+    alt Booking ยังเป็น pending
+        API->>DB: UPDATE WorkQueue = accepted
+        activate DB
+        DB-->>API: อัปเดตคิวสำเร็จ
+        deactivate DB
+
+        API->>DB: UPDATE Booking = confirmed + assign mechanic
+        activate DB
+        DB-->>API: อัปเดต booking สำเร็จ
+        deactivate DB
+
+        API->>DB: UPDATE MechanicProfile.total_jobs + 1
+        activate DB
+        DB-->>API: อัปเดตสถิติช่างสำเร็จ
+        deactivate DB
+
+        API->>CH: ตรวจหรือสร้างห้องแชท
+        activate CH
+        CH->>DB: INSERT ChatRoom if not exists
+        activate DB
+        DB-->>CH: ผลการสร้างห้องแชท
+        deactivate DB
+        CH-->>API: chat room ready
+        deactivate CH
+
+        API->>N: แจ้งลูกค้าว่ารับงานแล้ว
+        activate N
+        N->>DB: INSERT Notification
+        activate DB
+        DB-->>N: บันทึกแจ้งเตือนสำเร็จ
+        deactivate DB
+        N-->>API: แจ้งเตือนเสร็จ
+        deactivate N
+
+        API-->>UI: Accept success
+    else Booking ถูกช่างคนอื่นรับแล้ว
+        API-->>UI: Accept failed (taken by other)
+    end
+    deactivate API
+    UI-->>M: แสดงผลการรับงาน
+
+    M->>UI: กดปฏิเสธงาน
+    activate UI
+    UI->>API: POST RejectQueue
+    deactivate UI
+    activate API
+    API->>DB: UPDATE WorkQueue = rejected เฉพาะ pending
+    activate DB
+    DB-->>API: ผลการปฏิเสธงาน
+    deactivate DB
+    API-->>UI: Reject result
+    deactivate API
+    UI-->>M: แสดงผลการปฏิเสธ
+

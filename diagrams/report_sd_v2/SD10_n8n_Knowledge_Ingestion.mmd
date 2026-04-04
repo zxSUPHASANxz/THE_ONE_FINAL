@@ -1,0 +1,21 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    participant N8N as n8nWorkflow
+    participant API as N8NWebhookAPI
+    participant DB as PostgreSQL
+
+    N8N->>API: POST webhook(type=knowledge,payload)
+    activate API
+    API->>API: validate payload structure
+
+    alt payload.type == knowledge
+        API->>DB: INSERT Knowbase(source,title,content,raw_data)
+        activate DB
+        DB-->>API: insert success
+        deactivate DB
+        API-->>N8N: success
+    else payload type อื่น
+        API-->>N8N: ignored or generic success
+    end
+    deactivate API
+

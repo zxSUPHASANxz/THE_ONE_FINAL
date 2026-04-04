@@ -1,0 +1,157 @@
+erDiagram
+    USER {
+        id integer PK
+        username varchar
+        email varchar
+        user_type varchar
+        phone_number varchar
+        address text
+        profile_image varchar
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    MOTORCYCLE {
+        id integer PK
+        owner_id integer FK
+        brand varchar
+        model varchar
+        year integer
+        cc integer
+        bike_type varchar
+        license_plate varchar
+        color varchar
+        mileage integer
+        notes text
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    BOOKING {
+        id integer PK
+        customer_id integer FK
+        motorcycle_id integer FK
+        mechanic_id integer FK
+        problem_description text
+        appointment_date timestamp
+        status varchar
+        estimated_cost decimal
+        actual_cost decimal
+        repair_notes text
+        completion_date timestamp
+        pickup_date timestamp
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    BOOKING_IMAGE {
+        id integer PK
+        booking_id integer FK
+        image varchar
+        caption varchar
+        uploaded_at timestamp
+    }
+
+    MECHANIC_PROFILE {
+        id integer PK
+        user_id integer FK
+        specialization varchar
+        years_of_experience integer
+        certification varchar
+        bio text
+        shop_address text
+        shop_photo varchar
+        qualification varchar
+        qualification_file varchar
+        license_file varchar
+        is_available boolean
+        rating decimal
+        total_jobs integer
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    WORK_QUEUE {
+        id integer PK
+        mechanic_id integer FK
+        booking_id integer FK
+        status varchar
+        assigned_at timestamp
+        responded_at timestamp
+        started_at timestamp
+        completed_at timestamp
+        priority varchar
+    }
+
+    CHAT_ROOM {
+        id integer PK
+        booking_id integer FK
+        customer_id integer FK
+        mechanic_id integer FK
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    MESSAGE {
+        id integer PK
+        chat_room_id integer FK
+        sender_id integer FK
+        message text
+        is_read boolean
+        created_at timestamp
+    }
+
+    NOTIFICATION {
+        id integer PK
+        user_id integer FK
+        booking_id integer FK
+        notification_type varchar
+        title varchar
+        message text
+        is_read boolean
+        created_at timestamp
+    }
+
+    CHAT_SESSION {
+        id integer PK
+        user_id integer FK
+        session_id varchar
+        title varchar
+        started_at timestamp
+        updated_at timestamp
+        ended_at timestamp
+        is_active boolean
+    }
+
+    CHAT_MESSAGE {
+        id integer PK
+        session_id integer FK
+        sender varchar
+        message text
+        n8n_response json
+        created_at timestamp
+    }
+
+    USER ||--|{ MOTORCYCLE : rel
+    USER ||--|{ BOOKING : rel
+    MOTORCYCLE ||--|{ BOOKING : rel
+    USER ||--|{ BOOKING : rel
+
+    BOOKING ||--|{ BOOKING_IMAGE : rel
+
+    USER ||--|| MECHANIC_PROFILE : rel
+
+    USER ||--|{ WORK_QUEUE : rel
+    BOOKING ||--|{ WORK_QUEUE : rel
+
+    BOOKING ||--|| CHAT_ROOM : rel
+    USER ||--|{ CHAT_ROOM : rel
+    USER ||--|{ CHAT_ROOM : rel
+    CHAT_ROOM ||--|{ MESSAGE : rel
+    USER ||--|{ MESSAGE : rel
+
+    USER ||--|{ NOTIFICATION : rel
+    BOOKING ||--|{ NOTIFICATION : rel
+
+    USER ||--|{ CHAT_SESSION : rel
+    CHAT_SESSION ||--|{ CHAT_MESSAGE : rel

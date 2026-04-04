@@ -1,0 +1,59 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor U as User
+    participant UI as NotificationUI
+    participant API as NotificationAPI
+    participant DB as PostgreSQL
+
+    U->>UI: เปิดหน้าการแจ้งเตือน
+    activate UI
+    UI->>API: GET Notifications
+    deactivate UI
+    activate API
+    API->>DB: SELECT notifications + unread_count
+    activate DB
+    DB-->>API: notification list
+    deactivate DB
+    API-->>UI: notifications payload
+    deactivate API
+    UI-->>U: แสดงรายการแจ้งเตือน
+
+    U->>UI: อ่านแจ้งเตือนรายการเดียว
+    activate UI
+    UI->>API: POST MarkRead(notification_id)
+    deactivate UI
+    activate API
+    API->>DB: UPDATE is_read=true
+    activate DB
+    DB-->>API: update success
+    deactivate DB
+    API-->>UI: mark read success
+    deactivate API
+    UI-->>U: อัปเดตรายการ
+
+    U->>UI: อ่านทั้งหมด
+    activate UI
+    UI->>API: POST MarkAllRead
+    deactivate UI
+    activate API
+    API->>DB: UPDATE all notifications is_read=true
+    activate DB
+    DB-->>API: update all success
+    deactivate DB
+    API-->>UI: mark all success
+    deactivate API
+    UI-->>U: อัปเดตรายการ
+
+    U->>UI: ลบการแจ้งเตือน
+    activate UI
+    UI->>API: DELETE Notification
+    deactivate UI
+    activate API
+    API->>DB: DELETE notification by owner
+    activate DB
+    DB-->>API: delete success
+    deactivate DB
+    API-->>UI: delete success
+    deactivate API
+    UI-->>U: แสดงรายการล่าสุด
+

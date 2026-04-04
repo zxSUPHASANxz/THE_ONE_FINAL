@@ -1,0 +1,49 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor A as Admin
+    participant UI as AdminUI
+    participant AUTH as DjangoAuthViews
+    participant ADM as DjangoAdminSite
+    participant DB as PostgreSQL
+
+    A->>UI: เข้าหน้า /admin
+    activate UI
+    UI->>AUTH: ส่ง username/password ของแอดมิน
+    deactivate UI
+    activate AUTH
+    AUTH->>DB: ตรวจสอบสิทธิ์ is_staff หรือ is_superuser
+    activate DB
+    DB->>AUTH: ผลการยืนยันตัวตน
+    deactivate DB
+
+    alt สิทธิ์ถูกต้อง
+        AUTH->>UI: Login สำเร็จ
+        UI->>ADM: เปิดหน้า Dashboard ของแอดมิน
+        activate ADM
+        ADM->>DB: โหลดสรุปข้อมูลโมเดลหลัก
+        activate DB
+        DB->>ADM: ข้อมูลแสดงผล
+        deactivate DB
+
+        A->>UI: ค้นหาผู้ใช้ตาม username/email
+        UI->>ADM: ส่งคำสั่งค้นหา
+        ADM->>DB: SELECT User ตามเงื่อนไข
+        activate DB
+        DB->>ADM: รายการผู้ใช้
+        deactivate DB
+        ADM->>UI: แสดงผลการค้นหา
+
+        A->>UI: แก้ไขบทบาทและสถานะผู้ใช้
+        UI->>ADM: บันทึกการแก้ไข User
+        ADM->>DB: UPDATE user_type/is_active/is_staff
+        activate DB
+        DB->>ADM: บันทึกสำเร็จ
+        deactivate DB
+        ADM->>UI: แจ้งผลการบันทึก
+        deactivate ADM
+        UI->>A: แสดงผลสำเร็จ
+    else สิทธิ์ไม่เพียงพอ
+        AUTH->>UI: ปฏิเสธการเข้าใช้งาน /admin
+        UI->>A: แสดง Access Denied
+    end
+    deactivate AUTH

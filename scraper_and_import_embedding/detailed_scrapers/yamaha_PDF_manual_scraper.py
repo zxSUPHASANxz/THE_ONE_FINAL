@@ -12,15 +12,19 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def start_scraper():
     # 1. ตั้งค่าโฟลเดอร์เก็บไฟล์
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    download_dir = os.path.join(base_dir, "yamaha_manuals_pdf")
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
-        print(f"สร้างโฟลเดอร์เก็บไฟล์ที่: {download_dir}")
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    database_dir = os.path.join(base_dir, "database")
+    download_dir = os.path.join(database_dir, "yamaha_manuals_pdf")
+    
+    os.makedirs(download_dir, exist_ok=True)
+    print(f"สร้างโฟลเดอร์เก็บไฟล์ที่: {download_dir}")
 
     # 2. ตั้งค่า Browser
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless') # ปิดไว้ก่อนเพื่อให้คุณเห็นการทำงาน
+    options.add_argument('--headless=new') 
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     wait = WebDriverWait(driver, 20)
 
@@ -82,7 +86,7 @@ def start_scraper():
                     })
 
         # 5. บันทึกข้อมูลทั้งหมดเป็น JSON
-        json_output = os.path.join(base_dir, "yamaha_all_manuals_data.json")
+        json_output = os.path.join(database_dir, "yamaha_all_manuals_data.json")
         with open(json_output, "w", encoding="utf-8") as f:
             json.dump(all_data, f, ensure_ascii=False, indent=4)
         

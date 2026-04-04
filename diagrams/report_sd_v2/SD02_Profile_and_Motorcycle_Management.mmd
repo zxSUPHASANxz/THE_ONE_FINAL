@@ -1,0 +1,66 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor C as Customer
+    participant UI as ProfileMotorcycleUI
+    participant API as UsersBookingAPI
+    participant DB as PostgreSQL
+    participant FS as MediaStorage
+
+    C->>UI: แก้ไขข้อมูลโปรไฟล์
+    activate UI
+    UI->>API: ส่งคำขออัปเดตโปรไฟล์
+    deactivate UI
+    activate API
+    opt มีรูปโปรไฟล์ใหม่
+        API->>FS: อัปโหลดรูปโปรไฟล์
+        activate FS
+        FS-->>API: URL/Path ของรูป
+        deactivate FS
+    end
+    API->>DB: UPDATE User Profile
+    activate DB
+    DB-->>API: อัปเดตสำเร็จ
+    deactivate DB
+    API-->>UI: ส่งผลการอัปเดต
+    deactivate API
+    UI-->>C: แสดงผลสำเร็จ
+
+    C->>UI: เพิ่มรถจักรยานยนต์
+    activate UI
+    UI->>API: POST Motorcycle
+    deactivate UI
+    activate API
+    API->>DB: INSERT Motorcycle(owner=C)
+    activate DB
+    DB-->>API: สร้างข้อมูลรถสำเร็จ
+    deactivate DB
+    API-->>UI: ส่งข้อมูลรถที่สร้างแล้ว
+    deactivate API
+    UI-->>C: แสดงรายการรถล่าสุด
+
+    C->>UI: แก้ไขข้อมูลรถ
+    activate UI
+    UI->>API: PUT Motorcycle(id)
+    deactivate UI
+    activate API
+    API->>DB: ตรวจสอบ owner และ UPDATE Motorcycle
+    activate DB
+    DB-->>API: อัปเดตข้อมูลรถสำเร็จ
+    deactivate DB
+    API-->>UI: ส่งผลอัปเดต
+    deactivate API
+    UI-->>C: แสดงข้อมูลรถใหม่
+
+    C->>UI: ลบรถ
+    activate UI
+    UI->>API: DELETE Motorcycle(id)
+    deactivate UI
+    activate API
+    API->>DB: ตรวจสอบ owner และ DELETE Motorcycle
+    activate DB
+    DB-->>API: ลบข้อมูลรถสำเร็จ
+    deactivate DB
+    API-->>UI: ส่งผลการลบ
+    deactivate API
+    UI-->>C: อัปเดตรายการรถ
+

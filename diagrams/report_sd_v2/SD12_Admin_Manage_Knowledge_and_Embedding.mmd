@@ -1,0 +1,49 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor A as Admin
+    participant UI as AdminUI
+    participant ADM as DjangoAdminSite
+    participant DB as PostgreSQL
+    participant Q as EmbedQueueProxy
+    participant N8N as n8nWorkflow
+
+    A->>UI: เปิดเมนูฐานความรู้ Knowbase
+    activate UI
+    UI->>ADM: โหลดรายการความรู้
+    deactivate UI
+    activate ADM
+    ADM->>DB: SELECT Knowbase/KnowlageDatabase
+    activate DB
+    DB->>ADM: ข้อมูลฐานความรู้
+    deactivate DB
+    ADM->>UI: แสดงรายการ
+
+    A->>UI: เพิ่มหรือแก้ไขข้อมูลความรู้
+    UI->>ADM: Save Knowbase record
+    ADM->>DB: INSERT/UPDATE Knowbase
+    activate DB
+    DB->>ADM: บันทึกสำเร็จ
+    deactivate DB
+
+    opt ต้องสร้าง embedding ใหม่
+        ADM->>Q: เพิ่มรายการเข้าคิว embedding
+        activate Q
+        Q->>DB: UPDATE embedding = null หรือ mark pending
+        activate DB
+        DB->>Q: คิวพร้อมประมวลผล
+        deactivate DB
+        Q->>N8N: Trigger workflow สำหรับ embedding
+        activate N8N
+        N8N->>DB: UPDATE vector embedding ของ record
+        activate DB
+        DB->>N8N: อัปเดต embedding สำเร็จ
+        deactivate DB
+        N8N->>Q: ส่งสถานะสำเร็จ
+        deactivate N8N
+        Q->>ADM: แจ้งผลการประมวลผล
+        deactivate Q
+    end
+
+    ADM->>UI: แสดงผลการบันทึกและสถานะ embedding
+    deactivate ADM
+    UI->>A: แสดงผลสำเร็จ

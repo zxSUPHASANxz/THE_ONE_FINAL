@@ -173,12 +173,7 @@ def extract_specifications(soup: BeautifulSoup) -> Dict[str, str]:
                     key = clean_text(cols[0].get_text())
                     value = clean_text(cols[1].get_text())
                     if key and value and len(key) < 100:
-                        # Add section context if available
-                        if section_title and section_title not in key:
-                            full_key = f"{key}"
-                        else:
-                            full_key = key
-                        specs[full_key] = value
+                        specs[key] = value
     
     # Method 2: Look for div-based key-value pairs
     if len(specs) < 3:

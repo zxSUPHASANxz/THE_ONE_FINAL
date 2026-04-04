@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--file',
             type=str,
-            default='scraper/database/honda_bigbike_all.json',
+            default='scraper_and_import_embedding/database/honda_bigbike_all.json',
             help='Path to Honda BigBike JSON file'
         )
         parser.add_argument(

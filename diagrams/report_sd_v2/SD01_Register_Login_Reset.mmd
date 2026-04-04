@@ -1,0 +1,74 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor U as User
+    participant UI as WebUI
+    participant AUTH as DjangoAuthViews
+    participant DB as PostgreSQL
+
+    U->>UI: กรอกแบบฟอร์มสมัครสมาชิก
+    activate UI
+    UI->>AUTH: ส่งคำขอสมัครสมาชิก
+    deactivate UI
+    activate AUTH
+    AUTH->>DB: ตรวจสอบ username/email ซ้ำ
+    activate DB
+    DB-->>AUTH: ผลการตรวจสอบ
+    deactivate DB
+
+    alt ข้อมูลถูกต้อง
+        AUTH->>DB: INSERT User
+        activate DB
+        DB-->>AUTH: สร้างผู้ใช้สำเร็จ
+        deactivate DB
+        opt user_type = mechanic
+            AUTH->>DB: INSERT MechanicProfile
+            activate DB
+            DB-->>AUTH: สร้างโปรไฟล์ช่างสำเร็จ
+            deactivate DB
+        end
+        AUTH-->>UI: สมัครสมาชิกสำเร็จและเข้าสู่ระบบอัตโนมัติ
+    else ข้อมูลไม่ถูกต้อง
+        AUTH-->>UI: แจ้งข้อผิดพลาด validation
+    end
+    deactivate AUTH
+    UI-->>U: แสดงผลการสมัครสมาชิก
+
+    U->>UI: เข้าสู่ระบบ
+    activate UI
+    UI->>AUTH: ส่ง username/password
+    deactivate UI
+    activate AUTH
+    AUTH->>DB: ตรวจสอบ credentials
+    activate DB
+    DB-->>AUTH: ผลการยืนยันตัวตน
+    deactivate DB
+    alt ยืนยันตัวตนสำเร็จ
+        AUTH-->>UI: Login success + redirect ตามบทบาท
+    else ยืนยันตัวตนไม่สำเร็จ
+        AUTH-->>UI: Login failed
+    end
+    deactivate AUTH
+    UI-->>U: แสดงผลการเข้าสู่ระบบ
+
+    U->>UI: รีเซ็ตรหัสผ่าน
+    activate UI
+    UI->>AUTH: ส่ง email และรหัสผ่านใหม่
+    deactivate UI
+    activate AUTH
+    AUTH->>DB: ค้นหาผู้ใช้จาก email
+    activate DB
+    DB-->>AUTH: ผลการค้นหา
+    deactivate DB
+    alt พบผู้ใช้
+        AUTH->>AUTH: เข้ารหัสรหัสผ่านใหม่
+        AUTH->>DB: UPDATE password hash
+        activate DB
+        DB-->>AUTH: บันทึกรหัสผ่านใหม่สำเร็จ
+        deactivate DB
+        AUTH-->>UI: รีเซ็ตรหัสผ่านสำเร็จ
+    else ไม่พบผู้ใช้
+        AUTH-->>UI: รีเซ็ตรหัสผ่านไม่สำเร็จ
+    end
+    deactivate AUTH
+    UI-->>U: แสดงผลการรีเซ็ตรหัสผ่าน
+

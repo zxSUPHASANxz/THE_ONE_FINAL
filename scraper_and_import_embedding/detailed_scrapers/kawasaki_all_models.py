@@ -182,7 +182,7 @@ def scrape_model_detail(driver, model_info: Dict) -> Dict:
         # Method 2: Look for spec rows with specific patterns
         if len(specifications) < 5:
             # Look for elements containing spec data
-            for elem in soup.select("div[class*='spec'], div[class*='detail'], section"):
+            for elem in soup.select("div[class*='wrapper'], div[class*='detail'], section"):
                 rows = elem.select("tr, .row")
                 for row in rows:
                     cols = row.select("td, div, span")
@@ -281,7 +281,7 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Main JSON file
-    output_file = OUTPUT_DIR / f"kawasaki_all_models_{timestamp}.json"
+    output_file = OUTPUT_DIR / f"kawasaki_New{timestamp}.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump({
             "metadata": {
@@ -294,7 +294,7 @@ def main():
         }, f, ensure_ascii=False, indent=2)
     
     # Latest file
-    latest_file = OUTPUT_DIR / "kawasaki_all_models_latest.json"
+    latest_file = OUTPUT_DIR / "kawasaki_New.json"
     with open(latest_file, "w", encoding="utf-8") as f:
         json.dump({
             "metadata": {

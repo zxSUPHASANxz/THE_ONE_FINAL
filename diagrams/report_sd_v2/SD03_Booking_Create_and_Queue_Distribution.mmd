@@ -1,0 +1,70 @@
+%%{init: {'theme':'base','themeCSS': '.loopLine{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox{stroke:#000 !important;stroke-dasharray:0 !important;} .labelBox rect{stroke:#000 !important;stroke-dasharray:0 !important;} .loopText{fill:#000 !important;} .labelText{fill:#000 !important;}'} }%%
+sequenceDiagram
+    actor C as Customer
+    participant UI as BookingUI
+    participant API as BookingAPI
+    participant DB as PostgreSQL
+    participant FS as MediaStorage
+    participant SIG as BookingSignals
+    participant N as NotificationService
+
+    C->>UI: กรอกข้อมูลจองและกดบันทึก
+    activate UI
+    UI->>API: POST CreateBooking
+    deactivate UI
+    activate API
+
+    API->>DB: ตรวจสอบการจองซ้ำในช่วงเวลาสั้น
+    activate DB
+    DB-->>API: ผลการตรวจสอบ duplicate
+    deactivate DB
+
+    alt พบการจองซ้ำ
+        API-->>UI: ส่ง booking เดิมกลับ
+    else ไม่ซ้ำ
+        API->>DB: INSERT Booking(status=pending)
+        activate DB
+        DB-->>API: ได้ booking_id
+        deactivate DB
+
+        opt มีรูปแนบ
+            API->>FS: อัปโหลดรูปทั้งหมด
+            activate FS
+            FS-->>API: ตำแหน่งรูป
+            deactivate FS
+            API->>DB: INSERT BookingImage(*)
+            activate DB
+            DB-->>API: บันทึกรูปสำเร็จ
+            deactivate DB
+        end
+
+        API->>DB: SELECT ช่างที่พร้อมรับงาน
+        activate DB
+        DB-->>API: รายชื่อช่าง available
+        deactivate DB
+
+        loop สำหรับช่างแต่ละคน
+            API->>DB: INSERT WorkQueue(status=pending)
+            activate DB
+            DB-->>API: เพิ่มคิวงานสำเร็จ
+            deactivate DB
+        end
+
+        API->>SIG: เรียก signal หลังสร้าง booking
+        activate SIG
+        SIG->>N: สร้างแจ้งเตือนงานใหม่
+        activate N
+        N->>DB: INSERT Notification(*)
+        activate DB
+        DB-->>N: บันทึกแจ้งเตือนสำเร็จ
+        deactivate DB
+        N-->>SIG: แจ้งเตือนเสร็จสิ้น
+        deactivate N
+        SIG-->>API: signal เสร็จสมบูรณ์
+        deactivate SIG
+
+        API-->>UI: Booking created
+    end
+    deactivate API
+    UI-->>C: แสดงผลการจอง
+

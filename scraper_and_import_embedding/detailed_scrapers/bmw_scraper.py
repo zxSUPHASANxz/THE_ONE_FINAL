@@ -18,8 +18,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-
 
 # =========================
 # Configuration
@@ -100,7 +100,7 @@ def clean(text: str) -> str:
     if not text:
         return ""
     # Remove HTML space entities and normalize whitespace
-    text = text.replace('\xa0', ' ').replace('&nbsp;', ' ')
+    text = text.replace('\xa0', ' ')
     return re.sub(r"\s+", " ", text.strip())
 
 
@@ -123,9 +123,6 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
     """Scrape singular BMW model page with retries"""
     relative_url = model_info["url"]
     full_url = f"{BASE_URL}{relative_url}" if not relative_url.startswith("http") else relative_url
-    
-    print(f"  📄 Fetching: {full_url}")
-    from selenium.webdriver.common.by import By 
     
     # Retry logic variables
     max_retries = 3
@@ -168,7 +165,6 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
             "price": None,
             "price_numeric": None,
             "specifications": {},
-            "features": [],
             "scraped_at": datetime.now().isoformat()
         }
         
@@ -273,11 +269,6 @@ def scrape_bmw_model(driver, model_info: Dict) -> Dict:
 
         data["specifications"] = specs
         
-        # 3. FEATURES Extraction (Simple heuristic from Tech Soup or skipped if not critical)
-        # Note: Features are often on the Overview page which we navigated away from. 
-        # For now, we accept we might miss features unless we navigate back or scrape them first.
-        # User emphasized "ALL Technical Data", so Specs are priority.
-        
         print(f"    found price: {data['price']}")
         print(f"    found specs: {len(data['specifications'])} items")
         
@@ -319,9 +310,8 @@ def run():
                 
                 price_disp = data.get('price') or 'N/A'
                 spec_count = len(data.get("specifications", {}))
-                feat_count = len(data.get("features", []))
                 
-                print(f"  ✅ Done - Price: {price_disp}, Specs: {spec_count}, Features: {feat_count}")
+                print(f"  ✅ Done - Price: {price_disp}, Specs: {spec_count}")
                 
                 # Random delay
                 time.sleep(random.uniform(2.0, 4.0))
@@ -350,7 +340,7 @@ def run():
         }, f, ensure_ascii=False, indent=2)
     
     # Latest file
-    latest_file = OUTPUT_DIR / "bmw_all_models_latest.json"
+    latest_file = OUTPUT_DIR / "bmw_all_models_latest_v1.json"
     with open(latest_file, "w", encoding="utf-8") as f:
         json.dump({
             "metadata": {
