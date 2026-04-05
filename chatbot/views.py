@@ -278,15 +278,30 @@ class N8NWebhookView(APIView):
         
         # Save to knowledge base if it's scraping data
         if data.get('type') == 'knowledge':
+            brand = data.get('brand', '')
+            model_name = data.get('model', '')
+            title = data.get('title', f"{brand} {model_name}".strip())
+            
+            # Merge metadata into content
+            content_parts = []
+            if brand:
+                content_parts.append(f"Brand: {brand}")
+            if model_name:
+                content_parts.append(f"Model: {model_name}")
+            if data.get('source'):
+                content_parts.append(f"Source: {data['source']}")
+            symptom = data.get('symptom', '')
+            solution = data.get('solution', '')
+            if symptom:
+                content_parts.append(symptom)
+            if solution:
+                content_parts.append(solution)
+            
             Knowbase.objects.create(
-                source=data.get('source', 'n8n'),
-                title=data.get('title', f"{data.get('brand', '')} {data.get('model', '')}"),
-                content=f"{data.get('symptom', '')}\n\n{data.get('solution', '')}",
+                title=title,
+                content="\n\n".join(content_parts),
                 category=data.get('category', ''),
-                brand=data.get('brand'),
-                model=data.get('model'),
                 source_url=data.get('source_url'),
-                raw_data=data
             )
         
         return Response({'status': 'success'}, status=status.HTTP_200_OK)
@@ -300,17 +315,8 @@ class KnowbaseListView(generics.ListAPIView):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        source = self.request.query_params.get('source')
-        brand = self.request.query_params.get('brand')
-        model = self.request.query_params.get('model')
         category = self.request.query_params.get('category')
         
-        if source:
-            queryset = queryset.filter(source=source)
-        if brand:
-            queryset = queryset.filter(brand__icontains=brand)
-        if model:
-            queryset = queryset.filter(model__icontains=model)
         if category:
             queryset = queryset.filter(category__icontains=category)
         

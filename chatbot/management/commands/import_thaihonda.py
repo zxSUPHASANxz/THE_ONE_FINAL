@@ -208,15 +208,11 @@ class Command(BaseCommand):
                 
                 # Create or update record
                 obj, created = KnowBase.objects.update_or_create(
-                    source='thaihonda',
-                    brand='Honda',
-                    model=name,
+                    title=title,
                     defaults={
-                        'title': title,
                         'content': content,
                         'category': category,
                         'source_url': url,
-                        'raw_data': item,
                         'is_active': True,
                     }
                 )
@@ -273,9 +269,9 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'⚠️  Errors: {errors}'))
         
         # Final stats
-        total = KnowBase.objects.filter(source='thaihonda', is_active=True).count()
+        total = KnowBase.objects.filter(category='มอเตอร์ไซค์', is_active=True).count()
         with_embeddings = KnowBase.objects.filter(
-            source='thaihonda', 
+            category='มอเตอร์ไซค์', 
             is_active=True, 
             embedding__isnull=False
         ).count()

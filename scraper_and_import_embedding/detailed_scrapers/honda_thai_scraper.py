@@ -1,27 +1,18 @@
 """
-Honda Motorcycle Full Auto Scraper with Embeddings
+Honda Motorcycle Full Auto Scraper
 สกัดข้อมูลจาก https://www.thaihonda.co.th/honda/motorcycle
 - ชื่อและราคาจาก div class="n_top"
 - Specifications จาก div class="n_name" และ div class="value"
-- สร้าง embeddings ด้วย Gemini API
 - บันทึกเป็น JSON
+
+หมายเหตุ: ไฟล์นี้ทำหน้าที่สกัดข้อมูลเท่านั้น (Scraping Only)
+          การสร้าง Embedding และนำเข้า DB ใช้ import_and_embedding_to_knowbase.py
 """
-import os
-import sys
 import json
 import time
 import re
 from datetime import datetime
 from pathlib import Path
-
-# Add project root to path
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))
-
-# Django setup
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'the_one.settings')
-import django
-django.setup()
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -31,14 +22,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-import google.generativeai as genai
 from tqdm import tqdm
-
-from chatbot.models import KnowBase
-
-# Gemini API configuration
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
 
 class HondaFullAutoScraper:
     def __init__(self):
@@ -288,40 +272,7 @@ class HondaFullAutoScraper:
             print(f"❌ เกิดข้อผิดพลาดในการดึงข้อมูลจาก {url}: {e}")
             return None
     
-    def create_embedding(self, text):
-        """สร้าง embedding ด้วย Gemini API"""
-        try:
-            result = genai.embed_content(
-                model="models/gemini-embedding-001",
-                content=text,
-            )
-            return result['embedding']
-        except Exception as e:
-            print(f"⚠️ ไม่สามารถสร้าง embedding ได้: {e}")
-            return None
-    
-    def prepare_text_for_embedding(self, motorcycle_data):
-        """เตรียม text สำหรับสร้าง embedding"""
-        text_parts = []
-        
-        # เพิ่มชื่อยี่ห้อและรุ่น
-        text_parts.append(f"Brand: {motorcycle_data.get('brand', '')}")
-        if 'model' in motorcycle_data:
-            text_parts.append(f"Model: {motorcycle_data['model']}")
-        
-        # เพิ่มราคา
-        if 'price' in motorcycle_data:
-            text_parts.append(f"Price: {motorcycle_data['price']}")
-        
-        # เพิ่ม specifications
-        if 'specifications' in motorcycle_data and motorcycle_data['specifications']:
-            text_parts.append("Specifications:")
-            for name, value in motorcycle_data['specifications'].items():
-                text_parts.append(f"{name}: {value}")
-        
-        return "\n".join(text_parts)
-    
-    def scrape_all_models(self, create_embeddings=False):
+    def scrape_all_models(self):
         """สกัดข้อมูลจากรถทุกรุ่น"""
         # 1. ดึง URLs ของรถทั้งหมด
         model_urls = self.get_model_urls()
@@ -332,24 +283,11 @@ class HondaFullAutoScraper:
         
         # 2. วนลูปดึงข้อมูลจากแต่ละรถ
         print(f"\n🚀 เริ่มสกัดข้อมูลจาก {len(model_urls)} รุ่น...")
-        if create_embeddings:
-            print("🤖 โหมด: สกัดข้อมูล + สร้าง embeddings")
-        else:
-            print("⚠️ โหมด: สกัดข้อมูลอย่างเดียว (ไม่สร้าง embeddings)")
         
         for idx, url in enumerate(tqdm(model_urls, desc="📊 กำลังสกัดข้อมูล"), 1):
             motorcycle_data = self.scrape_model_page(url)
             
             if motorcycle_data:
-                # สร้าง embedding (ถ้าเปิดใช้งาน)
-                if create_embeddings:
-                    text = self.prepare_text_for_embedding(motorcycle_data)
-                    embedding = self.create_embedding(text)
-                    
-                    if embedding:
-                        motorcycle_data['embedding'] = embedding
-                        motorcycle_data['embedding_dimension'] = len(embedding)
-                
                 self.motorcycles.append(motorcycle_data)
                 print(f"✅ [{idx}/{len(model_urls)}] {motorcycle_data.get('model', 'Unknown')} - เสร็จสิ้น")
             
@@ -374,48 +312,6 @@ class HondaFullAutoScraper:
             
         except Exception as e:
             print(f"❌ ไม่สามารถบันทึกไฟล์ได้: {e}")
-    
-    def save_to_database(self):
-        """บันทึกข้อมูลลง Django database"""
-        print("\n💾 กำลังบันทึกข้อมูลลงฐานข้อมูล...")
-        saved_count = 0
-        
-        for motorcycle in self.motorcycles:
-            try:
-                # เตรียมข้อมูล
-                text = self.prepare_text_for_embedding(motorcycle)
-                embedding = motorcycle.get('embedding')
-                
-                if not embedding:
-                    print(f"⚠️ ข้าม {motorcycle.get('model')} - ไม่มี embedding")
-                    continue
-                
-                # บันทึกลง database
-                obj, created = KnowBase.objects.update_or_create(
-                    source='honda_website',
-                    brand=motorcycle.get('brand', 'Honda'),
-                    model=motorcycle.get('model', 'Unknown'),
-                    defaults={
-                        'category': 'specifications',
-                        'title': motorcycle.get('model', 'Unknown'),
-                        'content': text,
-                        'source_url': motorcycle.get('url', ''),
-                        'raw_data': {
-                            'price': motorcycle.get('price', ''),
-                            'specifications': motorcycle.get('specifications', {})
-                        },
-                        'embedding': embedding
-                    }
-                )
-                
-                saved_count += 1
-                status = "สร้างใหม่" if created else "อัพเดท"
-                print(f"✅ {status}: {motorcycle.get('model')} ")
-                
-            except Exception as e:
-                print(f"❌ ไม่สามารถบันทึก {motorcycle.get('model')} ได้: {e}")
-        
-        print(f"\n✅ บันทึกข้อมูลเสร็จสิ้น: {saved_count}/{len(self.motorcycles)} รุ่น")
 
 
 def main():
@@ -424,28 +320,17 @@ def main():
     print("🏍️  Honda Motorcycle Full Auto Scraper")
     print("=" * 80)
     
-    # ถามว่าต้องการสร้าง embeddings หรือไม่
-    create_emb = input("\n🤖 ต้องการสร้าง embeddings ด้วย Gemini API หรือไม่? (y/n): ")
-    create_embeddings = create_emb.lower() == 'y'
-    
     scraper = HondaFullAutoScraper()
     
     # 1. สกัดข้อมูล
-    scraper.scrape_all_models(create_embeddings=create_embeddings)
+    scraper.scrape_all_models()
     
     # 2. บันทึก JSON
     scraper.save_to_json()
     
-    # 3. บันทึกลงฐานข้อมูล (เฉพาะกรณีมี embeddings)
-    if create_embeddings:
-        save_db = input("\n💾 ต้องการบันทึกลงฐานข้อมูลหรือไม่? (y/n): ")
-        if save_db.lower() == 'y':
-            scraper.save_to_database()
-    else:
-        print("\n⚠️ ข้าม: ไม่สามารถบันทึกลงฐานข้อมูลได้เนื่องจากไม่มี embeddings")
-    
     print("\n" + "=" * 80)
-    print("✅ เสร็จสิ้นทั้งหมด!")
+    print("✅ สกัดข้อมูลเสร็จสิ้น!")
+    print("💡 ขั้นตอนถัดไป: รัน import_and_embedding_to_knowbase.py เพื่อสร้าง embedding และนำเข้า DB")
     print("=" * 80)
 
 

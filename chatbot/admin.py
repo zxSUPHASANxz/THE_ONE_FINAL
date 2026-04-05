@@ -295,17 +295,17 @@ class KnowbaseAdmin(admin.ModelAdmin):
     วิธีที่ 1 — Auto-embed เมื่อกด Save:
       - เพิ่มข้อมูลใหม่ → สร้าง Embedding ให้อัตโนมัติทันที
       - แก้ไข title/content ของรายการเดิม → สร้าง Embedding ใหม่อัตโนมัติ
-      - แก้ไขฟิลด์อื่น (เช่น brand, category) → ไม่ยิง API (ประหยัดโควตา)
+      - แก้ไขฟิลด์อื่น (เช่น category) → ไม่ยิง API (ประหยัดโควตา)
 
     วิธีที่ 2 — Action สร้าง Embedding ทีละหลายรายการ:
       - เลือกรายการที่ยังไม่มี Embedding แล้วกด Action ได้เลย
     """
     list_display = (
-        "title", "brand", "model", "source", "category",
+        "title", "category",
         "embedding_status", "is_active", "created_at",
     )
-    list_filter = ("source", "category", "brand", "is_active")
-    search_fields = ("title", "content", "brand", "model")
+    list_filter = ("category", "is_active")
+    search_fields = ("title", "content")
     # embedding_status แสดงในหน้า readonly — ไม่ให้คนพิมพ์ตัวเลข 3072 มิติด้วยมือ
     form = KnowbaseAdminForm
     readonly_fields = ("embedding_status", "created_at", "updated_at")
@@ -336,16 +336,6 @@ class KnowbaseAdmin(admin.ModelAdmin):
             not change  # record ใหม่
             or (change and ("content" in form.changed_data or "title" in form.changed_data))
         )
-
-        uploaded_file = form.cleaned_data.get("upload_file")
-        if uploaded_file:
-            existing_raw_data = obj.raw_data if isinstance(obj.raw_data, dict) else {}
-            existing_raw_data.update({
-                "upload_file_name": uploaded_file.name,
-                "upload_file_size": uploaded_file.size,
-                "upload_source": "admin_form",
-            })
-            obj.raw_data = existing_raw_data
 
         if should_embed and obj.content:
             text = f"{obj.title}\n{obj.content}"
@@ -385,9 +375,9 @@ class KnowbaseEmbedQueueAdmin(admin.ModelAdmin):
       - เมื่อสำเร็จ: record หายออกจากหน้านี้อัตโนมัติ
       - เมื่อล้มเหลว: record ยังอยู่ให้ retry ใหม่
     """
-    list_display = ("title", "brand", "model", "source", "category", "created_at")
-    list_filter = ("source", "category", "brand")
-    search_fields = ("title", "content", "brand", "model")
+    list_display = ("title", "category", "created_at")
+    list_filter = ("category",)
+    search_fields = ("title", "content")
     exclude = ("embedding",)
     list_per_page = 10   # จำกัด 10 ต่อหน้า ป้องกันโควตา Gemini หมดต่อครั้ง
     actions = [action_generate_embeddings]
@@ -445,9 +435,6 @@ class KnowbaseEmbedQueueAdmin(admin.ModelAdmin):
             pending_qs = pending_qs.filter(
                 Q(title__icontains=query)
                 | Q(content__icontains=query)
-                | Q(brand__icontains=query)
-                | Q(model__icontains=query)
-                | Q(source__icontains=query)
                 | Q(category__icontains=query)
             )
 

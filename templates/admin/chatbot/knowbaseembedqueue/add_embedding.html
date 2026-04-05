@@ -62,9 +62,6 @@
               <tr>
                 <th style="width: 50px;">เลือก</th>
                 <th>Title</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Source</th>
                 <th>Category</th>
                 <th>Created</th>
               </tr>
@@ -74,9 +71,6 @@
                 <tr>
                   <td><input type="checkbox" name="selected_ids" value="{{ item.id }}"></td>
                   <td>{{ item.title }}</td>
-                  <td>{{ item.brand|default:"-" }}</td>
-                  <td>{{ item.model|default:"-" }}</td>
-                  <td>{{ item.source|default:"-" }}</td>
                   <td>{{ item.category|default:"-" }}</td>
                   <td>{{ item.created_at }}</td>
                 </tr>

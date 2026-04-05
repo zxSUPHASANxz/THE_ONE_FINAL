@@ -189,17 +189,11 @@ class Knowbase(models.Model):
     content = models.TextField(verbose_name='Content')
     
     # Metadata
-    source = models.CharField(max_length=100, default='Brand', db_index=True)
-    brand = models.CharField(max_length=100, blank=True, null=True, db_index=True)
-    model = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     category = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     source_url = models.URLField(blank=True, null=True)
     
     # Vector Embedding (3072 dimensions for gemini-embedding-001 default output)
     embedding = VectorField(dimensions=3072, null=True, blank=True)
-    
-    # Additional data
-    raw_data = models.JSONField(blank=True, null=True)
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -211,13 +205,9 @@ class Knowbase(models.Model):
         verbose_name = 'Knowbase'
         verbose_name_plural = 'Knowbases'
         ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['source', 'brand']),
-            models.Index(fields=['brand', 'model']),
-        ]
     
     def __str__(self):
-        return f"{self.brand} {self.model}" if self.brand and self.model else self.title[:80]
+        return self.title[:80]
 
 
 # Backwards compatibility aliases for older imports

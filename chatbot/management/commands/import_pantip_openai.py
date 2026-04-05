@@ -158,15 +158,11 @@ class Command(BaseCommand):
             try:
                 obj, created = KnowBase.objects.update_or_create(
                     title=title[:500],
-                    source='pantip',
-                    model=str(topic_id),
                     defaults={
                         'content': content,
-                        'brand': 'pantip',
                         'category': item.get('tags', ['มอเตอร์ไซค์'])[0] if item.get('tags') else 'มอเตอร์ไซค์',
                         'source_url': source_url,
                         'embedding': embedding,
-                        'raw_data': item,
                         'is_active': True
                     }
                 )

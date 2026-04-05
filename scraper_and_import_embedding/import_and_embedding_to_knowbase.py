@@ -1,12 +1,14 @@
 """
-Import Data into KnowBase with Gemini embeddings
-================================================
-Imports:
-1. JSON files from 'database/'
-2. PDF files from 'database/yamaha_manuals_pdf/'
+Import & Embedding to KnowBase (Gemini Embedding)
+==================================================
+ไฟล์นี้ทำหน้าที่:
+1. อ่านข้อมูลจากไฟล์ JSON (ที่ scrapers สร้างไว้ใน database/)
+2. อ่านข้อมูลจากไฟล์ PDF (database/yamaha_manuals_pdf/)
+3. สร้าง Embedding ด้วย Gemini API (models/gemini-embedding-001, 3072 มิติ)
+4. บันทึกเข้า KnowBase (PostgreSQL + pgvector)
 
 Usage:
-    python scraper_and_import_embedding/import_to_knowbase.py
+    python scraper_and_import_embedding/import_and_embedding_to_knowbase.py
 """
 
 import os
@@ -82,7 +84,7 @@ class KnowBaseImporter:
                     # Or raise if we want to be strict. Let's return None to not break the loop.
                     return None
 
-    def save_to_knowbase(self, title, content, source, brand, category, raw_data, model=None, url=None):
+    def save_to_knowbase(self, title, content, category, url=None):
         try:
             # Check for existing duplicates with the same title and strictly clean them up if found
             # This prevents MultipleObjectsReturned error from update_or_create
@@ -103,13 +105,9 @@ class KnowBaseImporter:
                 title=title,
                 defaults={
                     'content': content,
-                    'source': source,
-                    'brand': brand,
-                    'model': model,
                     'category': category,
                     'source_url': url,
                     'embedding': embedding,
-                    'raw_data': raw_data,
                     'is_active': True
                 }
             )
@@ -162,14 +160,21 @@ class KnowBaseImporter:
                 
                 title = candidate_title
                 
+                # Merge brand/model/source metadata into content
+                meta_parts = []
+                if item.get('brand'):
+                    meta_parts.append(f"Brand: {item['brand']}")
+                if item.get('model'):
+                    meta_parts.append(f"Model: {item['model']}")
+                if item.get('source'):
+                    meta_parts.append(f"Source: {item['source']}")
+                if meta_parts:
+                    content = "\n".join(meta_parts) + "\n\n" + content
+                
                 self.save_to_knowbase(
                     title=title,
                     content=content,
-                    source=item.get('source', 'import'),
-                    brand=item.get('brand'),
-                    model=item.get('model'),
                     category=item.get('category'),
-                    raw_data=item,
                     url=item.get('source_url') or item.get('url')
                 )
                 
@@ -205,12 +210,9 @@ class KnowBaseImporter:
                 
                 self.save_to_knowbase(
                     title=pdf_file.name,
-                    content=text,
-                    source='yamaha_manual',
-                    brand='yamaha',
+                    content=f"Brand: yamaha\nSource: yamaha_manual\n\n{text}",
                     category='manual',
-                    raw_data={'file': str(pdf_file.name)},
-                    model=None
+                    url=None
                 )
                 
                 # Rate Limiting

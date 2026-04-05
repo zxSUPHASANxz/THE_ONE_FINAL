@@ -27,6 +27,6 @@ class KnowbaseSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Knowbase
-        fields = ('id', 'source', 'source_url', 'title', 'content', 'category',
-                  'brand', 'model', 'raw_data', 'created_at', 'updated_at', 'is_active', 'embedding')
+        fields = ('id', 'source_url', 'title', 'content', 'category',
+                  'created_at', 'updated_at', 'is_active', 'embedding')
         read_only_fields = ('id', 'created_at', 'updated_at')

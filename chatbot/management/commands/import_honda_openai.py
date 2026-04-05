@@ -135,15 +135,11 @@ Honda {name}
             # Create or update record
             obj, created = KnowBase.objects.update_or_create(
                 title=f"Honda {name}",
-                source='honda',
                 defaults={
                     'content': content,
-                    'brand': 'Honda',
-                    'model': name,
                     'category': 'BigBike',
                     'source_url': item.get('url', ''),
                     'embedding': embedding,
-                    'raw_data': item,
                     'is_active': True
                 }
             )

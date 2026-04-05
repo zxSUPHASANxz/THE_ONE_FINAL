@@ -1,0 +1,2690 @@
+[
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja H2",
+    "slug": "ninjah2",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjah2",
+    "price": "1,690,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "1,690,000 บาท"
+    },
+    "colors": [
+      "Mirror Coated Spark Black (2026)",
+      "1,690,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,085 mm",
+        "ความกว้าง": "770 mm",
+        "ความสูง": "1,125 mm",
+        "ระยะฐานล้อ": "1,445 mm",
+        "ระยะห่างจากพื้น": "130 mm",
+        "ความสูงเบาะนั่ง": "825 mm",
+        "น้ำหนักรวม": "238 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "147.2 kW {200 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "154.5 kW {210 PS} / 10,000 min-1",
+        "แรงบิดสูงสุด": "140.4 N·m {14.3 kgƒ·m} / 10,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "76.0 x 55.0 mm",
+        "ปริมาตรกระบอกสูบ": "998 cc",
+        "อัตราส่วนกำลังอัด": "8.5:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø50 mm x 4 with dual injection ; Kawasaki Supercharger",
+        "ระบบหล่อลื่น": "Forced lubrication, Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return, dog-ring",
+        "อัตราทดขั้นต้น": "1.551 (76/49)",
+        "อัตราทดเกียร์ 1": "3.188 (51/16)",
+        "อัตราทดเกียร์ 2": "2.526 (48/19)",
+        "อัตราทดเกียร์ 3": "2.045 (45/22)",
+        "อัตราทดเกียร์ 4": "1.727 (38/22)",
+        "อัตราทดเกียร์ 5": "1.524 (32/21)",
+        "อัตราทดเกียร์ 6": "1.348 (31/23)",
+        "อัตราทดสุดท้าย": "2.444 (44/18)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel, with Swingarm Mounting Plate",
+        "ระบบกันสะเทือนหน้า": "ø43 mm inverted fork with rebound and compression damping and spring preload adjustability, and top-out springs",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak, Öhlins TTX36 gas-charged shock with piggyback reservoir, compression and rebound damping and spring preload adjustability, and top-out spring",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "135 mm",
+        "มุมแคสเตอร์": "24.5°",
+        "ระยะเทรล": "103 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "27° / 27°",
+        "ยางหน้า": "120/70 ZR17 (58W)",
+        "ยางหลัง": "200/55 ZR17 (78W)",
+        "เบรกหน้า": "Dual semi-floating ø330 mm Brembo discs,",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, Brembo Stylema monobloc, opposed 4-piston, KIBS ABS",
+        "เบรกหลัง": "Single ø250 mm disc,",
+        "คาลิปเปอร์ (หลัง)": "Brembo, opposed 2-piston, KIBS ABS"
+      }
+    },
+    "scraped_at": "2026-04-05T20:17:25.971704"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja e-1",
+    "slug": "ninjae1",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjae1",
+    "price": "276,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "276,000 บาท"
+    },
+    "colors": [
+      "Metallic Bright Silver / Metallic Matte Lime Green / Ebony (2025)",
+      "276,000"
+    ],
+    "specifications": {
+      "Motor": {
+        "Type": "Air-cooled, interior permanent magnet synchronous motor"
+      },
+      "Traction Battery": {
+        "Type": "Air-cooled, interior permanent magnet synchronous motor",
+        "Nominal Voltage": "50.4 V",
+        "Total Nominal Capacity": "30 Ah x2",
+        "Total battery weight": "11.5 kg x2",
+        "Charging time (0 to 100%)": "3.7 h x2"
+      },
+      "Drivetrain": {
+        "Driving system": "Chain",
+        "Transmission": "-",
+        "Primary reduction ratio": "3.211 (61/19)",
+        "Final reduction ratio": "3.867 (58/15)"
+      },
+      "Dimensions": {
+        "Overall length": "1,980 mm",
+        "Overall width": "690 mm",
+        "Overall height": "1,105 mm",
+        "Wheelbase": "1,370 mm",
+        "Road clearance": "160 mm",
+        "Seat height": "785 mm",
+        "Curb mass (with batteries)": "140 kg"
+      },
+      "Frame": {
+        "Type": "Trellis, high-tensile steel",
+        "Suspension: Front Rear": "ø41 mm telescopic fork Bottom-Link Uni Trak, gas-charged shock with adjustable spring preload",
+        "Wheel travel: Front Rear": "120 mm 133 mm",
+        "Caster (Rake angle)": "24.4°",
+        "Trail": "93 mm",
+        "Steering angle (left/right)": "35° / 35°",
+        "Tyre: Front Rear": "100/80-17M/C 52S 130/70-17M/C 62S",
+        "Brakes: Front Type Caliper Rear Type Caliper": "Single ø290 mm disc (Effective diameter: ø263 mm) Dual-piston Single ø220 mm disc (Effective diameter: ø193 mm) Dual-piston"
+      },
+      "Performance": {
+        "Rated power": "5.0 kW {6.8 PS} / 2,800 min-1",
+        "Max. power": "9.0 kW {12 PS} / 2,600-4,000 min-1",
+        "Max. torque": "40.5 N·m {4.1 kgƒ·m} / 0-1,600 min-1",
+        "Max. speed: ECO Mode ECO Mode + e-boost ROAD Mode ROAD Mode + e-boost": "64 km/h 75 km/h 88 km/h 99* km/h *Speed limited",
+        "Electric consumption": "49 Wh/km [WMTC Class 1]",
+        "Range": "72 km [WMTC Class 1]"
+      }
+    },
+    "scraped_at": "2026-04-05T20:17:37.600238"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja ZX-10RR",
+    "slug": "ninjazx10rr",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjazx10rr",
+    "price": "1,223,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "1,223,000 บาท"
+    },
+    "colors": [
+      "Lime Green (2021)",
+      "1,223,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,085 mm",
+        "ความกว้าง": "750 mm",
+        "ความสูง": "1,185 mm",
+        "ระยะฐานล้อ": "1,450 mm",
+        "ระยะห่างจากพื้น": "135 mm",
+        "ความสูงเบาะนั่ง": "835 mm",
+        "น้ำหนักรวม": "207 Kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "133.0 kW {181PS} / 11,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "139.7 kW {190 PS} / 11,500 min-1 (THA)",
+        "แรงบิดสูงสุด": "110.5 N·m {11.3 kgƒ·m} / 11,500 min-1 (THA)"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "76.0 x 55.0 mm",
+        "ปริมาตรกระบอกสูบ": "998 cc",
+        "อัตราส่วนกำลังอัด": "13.0:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø47 mm x 4 with dual injection",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump with air-cooled oil cooler",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.681 (79/47)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "2.158 (41/19}",
+        "อัตราทดเกียร์ 3": "1.882 (32/17)",
+        "อัตราทดเกียร์ 4": "1.650 (33/20)",
+        "อัตราทดเกียร์ 5": "1.476 (31/21)",
+        "อัตราทดเกียร์ 6": "1.304 (30/23)",
+        "อัตราทดสุดท้าย": "2.412 (41/17)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Twin spar, cast aluminium",
+        "ระบบกันสะเทือนหน้า": "ø43 mm inverted fork (BFF) with external compression chamber, compression and rebound damping and spring preload adjustability, and top-out springs",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, BFRC lite gas-charged shock with piggyback reservoir, compression and rebound damping and spring preload adjustability, and top-out spring",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "115 mm",
+        "มุมแคสเตอร์": "25.0°",
+        "ระยะเทรล": "105 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "27° / 27°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "190/55ZR17M/C (75W)",
+        "เบรกหน้า": "Dual semi-floating ø330 mm Brembo discs, Dual radial-mount, Brembo M50 monobloc, opposed 4-piston",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, Brembo M50 monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø220 mm disc, Single-bore pin-slide",
+        "คาลิปเปอร์ (หลัง)": "Single-bore pin-slide"
+      }
+    },
+    "scraped_at": "2026-04-05T20:17:48.036393"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja ZX-10R",
+    "slug": "ninjazx10r",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjazx10r",
+    "price": "859,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "859,000 บาท"
+    },
+    "colors": [
+      "Lime Green / Ebony / Pearl Blizzard White (2025)",
+      "859,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,085 mm",
+        "ความกว้าง": "750 mm",
+        "ความสูง": "1,185 mm",
+        "ระยะฐานล้อ": "1,450 mm",
+        "ระยะห่างจากพื้น": "135 mm",
+        "ความสูงเบาะนั่ง": "835 mm",
+        "น้ำหนักรวม": "207 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "139 kW {189 PS} / 11,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "146 kW {199 PS} / 11,500 min-1",
+        "แรงบิดสูงสุด": "114.3 N·m {11.7 kgƒ·m} / 11,300 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4st, 4-cyl, DOHC, Liquid-cooled",
+        "ระบบหล่อเย็น": "",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "76.0 x 55.0 mm",
+        "ปริมาตรกระบอกสูบ": "998 cm3",
+        "อัตราส่วนกำลังอัด": "13",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø47 x 4)",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "B&C (TCBI EL. ADV. D.)"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.681 (79/47)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "2.158 (41/19)",
+        "อัตราทดเกียร์ 3": "1.882 (32/17)",
+        "อัตราทดเกียร์ 4": "1.650 (33/20)",
+        "อัตราทดเกียร์ 5": "1.476 (31/21)",
+        "อัตราทดเกียร์ 6": "1.304 (30/23)",
+        "อัตราทดสุดท้าย": "2.412 (41/17)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, Diamond",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork (Upside-down)",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link Swingarm",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "115 mm",
+        "มุมแคสเตอร์": "25.0º",
+        "ระยะเทรล": "105 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "27º / 27º",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "190/55ZR17M/C (75W)",
+        "เบรกหน้า": "Dual disc, 304 mm",
+        "คาลิปเปอร์ (หน้า)": "",
+        "เบรกหลัง": "Single disc, 186 mm",
+        "คาลิปเปอร์ (หลัง)": ""
+      }
+    },
+    "scraped_at": "2026-04-05T20:17:59.598395"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja ZX-6R",
+    "slug": "ninjazx6r",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjazx6r",
+    "price": "399,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "399,000 บาท",
+      "kw-color-1": "399,000 บาท",
+      "kw-color-2": "399,000 บาท"
+    },
+    "colors": [
+      "Lime Green / Ebony (2026)",
+      "Metallic Matte Graphenesteel Gray / Metallic Spark Black (2026)",
+      "Lime Green / Ebony / Pearl Blizzard White (2025)",
+      "399,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,025 mm",
+        "ความกว้าง": "710 mm",
+        "ความสูง": "1,105 mm",
+        "ระยะฐานล้อ": "1,400 mm",
+        "ระยะห่างจากพื้น": "130 mm",
+        "ความสูงเบาะนั่ง": "830 mm",
+        "น้ำหนักรวม": "198 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "91.0 kW {124 PS} / 13,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "95.2 kW {129PS} / 13,000 min-1",
+        "แรงบิดสูงสุด": "69.0 N·m {7.0 kgƒ·m} / 10,800 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 45.1 mm",
+        "ปริมาตรกระบอกสูบ": "636 cm3",
+        "อัตราส่วนกำลังอัด": "12.9:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø38 mm x 4 with oval sub-throttles",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.900 (76/40)",
+        "อัตราทดเกียร์ 1": "2.846 (37/13)",
+        "อัตราทดเกียร์ 2": "2.200 (33/15)",
+        "อัตราทดเกียร์ 3": "1.850 (37/20)",
+        "อัตราทดเกียร์ 4": "1.600 (32/20)",
+        "อัตราทดเกียร์ 5": "1.421 (27/19)",
+        "อัตราทดเกียร์ 6": "1.300 (26/20)",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, Diamond",
+        "ระบบกันสะเทือนหน้า": "ø41 inverted fork (SFF-BP) with rebound and compression damping and spring preload adjustability, and top-out springs",
+        "ระบบกันสะเทือนหลัง": "Bottom-Link Uni Trak, gas-charged shock with piggyback reservoir, compression and rebound damping and spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "151 mm",
+        "มุมแคสเตอร์": "23.5°",
+        "ระยะเทรล": "101 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "27° / 27°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "180/55ZR17M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø310 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Caliper- Dual radial-mount, monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø220 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Caliper- Single-bore pin-slide"
+      }
+    },
+    "scraped_at": "2026-04-05T20:18:09.975816"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja ZX-4R SE",
+    "slug": "ninjazx4rse",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjazx4rse",
+    "price": "320,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "320,000 บาท",
+      "kw-color-1": "320,000 บาท",
+      "kw-color-2": "320,000 บาท"
+    },
+    "colors": [
+      "Lime Green / Ebony / Pearl Blizzard White (SE) (2025)",
+      "Candy Plasma Blue / Metallic Flat Spark Black (SE) (2024)",
+      "Lime Green / Ebony (SE) (2024)",
+      "320,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "1,990 mm",
+        "ความกว้าง": "765 mm",
+        "ความสูง": "1,110 mm",
+        "ระยะฐานล้อ": "1,380 mm",
+        "ระยะห่างจากพื้น": "135 mm",
+        "ความสูงเบาะนั่ง": "800 mm",
+        "น้ำหนักรวม": "189 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "15 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "55.0 kW {75 PS} / 14,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "56.7 kW {77 PS} / 14,500 min-1",
+        "แรงบิดสูงสุด": "37.6 N·m {3.8 kgƒ·m} / 12,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "57.0 x 39.1 mm",
+        "ปริมาตรกระบอกสูบ": "399 cm3",
+        "อัตราส่วนกำลังอัด": "12.3:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø34 mm x 4",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.429 (48/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm inverted fork (SFF-BP) with spring preload adjustability, and top-out springs",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, gas-charged shock with spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "112 mm",
+        "มุมแคสเตอร์": "23.5°",
+        "ระยะเทรล": "97 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "160/60ZR17M/C (69W)",
+        "เบรกหน้า": "Dual semi-floating ø290 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø220 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:18:21.856490"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja ZX-4R",
+    "slug": "ninjazx4r",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninjazx4r",
+    "price": "299,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "299,000 บาท"
+    },
+    "colors": [
+      "Metallic Spark Black (2025)",
+      "299,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "1,990 mm",
+        "ความกว้าง": "765 mm",
+        "ความสูง": "1,110 mm",
+        "ระยะฐานล้อ": "1,380 mm",
+        "ระยะห่างจากพื้น": "135 mm",
+        "ความสูงเบาะนั่ง": "800 mm",
+        "น้ำหนักรวม": "188 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "15 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "55.0 kW {75 PS} / 14,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "56.7 kW {77 PS} / 14,500 min-1",
+        "แรงบิดสูงสุด": "39.0 N·m {4.0 kgƒ·m} / 13,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "57.0 x 39.1 mm",
+        "ปริมาตรกระบอกสูบ": "399 cm3",
+        "อัตราส่วนกำลังอัด": "12.3:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø34 mm x 4",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.429 (48/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm inverted fork (SFF-BP) with top-out springs",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, gas-charged shock with spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "112 mm",
+        "มุมแคสเตอร์": "23.5°",
+        "ระยะเทรล": "97 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "160/60ZR17M/C (69W)",
+        "เบรกหน้า": "Dual semi-floating ø290 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø220 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:18:33.623857"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Ninja 500 SE",
+    "slug": "ninja500se",
+    "category": "Ninja",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/ninja500se",
+    "price": "219,800 บาท",
+    "price_by_color": {
+      "kw-color-0": "219,800 บาท"
+    },
+    "colors": [
+      "Lime Green / Ebony / Pearl Blizzard White",
+      "219,800"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "1,995 mm",
+        "ความกว้าง": "730 mm",
+        "ความสูง": "1,120 mm",
+        "ระยะฐานล้อ": "1,375 mm",
+        "ระยะห่างจากพื้น": "145 mm",
+        "ความสูงเบาะนั่ง": "785 mm",
+        "น้ำหนักรวม": "172 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "158 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "14 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38.3 kW {52 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "42.6 N·m {4.3 kgƒ·m} / 6,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4st, 2-cyl, DOHC, 4val",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 58.6 mm",
+        "ปริมาตรกระบอกสูบ": "451 cm3",
+        "อัตราส่วนกำลังอัด": "11.3",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (φ32 mm x 2)",
+        "ระบบหล่อลื่น": "Forced Wet Sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "B&C (TCBI, B. P&EL. ADV. D.)"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.071 (43/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Swingarm",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "130 mm",
+        "มุมแคสเตอร์": "24.5°",
+        "ระยะเทรล": "92 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "110/70R17 M/C 54H",
+        "ยางหลัง": "150/60R17 M/C 66H",
+        "เบรกหน้า": "Single disc 286 mm",
+        "คาลิปเปอร์ (หน้า)": "-",
+        "เบรกหลัง": "Single disc 193 mm",
+        "คาลิปเปอร์ (หลัง)": "-"
+      }
+    },
+    "scraped_at": "2026-04-05T20:18:44.658135"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z1000",
+    "slug": "z1000",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z1000",
+    "price": "620,700 บาท",
+    "price_by_color": {
+      "kw-color-0": "620,700 บาท"
+    },
+    "colors": [
+      "Candy Lime Green / Metallic Spark Black (2023)",
+      "620,700"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,045 mm",
+        "ความกว้าง": "790 mm",
+        "ความสูง": "1,055 mm",
+        "ระยะฐานล้อ": "1,435 mm",
+        "ระยะห่างจากพื้น": "125 mm",
+        "ความสูงเบาะนั่ง": "815 mm",
+        "น้ำหนักรวม": "221 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "100.9 kW {137 PS} / 9,800 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "109.0 N·m {11.1 kgƒ·m} / 7,300 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke, 4-cylinder",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "77.0 x 56.0 mm",
+        "ปริมาตรกระบอกสูบ": "1,043 cc",
+        "อัตราส่วนกำลังอัด": "11.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø38 mm x 4 with oval sub-throttles",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.627 (83/51)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "1.950 (39/20)",
+        "อัตราทดเกียร์ 3": "1.600 (24/15)",
+        "อัตราทดเกียร์ 4": "1.389 (25/18)",
+        "อัตราทดเกียร์ 5": "1.238 (26/21)",
+        "อัตราทดเกียร์ 6": "1.107 (31/28)",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Diamond",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork (Upside-down)",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link Swingarm",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "135 mm",
+        "มุมแคสเตอร์": "24.5°",
+        "ระยะเทรล": "101 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "29° / 29°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "190/50ZR17M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø310 mm petal discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount",
+        "เบรกหลัง": "Single ø250 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:18:56.291093"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z900",
+    "slug": "z900",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z900",
+    "price": "349,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "349,000 บาท"
+    },
+    "colors": [
+      "Metallic Matte Graphenesteel Gray / Metallic Flat Spark Black (2026)",
+      "349,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,065 mm",
+        "ความกว้าง": "830 mm",
+        "ความสูง": "1,075 mm",
+        "ระยะฐานล้อ": "1,450 mm",
+        "ระยะห่างจากพื้น": "145 mm",
+        "ความสูงเบาะนั่ง": "810 mm",
+        "น้ำหนักรวม": "213 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "193 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "92.2 kW {125 PS} / 9,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "98.6 N·m {10.1 kgƒ·m} / 7,700 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "73.4 x 56.0 mm",
+        "ปริมาตรกระบอกสูบ": "948 cm3",
+        "อัตราส่วนกำลังอัด": "11.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø36 mm x 4",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.627 (83/51)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "1.950 (39/20)",
+        "อัตราทดเกียร์ 3": "1.600 (24/15)",
+        "อัตราทดเกียร์ 4": "1.389 (25/18)",
+        "อัตราทดเกียร์ 5": "1.217 (28/23)",
+        "อัตราทดเกียร์ 6": "1.069 (31/29)",
+        "อัตราทดสุดท้าย": "2.933 (44/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm inverted fork with rebound damping and spring preload adjustability",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, gas-charged shock with rebound damping and spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "140 mm",
+        "มุมแคสเตอร์": "24.7°",
+        "ระยะเทรล": "110 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "33° / 33°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "180/55ZR17M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø300 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, opposed 4-piston",
+        "เบรกหลัง": "Single ø250 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:19:06.769237"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z900 (2023)",
+    "slug": "z900-2023",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z900-2023",
+    "price": "413,100 บาท",
+    "price_by_color": {
+      "kw-color-0": "413,100 บาท",
+      "kw-color-1": "435,400 บาท",
+      "kw-color-2": "443,100 บาท",
+      "kw-color-3": "435,400 บาท"
+    },
+    "colors": [
+      "Metallic Spark Black / Metallic Graphite Gray (2023)",
+      "Ebony / Metallic Matte Graphenesteel Gray (SP) (2023)",
+      "Metallic Spark Black / Metallic Flat Spark Black (2021)",
+      "Firecracker Red / Metallic Spark Black (SP) (2021)",
+      "413,100",
+      "435,400",
+      "443,100"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,130 mm",
+        "ความกว้าง": "825 mm",
+        "ความสูง": "1,080 mm (1,155 mm SP model)",
+        "ระยะฐานล้อ": "1,455 mm",
+        "ระยะห่างจากพื้น": "145 mm",
+        "ความสูงเบาะนั่ง": "800 mm",
+        "น้ำหนักรวม": "212 kg (215 kg SP model)",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "92.2 kW {125 PS} / 9,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "98.6 N·m {10.1 kgƒ·m} / 7,700 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "73.4 x 56.0 mm",
+        "ปริมาตรกระบอกสูบ": "948 cm3",
+        "อัตราส่วนกำลังอัด": "11.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø36 mm x 4 with sub-throttles",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.627 (83/51)",
+        "อัตราทดเกียร์ 1": "2.692 (35/13)",
+        "อัตราทดเกียร์ 2": "2.059 (35/17)",
+        "อัตราทดเกียร์ 3": "1.650 (33/20)",
+        "อัตราทดเกียร์ 4": "1.409 (31/22)",
+        "อัตราทดเกียร์ 5": "1.222 (33/27)",
+        "อัตราทดเกียร์ 6": "1.034 (30/29)",
+        "อัตราทดสุดท้าย": "2.933 (44/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm inverted fork with rebound damping and spring preload adjustability",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link with rebound damping and spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "140 mm",
+        "มุมแคสเตอร์": "24.9°",
+        "ระยะเทรล": "110 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "33° / 33°",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "180/55ZR17M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø300 mm petal discs",
+        "คาลิปเปอร์ (หน้า)": "Dual opposed 4-piston",
+        "เบรกหลัง": "Single ø250 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:19:18.739056"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z900RS",
+    "slug": "z900rs",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z900rs",
+    "price": "409,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "409,000 บาท"
+    },
+    "colors": [
+      "Candy Tone Red (2026)",
+      "409,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,100 mm",
+        "ความกว้าง": "865 mm",
+        "ความสูง": "1,135 mm",
+        "ระยะฐานล้อ": "1,465 mm",
+        "ระยะห่างจากพื้น": "135 mm",
+        "ความสูงเบาะนั่ง": "810 mm",
+        "น้ำหนักรวม": "216 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "197 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "86.0 kW {117 PS} / 9,300 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "99.5 N·m {10.1 kgƒ·m} / 7,700 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "73.4 x 56 mm",
+        "ปริมาตรกระบอกสูบ": "948 cm3",
+        "อัตราส่วนกำลังอัด": "11.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø36 mm x 4",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.627 (83/51)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "1.950 (39/20)",
+        "อัตราทดเกียร์ 3": "1.600 (24/15)",
+        "อัตราทดเกียร์ 4": "1.389 (25/18)",
+        "อัตราทดเกียร์ 5": "1.217 (28/23)",
+        "อัตราทดเกียร์ 6": "1.069 (31/29)",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm inverted fork with compression and rebound damping and spring preload adjustability",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, gas-charged shock with rebound damping and spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "140 mm",
+        "มุมแคสเตอร์": "25.0°",
+        "ระยะเทรล": "98 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "120/70ZR17 M/C (58W)",
+        "ยางหลัง": "180/55ZR17 M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø300 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø250 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:19:31.861690"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z900RS SE",
+    "slug": "z900rsse",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z900rsse",
+    "price": "449,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "449,000 บาท"
+    },
+    "colors": [
+      "Metallic Spark Black (2026)",
+      "449,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,100 mm",
+        "ความกว้าง": "815 mm",
+        "ความสูง": "1,135 mm",
+        "ระยะฐานล้อ": "1,465 mm",
+        "ระยะห่างจากพื้น": "140 mm",
+        "ความสูงเบาะนั่ง": "820 mm",
+        "น้ำหนักรวม": "216 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "197 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "17 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "86.0 kW {117 PS} / 9,300 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "99.5 N·m {10.1 kgƒ·m} / 7,700 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke, In-Line Four",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "73.4 x 56 mm",
+        "ปริมาตรกระบอกสูบ": "948 cm3",
+        "อัตราส่วนกำลังอัด": "11.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø36 mm x 4",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.627 (83/51)",
+        "อัตราทดเกียร์ 1": "2.600 (39/15)",
+        "อัตราทดเกียร์ 2": "1.950 (39/20)",
+        "อัตราทดเกียร์ 3": "1.600 (24/15)",
+        "อัตราทดเกียร์ 4": "1.389 (25/18)",
+        "อัตราทดเกียร์ 5": "1.217 (28/23)",
+        "อัตราทดเกียร์ 6": "1.069 (31/29)",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm inverted fork with compression and rebound damping and spring preload adjustability",
+        "ระบบกันสะเทือนหลัง": "Horizontal Back-link, Öhlins S46 gas-charged shock with rebound damping and spring preload adjustability",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "140 mm",
+        "มุมแคสเตอร์": "25.0°",
+        "ระยะเทรล": "98 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "120/70ZR17 M/C (58W)",
+        "ยางหลัง": "180/55ZR17 M/C (73W)",
+        "เบรกหน้า": "Dual semi-floating ø300 mm Brembo discs",
+        "คาลิปเปอร์ (หน้า)": "Dual radial-mount, Brembo M4.32 monobloc, opposed 4-piston",
+        "เบรกหลัง": "Single ø250 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:19:43.031794"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Z500 SE",
+    "slug": "z500se",
+    "category": "Z",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/z500se",
+    "price": "219,800 บาท",
+    "price_by_color": {
+      "kw-color-0": "219,800 บาท",
+      "kw-color-1": "219,800 บาท"
+    },
+    "colors": [
+      "Golden Blazed Green / Metallic Carbon Gray / Ebony (2026)",
+      "Candy Lime Green / Metallic Spark Black / Metallic Matte Graphene Steel Gray",
+      "219,800"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "1,995 mm",
+        "ความกว้าง": "800 mm",
+        "ความสูง": "1,100 mm",
+        "ระยะฐานล้อ": "1,375 mm",
+        "ระยะห่างจากพื้น": "145 mm",
+        "ความสูงเบาะนั่ง": "785 mm",
+        "น้ำหนักรวม": "168 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "154 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "14 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38.3 kW {52 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "42.6 N·m {4.3 kgƒ·m} / 7,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4st, 2-cyl, DOHC, 4val",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 58.6 mm",
+        "ปริมาตรกระบอกสูบ": "451 cm3",
+        "อัตราส่วนกำลังอัด": "11.3",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (φ32 mm x 2)",
+        "ระบบหล่อลื่น": "Forced Wet Sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "B&C (TCBI, B. P&EL. ADV. D.)"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.071 (43/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Swingarm",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "130 mm",
+        "มุมแคสเตอร์": "24.3°",
+        "ระยะเทรล": "92 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "110/70R17 M/C 54H",
+        "ยางหลัง": "150/60R17 M/C 66H",
+        "เบรกหน้า": "Single disc 310 mm",
+        "คาลิปเปอร์ (หน้า)": "-",
+        "เบรกหลัง": "Single disc 220 mm",
+        "คาลิปเปอร์ (หลัง)": "-"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:03.033324"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Versys 650",
+    "slug": "versys650",
+    "category": "Versys",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/versys650",
+    "price": "259,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "259,000 บาท",
+      "kw-color-1": "259,000 บาท"
+    },
+    "colors": [
+      "Metallic graphite gray / metallic spark black (2026)",
+      "Futuristic metal blue / metallic spark black (2026)",
+      "259,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,165 mm",
+        "ความกว้าง": "840 mm",
+        "ความสูง": "1,420 mm / 1,360 mm",
+        "ระยะฐานล้อ": "1,415 mm",
+        "ระยะห่างจากพื้น": "170 mm",
+        "ความสูงเบาะนั่ง": "845 mm",
+        "น้ำหนักรวม": "219 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "200 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "21 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "49.0 kW {67 PS} / 8,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "61.0 N·m {6.2 kgƒ·m} / 7,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "83.0 x 60.0 mm",
+        "ปริมาตรกระบอกสูบ": "649 cm3",
+        "อัตราส่วนกำลังอัด": "10.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø38 mm x 2",
+        "ระบบหล่อลื่น": "Forced lubrication, semi-dry sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "B&C (TCBI, B. P&EL. ADV.)"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.095 (88/42)",
+        "อัตราทดเกียร์ 1": "2.438 (39/16)",
+        "อัตราทดเกียร์ 2": "1.714 (36/21)",
+        "อัตราทดเกียร์ 3": "1.333 (32/24)",
+        "อัตราทดเกียร์ 4": "1.111 (30/27)",
+        "อัตราทดเกียร์ 5": "0.966 (28/29)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.067 (46/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, Diamond",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Swingarm",
+        "ระยะยุบล้อหน้า": "150 mm",
+        "ระยะยุบล้อหลัง": "145 mm",
+        "มุมแคสเตอร์": "25.0",
+        "ระยะเทรล": "108 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35 / 35",
+        "ยางหน้า": "120/70ZR17M/C (58W)",
+        "ยางหลัง": "160/60ZR17M/C (69W)",
+        "เบรกหน้า": "Dual disc",
+        "คาลิปเปอร์ (หน้า)": "-",
+        "เบรกหลัง": "Single disc",
+        "คาลิปเปอร์ (หลัง)": "-"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:14.522368"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Eliminator SE",
+    "slug": "eliminatorse",
+    "category": "Eliminator",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/eliminatorse",
+    "price": "215,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "215,000 บาท"
+    },
+    "colors": [
+      "Metallic Matte Carbon Gray / Flat Ebony (2024)",
+      "215,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,250 mm",
+        "ความกว้าง": "785 mm",
+        "ความสูง": "1,140 mm",
+        "ระยะฐานล้อ": "1,520 mm",
+        "ระยะห่างจากพื้น": "150 mm",
+        "ความสูงเบาะนั่ง": "735 mm",
+        "น้ำหนักรวม": "177 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "13 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "35.0 kW {48 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "37.0 N·m {3.8 kgƒ·m} / 8,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 51.8 mm",
+        "ปริมาตรกระบอกสูบ": "399 CC",
+        "อัตราส่วนกำลังอัด": "11.5:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 2",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.037 (28/27)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.017 (43/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "Ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "90 mm",
+        "มุมแคสเตอร์": "30°",
+        "ระยะเทรล": "121 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "130/70-18M/C 63H",
+        "ยางหลัง": "150/80-16M/C 71H",
+        "เบรกหน้า": "Ø310 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "Ø240 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:25.023797"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Eliminator",
+    "slug": "eliminator",
+    "category": "Eliminator",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/eliminator",
+    "price": "199,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "199,000 บาท",
+      "kw-color-1": "199,000 บาท"
+    },
+    "colors": [
+      "Metallic Flat Spark Black (2024)",
+      "Pearl Robotic White (2024)",
+      "199,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,250 mm",
+        "ความกว้าง": "785 mm",
+        "ความสูง": "1,100 mm",
+        "ระยะฐานล้อ": "1,520 mm",
+        "ระยะห่างจากพื้น": "150 mm",
+        "ความสูงเบาะนั่ง": "735 mm",
+        "น้ำหนักรวม": "176 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "13 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "35.0 kW {48 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "37.0 N·m {3.8 kgƒ·m} / 8,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 51.8 mm",
+        "ปริมาตรกระบอกสูบ": "399 CC",
+        "อัตราส่วนกำลังอัด": "11.5:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 2",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "1.037 (28/27)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "2.219 (71/32)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "Ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks",
+        "ระยะยุบล้อหน้า": "120 mm",
+        "ระยะยุบล้อหลัง": "90 mm",
+        "มุมแคสเตอร์": "30.0°",
+        "ระยะเทรล": "121 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35° / 35°",
+        "ยางหน้า": "130/70-18M/C 63H",
+        "ยางหลัง": "150/80-16M/C 71H",
+        "เบรกหน้า": "Ø310 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "Ø240 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:36.849166"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "Vulcan S",
+    "slug": "vulcans",
+    "category": "Vulcan",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/vulcans",
+    "price": "259,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "259,000 บาท"
+    },
+    "colors": [
+      "Metallic Matte Graphite Gray / Metallic Matte Carbon Gray (ABS) (2025)",
+      "259,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,310 mm",
+        "ความกว้าง": "855 mm",
+        "ความสูง": "1,100 mm",
+        "ระยะฐานล้อ": "1,575 mm",
+        "ระยะห่างจากพื้น": "130 mm",
+        "ความสูงเบาะนั่ง": "705 mm",
+        "น้ำหนักรวม": "229 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "14 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "44.7 kW {61 PS} / 7,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "62.4 N·m {6.4 kgƒ·m} / 6,600 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke, Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "83.0 x 60.0 mm",
+        "ปริมาตรกระบอกสูบ": "649 cc",
+        "อัตราส่วนกำลังอัด": "10.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø38 mm x 2 with dual throttle valves",
+        "ระบบหล่อลื่น": "Forced Lub. Semi-dry sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.095 (88/42)",
+        "อัตราทดเกียร์ 1": "2.438 (39/16)",
+        "อัตราทดเกียร์ 2": "1.714 (36/21)",
+        "อัตราทดเกียร์ 3": "1.333 (32/24)",
+        "อัตราทดเกียร์ 4": "1.111 (30/27)",
+        "อัตราทดเกียร์ 5": "0.966 (28/29)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.067 (46/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, Diamond",
+        "ระบบกันสะเทือนหน้า": "ø41 mm telescopic fork.",
+        "ระบบกันสะเทือนหลัง": "Offset laydown single-shock, linkage-equipped, with adjustable preload.",
+        "ระยะยุบล้อหน้า": "130 mm",
+        "ระยะยุบล้อหลัง": "80 mm",
+        "มุมแคสเตอร์": "31.0 o",
+        "ระยะเทรล": "120 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "35o / 35o",
+        "ยางหน้า": "120/70R18M/C 59H",
+        "ยางหลัง": "160/60R17M/C 69H",
+        "เบรกหน้า": "Single ø300 mm petal dice",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "Single ø250 mm petal dice",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:47.463793"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "MEGURO K3",
+    "slug": "megurok3",
+    "category": "MEGURO",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/megurok3",
+    "price": "379,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "379,000 บาท"
+    },
+    "colors": [
+      "Mirror Coated Black / Ebony (2025)",
+      "379,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,190 mm",
+        "ความกว้าง": "925 mm",
+        "ความสูง": "1,130 mm",
+        "ระยะฐานล้อ": "1,465 mm",
+        "ระยะห่างจากพื้น": "125 mm",
+        "ความสูงเบาะนั่ง": "790 mm",
+        "น้ำหนักรวม": "227 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "15 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38kW {52PS} / 6,500rpm",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "62N·m {6.3kgƒ·m} / 4,800rpm"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Vertical Twin",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "77.0 x 83.0 mm",
+        "ปริมาตรกระบอกสูบ": "773 cc",
+        "อัตราส่วนกำลังอัด": "8.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø34 mm x 2 with sub-throttle",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "2.095 (88/42)",
+        "อัตราทดเกียร์ 1": "2.352 (40/17)",
+        "อัตราทดเกียร์ 2": "1.590 (35/22)",
+        "อัตราทดเกียร์ 3": "1.240 (31/25)",
+        "อัตราทดเกียร์ 4": "1.000 (28/28)",
+        "อัตราทดเกียร์ 5": "0.851 (23/27)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "2.466 (37/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Double Cradle, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks with spring preload adjustability",
+        "ระยะยุบล้อหน้า": "130mm",
+        "ระยะยุบล้อหลัง": "107mm",
+        "มุมแคสเตอร์": "27.0°",
+        "ระยะเทรล": "108mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "37°/ 37°",
+        "ยางหน้า": "100/90-19M/C 57H",
+        "ยางหลัง": "130/80-18M/C 66H",
+        "เบรกหน้า": "Single ø320 mm discs",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø270 mm disc, Twin-piston",
+        "คาลิปเปอร์ (หลัง)": "Twin-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:20:59.442000"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "MEGURO S1",
+    "slug": "meguros1",
+    "category": "MEGURO",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/meguros1",
+    "price": "147,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "147,900 บาท"
+    },
+    "colors": [
+      "Ebony (2025)",
+      "147,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,125 mm",
+        "ความกว้าง": "800 mm",
+        "ความสูง": "1,090 mm",
+        "ระยะฐานล้อ": "1,415 mm",
+        "ระยะห่างจากพื้น": "150 mm",
+        "ความสูงเบาะนั่ง": "740 mm",
+        "น้ำหนักรวม": "143 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "133 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "12 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "12.9 kW {18 PS} / 7,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "19 N·m {1.9 kgƒ·m} / 5,800 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cm3",
+        "อัตราส่วนกำลังอัด": "9.0:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection : ø32 mm x 1",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "2.714 (38/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Semi-double cradle, steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks with adjustable preload",
+        "ระยะยุบล้อหน้า": "117 mm",
+        "ระยะยุบล้อหลัง": "95 mm",
+        "มุมแคสเตอร์": "27.0°",
+        "ระยะเทรล": "99 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "40° / 40°",
+        "ยางหน้า": "90/90-18M/C 51S",
+        "ยางหลัง": "110/90-17M/C 60S",
+        "เบรกหน้า": "ø265 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "ø220 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:21:11.382888"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "W800",
+    "slug": "w800",
+    "category": "W",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/w800",
+    "price": "349,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "349,000 บาท",
+      "kw-color-1": "349,000 บาท",
+      "kw-color-2": "349,000 บาท"
+    },
+    "colors": [
+      "Pearl Crystal White (2026)",
+      "Metallic Brilliant Golden Black / Metallic Diablo Black (2025)",
+      "Metallic Diablo Black / Metallic Imperial Red (2024)",
+      "349,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,190 mm",
+        "ความกว้าง": "790 mm",
+        "ความสูง": "1,075 mm",
+        "ระยะฐานล้อ": "1,465 mm",
+        "ระยะห่างจากพื้น": "125 mm",
+        "ความสูงเบาะนั่ง": "790 mm",
+        "น้ำหนักรวม": "226 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "15 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38.0 kW {52 PS} / 6,500 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "62.9 N·m {6.4 kgƒ·m} / 4,800 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Vertical Twin",
+        "ระบบหล่อเย็น": "Air-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "77.0 x 83.0 mm",
+        "ปริมาตรกระบอกสูบ": "773 cc",
+        "อัตราส่วนกำลังอัด": "8.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø34 mm x 2 with sub-throttles",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "2.095 (88/42)",
+        "อัตราทดเกียร์ 1": "2.353 (40/17)",
+        "อัตราทดเกียร์ 2": "1.591 (35/22)",
+        "อัตราทดเกียร์ 3": "1.240 (31/25)",
+        "อัตราทดเกียร์ 4": "1.000 (28/28)",
+        "อัตราทดเกียร์ 5": "0.852 (23/27)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "2.467 (37/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Double-cradle, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks with spring preload adjustability",
+        "ระยะยุบล้อหน้า": "130 mm",
+        "ระยะยุบล้อหลัง": "107 mm",
+        "มุมแคสเตอร์": "27.0º",
+        "ระยะเทรล": "108 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "37º / 37º",
+        "ยางหน้า": "100/90-19M/C 57H",
+        "ยางหลัง": "130/80-18M/C 66H",
+        "เบรกหน้า": "Single ø320 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø270 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Twin-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:21:23.753150"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "W230",
+    "slug": "w230",
+    "category": "W",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/w230",
+    "price": "129,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "129,900 บาท",
+      "kw-color-1": "129,900 บาท"
+    },
+    "colors": [
+      "Metallic Ocean Blue / Ebony (2025)",
+      "Pearl Ivory / Ebony (2025)",
+      "129,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,125 mm",
+        "ความกว้าง": "800 mm",
+        "ความสูง": "1,090 mm",
+        "ระยะฐานล้อ": "1,415 mm",
+        "ระยะห่างจากพื้น": "150 mm",
+        "ความสูงเบาะนั่ง": "745 mm",
+        "น้ำหนักรวม": "143 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "133 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "12 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "12.9 kW {18 PS} / 7,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "18.6 N·m {1.9 kgƒ·m} / 5,800 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 CC",
+        "อัตราส่วนกำลังอัด": "9.0:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 1",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "2.714 (38/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Semi-double cradle, steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Twin shocks with adjustable preload",
+        "ระยะยุบล้อหน้า": "117 mm",
+        "ระยะยุบล้อหลัง": "95 mm",
+        "มุมแคสเตอร์": "27.0°",
+        "ระยะเทรล": "99 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "40° / 40°",
+        "ยางหน้า": "90/90-18M/C 51S",
+        "ยางหลัง": "110/90-17M/C 60S",
+        "เบรกหน้า": "ø265 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "ø220 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:21:35.017050"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLE500",
+    "slug": "kle500",
+    "category": "KLE",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/kle500",
+    "price": "199,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "199,000 บาท"
+    },
+    "colors": [
+      "Metallic Carbon Gray / Ebony (2026)",
+      "199,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,300 mm",
+        "ความกว้าง": "940 mm",
+        "ความสูง": "High position 1,405 mm / Low position 1,355 mm",
+        "ระยะฐานล้อ": "1,555 mm",
+        "ระยะห่างจากพื้น": "185 mm",
+        "ความสูงเบาะนั่ง": "870 mm",
+        "น้ำหนักรวม": "194 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "175 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "16 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38.3 kW {52 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "42.6 N·m {4.3 kgƒ·m} / 7,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 58.6 mm",
+        "ปริมาตรกระบอกสูบ": "451 cm3",
+        "อัตราส่วนกำลังอัด": "11.3:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 2",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.067 (46/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø43 mm inverted fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak",
+        "ระยะยุบล้อหน้า": "210 mm",
+        "ระยะยุบล้อหลัง": "196 mm",
+        "มุมแคสเตอร์": "28.0°",
+        "ระยะเทรล": "104 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "40° / 40°",
+        "ยางหน้า": "90/90-21M/C 54S",
+        "ยางหลัง": "140/70-17M/C 66S",
+        "เบรกหน้า": "ø300 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "ø230 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:21:46.273447"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLE500 SE",
+    "slug": "kle500se",
+    "category": "KLE",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/kle500se",
+    "price": "219,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "219,000 บาท",
+      "kw-color-1": "219,000 บาท"
+    },
+    "colors": [
+      "Pearl Blizzard White (2026)",
+      "Metallic Bluish Green (2026)",
+      "219,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,300 mm",
+        "ความกว้าง": "980 mm",
+        "ความสูง": "High position 1,510 mm / Low position 1,460 mm",
+        "ระยะฐานล้อ": "1,555 mm",
+        "ระยะห่างจากพื้น": "185 mm",
+        "ความสูงเบาะนั่ง": "870 mm",
+        "น้ำหนักรวม": "195 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "176 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "16 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "38.3 kW {52 PS} / 10,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "42.6 N·m {4.3 kgƒ·m} / 7,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Parallel Twin",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "70.0 x 58.6 mm",
+        "ปริมาตรกระบอกสูบ": "451 cm3",
+        "อัตราส่วนกำลังอัด": "11.3:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 2",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.029 (69/34)",
+        "อัตราทดเกียร์ 1": "2.929 (41/14)",
+        "อัตราทดเกียร์ 2": "2.056 (37/18)",
+        "อัตราทดเกียร์ 3": "1.619 (34/21)",
+        "อัตราทดเกียร์ 4": "1.333 (32/24)",
+        "อัตราทดเกียร์ 5": "1.154 (30/26)",
+        "อัตราทดเกียร์ 6": "1.037 (28/27)",
+        "อัตราทดสุดท้าย": "3.067 (46/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Trellis, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø43 mm inverted fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak",
+        "ระยะยุบล้อหน้า": "210 mm",
+        "ระยะยุบล้อหลัง": "196 mm",
+        "มุมแคสเตอร์": "28.0°",
+        "ระยะเทรล": "104 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "40° / 40°",
+        "ยางหน้า": "90/90-21M/C 54S",
+        "ยางหลัง": "140/70-17M/C 66S",
+        "เบรกหน้า": "ø300 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "ø230 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:21:58.492314"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLR650 ADVENTURE",
+    "slug": "klr650adventure",
+    "category": "KLR",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klr650adventure",
+    "price": "268,400 บาท",
+    "price_by_color": {
+      "kw-color-0": "268,400 บาท"
+    },
+    "colors": [
+      "Metallic matte dark green",
+      "268,400"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,280 mm",
+        "ความกว้าง": "970 mm",
+        "ความสูง": "High position: 1,455 mm / Low position: 1,420 mm",
+        "ระยะฐานล้อ": "1,540 mm",
+        "ระยะห่างจากพื้น": "210 mm",
+        "ความสูงเบาะนั่ง": "840 mm",
+        "น้ำหนักรวม": "223 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "23 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "28.5 kW {39 PS} / 6,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "51.5 N·m {5.3 kgƒ·m} / 4,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Liquid-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "100.0 x 83.0 mm",
+        "ปริมาตรกระบอกสูบ": "652 cc",
+        "อัตราส่วนกำลังอัด": "9.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø40 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Transistorised"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "2.273 (75/33)",
+        "อัตราทดเกียร์ 1": "2.267 (34/15)",
+        "อัตราทดเกียร์ 2": "1.444 (26/18)",
+        "อัตราทดเกียร์ 3": "1.136 (25/22)",
+        "อัตราทดเกียร์ 4": "0.955 (21/22)",
+        "อัตราทดเกียร์ 5": "0.792 (19/24)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Semi-double cradle, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Uni Trak, single shock with adjustable rebound damping and adjustable spring preload",
+        "ระยะยุบล้อหน้า": "200 mm",
+        "ระยะยุบล้อหลัง": "185 mm",
+        "มุมแคสเตอร์": "30.0°",
+        "ระยะเทรล": "121 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "44° / 44°",
+        "ยางหน้า": "90/90-21M/C 54S",
+        "ยางหลัง": "130/80-17M/C 65S",
+        "เบรกหน้า": "Single ø300 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual piston",
+        "เบรกหลัง": "Single ø240 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:22:10.139339"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLR650",
+    "slug": "klr650",
+    "category": "KLR",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klr650",
+    "price": "237,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "237,900 บาท"
+    },
+    "colors": [
+      "Metallic spark black (2026)",
+      "237,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,280 mm",
+        "ความกว้าง": "970 mm",
+        "ความสูง": "High position: 1,465 mm / Low position: 1,430 mm",
+        "ระยะฐานล้อ": "1,540 mm",
+        "ระยะห่างจากพื้น": "210 mm",
+        "ความสูงเบาะนั่ง": "840 mm",
+        "น้ำหนักรวม": "211 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "23 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "28.5 kW {39 PS} / 6,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "51.5 N·m {5.3 kgƒ·m} / 4,500 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "100.0 x 83.0 mm",
+        "ปริมาตรกระบอกสูบ": "652 cc",
+        "อัตราส่วนกำลังอัด": "9.8:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø40 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Transistorised"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "2.273 (75/33)",
+        "อัตราทดเกียร์ 1": "2.267 (34/15)",
+        "อัตราทดเกียร์ 2": "1.444 (26/18)",
+        "อัตราทดเกียร์ 3": "1.136 (25/22)",
+        "อัตราทดเกียร์ 4": "0.955 (21/22)",
+        "อัตราทดเกียร์ 5": "0.792 (19/24)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "2.867 (43/15)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Semi-double cradle, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø41 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Uni Trak, single shock with adjustable rebound damping and adjustable spring preload",
+        "ระยะยุบล้อหน้า": "200 mm",
+        "ระยะยุบล้อหลัง": "185 mm",
+        "มุมแคสเตอร์": "30°",
+        "ระยะเทรล": "121 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "44° / 44°",
+        "ยางหน้า": "90/90-21M/C 54S",
+        "ยางหลัง": "130/80-17M/C 65S",
+        "เบรกหน้า": "Single ø300 mm disc",
+        "คาลิปเปอร์ (หน้า)": "Dual piston",
+        "เบรกหลัง": "Single ø240 mm disc",
+        "คาลิปเปอร์ (หลัง)": "Dual piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:22:21.992786"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230 SHERPA",
+    "slug": "klx230-sherpa",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230-sherpa",
+    "price": "139,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "139,900 บาท"
+    },
+    "colors": [
+      "Medium Cloudy Gray (2026)",
+      "139,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,080 mm",
+        "ความกว้าง": "920 mm",
+        "ความสูง": "1,150 mm",
+        "ระยะฐานล้อ": "1,365 mm",
+        "ระยะห่างจากพื้น": "240 mm",
+        "ความสูงเบาะนั่ง": "845 mm",
+        "น้ำหนักรวม": "135 kg (MY26) / 134 kg (MY25)",
+        "น้ำหนัก (ไม่รวมของเหลว)": "127 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "7.6 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "13.2 kW {18 PS} / 8,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "18.0 N·m {1.8 kgƒ·m} / 6,400 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cm3",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection: ø32 mm x 1",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "Electric",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.214 (45/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload",
+        "ระยะยุบล้อหน้า": "200 mm",
+        "ระยะยุบล้อหลัง": "223 mm",
+        "มุมแคสเตอร์": "24.6°",
+        "ระยะเทรล": "96 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45° / 45°",
+        "ยางหน้า": "2.75-21 45P",
+        "ยางหลัง": "4.10-18 59P (MY26: Tubeless)",
+        "เบรกหน้า": "Single ø265 mm petal disc (Effective diameter: ø241 mm)",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc (Effective diameter: ø186 mm)",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:22:33.691035"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230 R",
+    "slug": "klx230r",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230r",
+    "price": "155,000 บาท",
+    "price_by_color": {
+      "kw-color-0": "155,000 บาท"
+    },
+    "colors": [
+      "Lime Green (2026)",
+      "155,000"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,045 mm",
+        "ความกว้าง": "840 mm",
+        "ความสูง": "1,200 mm",
+        "ระยะฐานล้อ": "1,360 mm",
+        "ระยะห่างจากพื้น": "300 mm",
+        "ความสูงเบาะนั่ง": "925 mm",
+        "น้ำหนักรวม": "115 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "6.6 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "14.6 kW {20 PS} / 8,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "20.6 N·m {2.1 kgƒ·m} / 6,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cc.",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø32 x 1)",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.538 (46/13)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload",
+        "ระยะยุบล้อหน้า": "250 mm",
+        "ระยะยุบล้อหลัง": "251 mm",
+        "มุมแคสเตอร์": "26.5o",
+        "ระยะเทรล": "113 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45° / 45°",
+        "ยางหน้า": "80/100-21 51M",
+        "ยางหลัง": "100/100-18 59M",
+        "เบรกหน้า": "Single ø240 mm petal disc",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:22:44.981481"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230 SM",
+    "slug": "klx230sm",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230sm",
+    "price": "132,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "132,900 บาท",
+      "kw-color-1": "134,900 บาท"
+    },
+    "colors": [
+      "Ebony (SE) (Non ABS) (2023)",
+      "Ebony (SE) (ABS) (2023)",
+      "132,900",
+      "134,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,050 mm",
+        "ความกว้าง": "940 mm",
+        "ความสูง": "1,145 mm",
+        "ระยะฐานล้อ": "1,375 mm",
+        "ระยะห่างจากพื้น": "230 mm",
+        "ความสูงเบาะนั่ง": "845 mm",
+        "น้ำหนักรวม": "NON ABS : 137 kg, ABS : 138 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "",
+        "ความจุถังน้ำมันเชื้อเพลิง": "7.5 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "14.0 kW {19 PS} / 7,600 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "19.8 N·m {2.0 kgƒ·m} / 6,100 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cm3",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø32 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "2.067 (31/15)",
+        "อัตราทดเกียร์ 2": "1.556 (28/18)",
+        "อัตราทดเกียร์ 3": "1.261 (29/23)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "0.852 (23/27)",
+        "อัตราทดเกียร์ 6": "2.871 (89/31)",
+        "อัตราทดสุดท้าย": "3.071 (43/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm invented fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload",
+        "ระยะยุบล้อหน้า": "204 mm",
+        "ระยะยุบล้อหลัง": "168 mm",
+        "มุมแคสเตอร์": "26.5º",
+        "ระยะเทรล": "86 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45° / 45°",
+        "ยางหน้า": "110/70-17M/C 54P",
+        "ยางหลัง": "120/70-17M/C 58P",
+        "เบรกหน้า": "Single ø300 mm semi-floating petal disc",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc,",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:22:57.055982"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230 SE",
+    "slug": "klx230se",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230se",
+    "price": "131,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "131,900 บาท",
+      "kw-color-1": "131,900 บาท"
+    },
+    "colors": [
+      "Bright White (2026)",
+      "Ebony / Neon Green (2025)",
+      "131,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,110 mm",
+        "ความกว้าง": "935 mm",
+        "ความสูง": "1,185 mm",
+        "ระยะฐานล้อ": "1,380 mm",
+        "ระยะห่างจากพื้น": "260 mm",
+        "ความสูงเบาะนั่ง": "875 mm",
+        "น้ำหนักรวม": "136 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "7.6 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "13.2 kW {18 PS} / 8,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "18.0 N·m {1.8kgƒ·m} / 6,400 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 CC",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø32 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.214 (45/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm invented fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload",
+        "ระยะยุบล้อหน้า": "220 mm",
+        "ระยะยุบล้อหลัง": "250 mm",
+        "มุมแคสเตอร์": "26.9º",
+        "ระยะเทรล": "111 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45º / 45º",
+        "ยางหน้า": "2.75-21 45P",
+        "ยางหลัง": "4.10-18 59P",
+        "เบรกหน้า": "Single ø265 mm petal disc",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:23:07.931460"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230 S",
+    "slug": "klx230s",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230s",
+    "price": "124,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "124,900 บาท"
+    },
+    "colors": [
+      "Lime Green (S) (Non ABS) (2023)",
+      "124,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,080 mm",
+        "ความกว้าง": "835 mm",
+        "ความสูง": "1,110 mm",
+        "ระยะฐานล้อ": "1,360 mm",
+        "ระยะห่างจากพื้น": "210 mm",
+        "ความสูงเบาะนั่ง": "830 mm",
+        "น้ำหนักรวม": "135 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "7.5 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "14.0 kW {19 PS} / 7,600 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "19.8 N·m {2.0 kgƒ·m} / 6,100 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled,",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cm3",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø32 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.214 (45/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload, Single ø240 mm petal disc",
+        "ระยะยุบล้อหน้า": "158 mm",
+        "ระยะยุบล้อหลัง": "168 mm",
+        "มุมแคสเตอร์": "27.5º",
+        "ระยะเทรล": "116 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45º / 45º",
+        "ยางหน้า": "2.75-21 45P",
+        "ยางหลัง": "4.10-18 59P",
+        "เบรกหน้า": "Single ø240 mm petal disc",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:23:21.209220"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX230",
+    "slug": "klx230",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx230",
+    "price": "131,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "131,900 บาท"
+    },
+    "colors": [
+      "Lime Green (2026)",
+      "131,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,090 mm",
+        "ความกว้าง": "845 mm",
+        "ความสูง": "1,170 mm",
+        "ระยะฐานล้อ": "1,370 mm",
+        "ระยะห่างจากพื้น": "265 mm",
+        "ความสูงเบาะนั่ง": "880 mm",
+        "น้ำหนักรวม": "133 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "7.6 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "13.2 kW {18 PS} / 8,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "18.0 N·m {1.8 kgƒ·m} / 6,400 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "67.0 x 66.0 mm",
+        "ปริมาตรกระบอกสูบ": "233 cm3",
+        "อัตราส่วนกำลังอัด": "9.4:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø32 x 1)",
+        "ระบบหล่อลื่น": "Forced lubrication, wet sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "6-speed, return",
+        "อัตราทดขั้นต้น": "2.871 (89/31)",
+        "อัตราทดเกียร์ 1": "3.000 (39/13)",
+        "อัตราทดเกียร์ 2": "2.067 (31/15)",
+        "อัตราทดเกียร์ 3": "1.556 (28/18)",
+        "อัตราทดเกียร์ 4": "1.261 (29/23)",
+        "อัตราทดเกียร์ 5": "1.040 (26/25)",
+        "อัตราทดเกียร์ 6": "0.852 (23/27)",
+        "อัตราทดสุดท้าย": "3.214 (45/14)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manual"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Perimeter, high-tensile steel",
+        "ระบบกันสะเทือนหน้า": "ø37 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable preload",
+        "ระยะยุบล้อหน้า": "240 mm",
+        "ระยะยุบล้อหลัง": "250 mm",
+        "มุมแคสเตอร์": "25.2º",
+        "ระยะเทรล": "101 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45º / 45º",
+        "ยางหน้า": "2.75-21 45P",
+        "ยางหลัง": "4.10-18 59P",
+        "เบรกหน้า": "Single ø265 mm petal disc,",
+        "คาลิปเปอร์ (หน้า)": "Twin-piston",
+        "เบรกหลัง": "Single ø220 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:23:31.849200"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX140R F",
+    "slug": "klx140rf",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx140rf",
+    "price": "118,400 บาท",
+    "price_by_color": {
+      "kw-color-0": "118,400 บาท"
+    },
+    "colors": [
+      "Lime Green (2026)",
+      "118,400"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,005 mm",
+        "ความกว้าง": "790 mm",
+        "ความสูง": "1,135 mm",
+        "ระยะฐานล้อ": "1,330 mm",
+        "ระยะห่างจากพื้น": "315 mm",
+        "ความสูงเบาะนั่ง": "860 mm",
+        "น้ำหนักรวม": "99 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "5.8 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "8.3 kW {11PS} / 8,000 min-1",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "12.0 N·m {1.2 kgƒ·m} / 6,000 min-1"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "58 x 54.4 mm",
+        "ปริมาตรกระบอกสูบ": "144 cc",
+        "อัตราส่วนกำลังอัด": "9.5:1",
+        "ระบบจ่ายเชื้อเพลิง": "Carburettor: PB20",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital DC-CDI"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "2.880 (72/25)",
+        "อัตราทดเกียร์ 1": "2.667 (40/15)",
+        "อัตราทดเกียร์ 2": "1.895 (36/19)",
+        "อัตราทดเกียร์ 3": "1.474 (28/19)",
+        "อัตราทดเกียร์ 4": "1.182 (26/22)",
+        "อัตราทดเกียร์ 5": "1.000 (24/24)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "4.385 (57/13)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, semi-double cradle",
+        "ระบบกันสะเทือนหน้า": "ø33 mm telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Uni-Trak with aluminium single shock; piggyback reservoir; adjustable preload; adjustable compression and rebound damping",
+        "ระยะยุบล้อหน้า": "190 mm",
+        "ระยะยุบล้อหลัง": "200 mm",
+        "มุมแคสเตอร์": "27.0°",
+        "ระยะเทรล": "116 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "41° / 41°",
+        "ยางหน้า": "2.75-21 45M",
+        "ยางหลัง": "4.10-18 59M",
+        "เบรกหน้า": "Single ø220 mm petal dice",
+        "คาลิปเปอร์ (หน้า)": "-",
+        "เบรกหลัง": "Single ø190 mm petal dice",
+        "คาลิปเปอร์ (หลัง)": "-"
+      }
+    },
+    "scraped_at": "2026-04-05T20:23:42.850005"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KLX110R L",
+    "slug": "klx110rl",
+    "category": "KLX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/klx110rl",
+    "price": "94,600 บาท",
+    "price_by_color": {
+      "kw-color-0": "94,600 บาท"
+    },
+    "colors": [
+      "Lime Green (2024)",
+      "94,600"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "1,560 mm",
+        "ความกว้าง": "650 mm",
+        "ความสูง": "990 mm",
+        "ระยะฐานล้อ": "1,075 mm",
+        "ระยะห่างจากพื้น": "265 mm",
+        "ความสูงเบาะนั่ง": "730 mm",
+        "น้ำหนักรวม": "76 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "-",
+        "ความจุถังน้ำมันเชื้อเพลิง": "3.6 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "-",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "-"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Air-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "53.0 x 50.6 mm",
+        "ปริมาตรกระบอกสูบ": "112 cc",
+        "อัตราส่วนกำลังอัด": "9.5:1",
+        "ระบบจ่ายเชื้อเพลิง": "Keihin PB18",
+        "ระบบหล่อลื่น": "Forced Lub. Wet",
+        "ระบบสตาร์ท": "Electric & Kick",
+        "ระบบจุดระเบิด": "DC-CDI"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "4-speed, return",
+        "อัตราทดขั้นต้น": "3.409 (75/22)",
+        "อัตราทดเกียร์ 1": "3.000 (36/12)",
+        "อัตราทดเกียร์ 2": "1.938 (31/16)",
+        "อัตราทดเกียร์ 3": "1.350 (27/20)",
+        "อัตราทดเกียร์ 4": "1.087 (25/23)",
+        "อัตราทดเกียร์ 5": "-",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "2.923 (38/13)",
+        "ประเภทคลัตช์ (หลัก)": "Wet, multi-disc"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Backbone",
+        "ระบบกันสะเทือนหน้า": "Telescopic fork",
+        "ระบบกันสะเทือนหลัง": "Mono Shock Swingarm",
+        "ระยะยุบล้อหน้า": "140 mm",
+        "ระยะยุบล้อหลัง": "132 mm",
+        "มุมแคสเตอร์": "24.2°",
+        "ระยะเทรล": "47 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "45° / 45°",
+        "ยางหน้า": "2.50-14 4PR",
+        "ยางหลัง": "3.00-12 4PR",
+        "เบรกหน้า": "Drum",
+        "คาลิปเปอร์ (หน้า)": "-",
+        "เบรกหลัง": "Drum",
+        "คาลิปเปอร์ (หลัง)": "-"
+      }
+    },
+    "scraped_at": "2026-04-05T20:23:54.362923"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KX250 50th Anniversary",
+    "slug": "kx250-50thanniversary",
+    "category": "KX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/kx250-50thanniversary",
+    "price": "384,900 บาท",
+    "price_by_color": {
+      "kw-color-0": "384,900 บาท"
+    },
+    "colors": [
+      "Lime Green (2024)",
+      "384,900"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,190 mm",
+        "ความกว้าง": "820 mm",
+        "ความสูง": "1,270 mm",
+        "ระยะฐานล้อ": "1,485 mm",
+        "ระยะห่างจากพื้น": "345 mm",
+        "ความสูงเบาะนั่ง": "960 mm",
+        "น้ำหนักรวม": "108 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "102.9 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "6.2 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "-",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "-"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "78.0 x 52.2 mm",
+        "ปริมาตรกระบอกสูบ": "249 cm3",
+        "อัตราส่วนกำลังอัด": "14.1:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø44 mm x 1)",
+        "ระบบหล่อลื่น": "Forced Lub. Semi-dry sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital DC-CDI"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "3.350 (67/20)",
+        "อัตราทดเกียร์ 1": "2.154 (28/13)",
+        "อัตราทดเกียร์ 2": "1.733 (26/15)",
+        "อัตราทดเกียร์ 3": "1.438 (23/16)",
+        "อัตราทดเกียร์ 4": "1.235 (21/17)",
+        "อัตราทดเกียร์ 5": "1.045 (23/22)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "3.846 (50/13)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manua"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, semi-double cradle",
+        "ระบบกันสะเทือนหน้า": "ø48 mm inverted telescopic fork with adjustable compression and rebound damping",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable dual-range (high/low-speed) compression damping, adjustable rebound damping and adjustable preload",
+        "ระยะยุบล้อหน้า": "314 mm",
+        "ระยะยุบล้อหลัง": "316 mm",
+        "มุมแคสเตอร์": "28.0°",
+        "ระยะเทรล": "118 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "42° / 42°",
+        "ยางหน้า": "80/100-21 51M",
+        "ยางหลัง": "110/90-19 62M",
+        "เบรกหน้า": "Single semi-floating ø270 mm petal disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "Single ø240 mm petal disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:24:05.589450"
+  },
+  {
+    "brand": "Kawasaki",
+    "name": "KX250",
+    "slug": "kx250",
+    "category": "KX",
+    "url": "https://www.kawasaki.co.th/th/motorcycle/kx250",
+    "price": "372,800 บาท",
+    "price_by_color": {
+      "kw-color-0": "372,800 บาท",
+      "kw-color-1": "372,800 บาท"
+    },
+    "colors": [
+      "Lime Green (2024)",
+      "Lime Green (2023)",
+      "372,800"
+    ],
+    "specifications": {
+      "มิติรถ": {
+        "ความยาว": "2,190 mm",
+        "ความกว้าง": "820 mm",
+        "ความสูง": "1,270 mm",
+        "ระยะฐานล้อ": "1,485 mm",
+        "ระยะห่างจากพื้น": "345 mm",
+        "ความสูงเบาะนั่ง": "960 mm",
+        "น้ำหนักรวม": "108 kg",
+        "น้ำหนัก (ไม่รวมของเหลว)": "102.9 kg",
+        "ความจุถังน้ำมันเชื้อเพลิง": "6.2 litres"
+      },
+      "สมรรถนะ": {
+        "กำลังเครื่องยนต์สูงสุด": "-",
+        "กำลังเครื่องยนต์สูงสุดพร้อมแรมแอร์": "-",
+        "แรงบิดสูงสุด": "-"
+      },
+      "เครื่องยนต์": {
+        "ประเภทเครื่องยนต์": "4-stroke Single",
+        "ระบบหล่อเย็น": "Liquid-cooled",
+        "ขนาดกระบอกสูบ x ช่วงชัก": "78.0 x 52.2 mm",
+        "ปริมาตรกระบอกสูบ": "249 cm3",
+        "อัตราส่วนกำลังอัด": "14.1:1",
+        "ระบบจ่ายเชื้อเพลิง": "Fuel injection (ø44 mm x 1)",
+        "ระบบหล่อลื่น": "Forced Lub. Semi-dry sump",
+        "ระบบสตาร์ท": "EL. Starter",
+        "ระบบจุดระเบิด": "Digital DC-CDI"
+      },
+      "ระบบขับเคลื่อน": {
+        "ระบบขับเคลื่อน": "Chain",
+        "ระบบส่งกำลัง": "5-speed, return",
+        "อัตราทดขั้นต้น": "3.350 (67/20)",
+        "อัตราทดเกียร์ 1": "2.154 (28/13)",
+        "อัตราทดเกียร์ 2": "1.733 (26/15)",
+        "อัตราทดเกียร์ 3": "1.438 (23/16)",
+        "อัตราทดเกียร์ 4": "1.235 (21/17)",
+        "อัตราทดเกียร์ 5": "1.045 (23/22)",
+        "อัตราทดเกียร์ 6": "-",
+        "อัตราทดสุดท้าย": "3.846 (50/13)",
+        "ประเภทคลัตช์ (หลัก)": "Wet multi-disc, manua"
+      },
+      "ตัวถัง": {
+        "ประเภทเฟรม": "Tubular, semi-double cradle",
+        "ระบบกันสะเทือนหน้า": "ø48 mm inverted telescopic fork with adjustable compression and rebound damping",
+        "ระบบกันสะเทือนหลัง": "New Uni Trak with adjustable dual-range (high/low-speed) compression damping, adjustable rebound damping and adjustable preload",
+        "ระยะยุบล้อหน้า": "314 mm",
+        "ระยะยุบล้อหลัง": "316 mm",
+        "มุมแคสเตอร์": "28.0°",
+        "ระยะเทรล": "118 mm",
+        "มุมเลี้ยว (ซ้าย/ขวา)": "42° / 42°",
+        "ยางหน้า": "80/100-21 51M",
+        "ยางหลัง": "110/90-19 62M",
+        "เบรกหน้า": "Single disc",
+        "คาลิปเปอร์ (หน้า)": "Dual-piston",
+        "เบรกหลัง": "Single disc",
+        "คาลิปเปอร์ (หลัง)": "Single-piston"
+      }
+    },
+    "scraped_at": "2026-04-05T20:24:16.091877"
+  }
+]
