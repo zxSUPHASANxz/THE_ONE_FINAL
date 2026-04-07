@@ -31,11 +31,9 @@ from chatbot.models import KnowBase
 
 # --- Configuration ---
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
 if not GEMINI_API_KEY:
     print("Error: GEMINI_API_KEY not found in .env")
     sys.exit(1)
-
 genai.configure(api_key=GEMINI_API_KEY)
 
 class KnowBaseImporter:
@@ -45,12 +43,6 @@ class KnowBaseImporter:
         self.total_imported = 0
         self.total_updated = 0
         self.total_errors = 0
-
-    def print_progress(self, current, total, prefix=""):
-        if total == 0:
-            return
-        percent = int((current / total) * 100)
-        print(f"{prefix} Progress: {percent}% ({current}/{total})", end='\r')
 
     def generate_embedding_with_retry(self, text: str, max_retries: int = 3):
         """Generate embedding with retry logic and exponential backoff"""
@@ -80,20 +72,16 @@ class KnowBaseImporter:
                     time.sleep(wait_time)
                 else:
                     print(f'\n❌ Failed to generate embedding after {max_retries} attempts.')
-                    # Don't raise, just return None so we can continue with other items if possible?
-                    # Or raise if we want to be strict. Let's return None to not break the loop.
                     return None
 
     def save_to_knowbase(self, title, content, category, url=None):
         try:
-            # Check for existing duplicates with the same title and strictly clean them up if found
-            # This prevents MultipleObjectsReturned error from update_or_create
+            # ลบ duplicate ป้องกัน MultipleObjectsReturned จาก update_or_create
             existing = KnowBase.objects.filter(title=title)
             if existing.count() > 1:
                 print(f"  ⚠️ Found {existing.count()} duplicates for '{title}'. Cleaning up...")
                 existing.delete() # Delete all to ensure clean state
             
-            # Embed header/summary or first 2000 chars (safe limit)
             embedding_text = f"{title}\n{content[:2000]}"
             embedding = self.generate_embedding_with_retry(embedding_text)
             
@@ -126,7 +114,6 @@ class KnowBaseImporter:
         json_files = list(db_dir.glob('*.json'))
         print(f"Found {len(json_files)} JSON files.")
 
-        total_records = 0
         current_count = 0
         
         for json_file in json_files:
@@ -145,8 +132,7 @@ class KnowBaseImporter:
             for i, item in enumerate(data):
                 content = item.get('content', json.dumps(item, ensure_ascii=False))
                 
-                # Improved Title Generation
-                # Prioritize explicit title -> model -> name -> filename + index
+                # Title: title → brand+model → brand+name → filename+index
                 candidate_title = item.get('title')
                 if not candidate_title:
                    model_name = item.get('model')
@@ -232,8 +218,6 @@ class KnowBaseImporter:
 
         print(f"found {missing_count} records without embeddings. Processing...")
         
-        # Process in chunks to avoid memory issues
-        # Django's iterator() is good for this
         qs = KnowBase.objects.filter(embedding__isnull=True)
         
         for i, obj in enumerate(qs.iterator()):

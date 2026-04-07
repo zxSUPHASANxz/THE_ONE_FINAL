@@ -27,7 +27,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
     TimeoutException,
     ElementClickInterceptedException,
-    NoSuchElementException,
 )
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup

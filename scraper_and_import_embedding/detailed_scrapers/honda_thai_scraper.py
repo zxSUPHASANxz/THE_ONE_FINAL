@@ -18,8 +18,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -27,7 +25,7 @@ from tqdm import tqdm
 class HondaFullAutoScraper:
     def __init__(self):
         self.brand = "Honda"
-        self.base_url = "https://www.thaihonda.co.th/honda/motorcycle"
+        self.base_url = "https://www.thaih onda.co.th/honda/motorcycle"
         self.motorcycles = []
         self.driver = None
     
@@ -260,9 +258,9 @@ class HondaFullAutoScraper:
                 'scraped_at': datetime.now().isoformat(),
                 **price_info,
                 'specifications': specs,
-                'features': features if features else [],
-                'images': images if images else [],
-                'colors': colors if colors else [],
+                'features': features,
+                'images': images,
+                'colors': colors,
                 'description': ''
             }
             
@@ -330,7 +328,6 @@ def main():
     
     print("\n" + "=" * 80)
     print("✅ สกัดข้อมูลเสร็จสิ้น!")
-    print("💡 ขั้นตอนถัดไป: รัน import_and_embedding_to_knowbase.py เพื่อสร้าง embedding และนำเข้า DB")
     print("=" * 80)
 
 
